@@ -1,7 +1,23 @@
 -- UPDATE
 
-update "TB_Usuario" set ds_senha = '123456' where id_usuario = 1;
+update tb_usuario set ds_senha = '123456' where id_usuario = 1;
 
--- DELETE
 
-delete from "TB_Endereco" where id_usuario = 10;
+-- Relatorio para acompanhamento das avaliacoes dos jogos
+
+select
+
+nm_jogo,
+tp_avaliacao,
+count(*) as nr_avaliacoes
+
+from tb_usuario
+
+inner join tb_avaliacao
+    using (id_usuario)
+
+left join tb_jogo
+    using (id_jogo)
+
+group by 1,2
+order by 1,2;

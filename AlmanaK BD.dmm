@@ -3,7 +3,7 @@
 		"b63c7ff7-25fc-4d0c-96a0-3763ef3b7fd3": {
 			"id": "b63c7ff7-25fc-4d0c-96a0-3763ef3b7fd3",
 			"visible": true,
-			"name": "TB_Usuario",
+			"name": "tb_usuario",
 			"desc": "Tabela para armazenamento do dados do usuario.",
 			"estimatedSize": "",
 			"cols": [
@@ -117,7 +117,7 @@
 			"keys": [
 				{
 					"id": "8934ade1-c572-4af0-bd0a-c77266045aa4",
-					"name": "pk_usuario",
+					"name": "PK_Usuario",
 					"isPk": true,
 					"using": "",
 					"cols": [
@@ -131,7 +131,7 @@
 					"id": "c35de700-5c18-4d13-8d21-3cd0c3ee4ca2",
 					"isPk": false,
 					"using": "na",
-					"name": "un_usuario_email",
+					"name": "UN_Usuario_Email",
 					"cols": [
 						{
 							"id": "c140ed40-1f33-4cf2-8205-a1097e0dccc0",
@@ -153,7 +153,7 @@
 		"eb66978e-e757-424f-8517-b3a06dcfa57e": {
 			"id": "eb66978e-e757-424f-8517-b3a06dcfa57e",
 			"visible": true,
-			"name": "TB_Jogo",
+			"name": "tb_jogo",
 			"desc": "Tabela para o cadastro dos jogos da plataforma.",
 			"estimatedSize": "",
 			"cols": [
@@ -303,7 +303,7 @@
 			"keys": [
 				{
 					"id": "511f02af-e73b-435a-992f-b39552c64cbe",
-					"name": "Primary key",
+					"name": "PK_jogo",
 					"isPk": true,
 					"using": "",
 					"cols": [
@@ -317,7 +317,7 @@
 					"id": "925bdb86-d772-40fc-9bb5-38fdbae9155d",
 					"isPk": false,
 					"using": "na",
-					"name": "un_jogo_nm_jogo",
+					"name": "UN_Nome_Jogo",
 					"cols": [
 						{
 							"id": "8fbcd420-1586-4b12-9a3b-7021f2d3c428",
@@ -339,7 +339,7 @@
 		"46db98b1-fb30-4d90-affa-9e57b8ab6f44": {
 			"id": "46db98b1-fb30-4d90-affa-9e57b8ab6f44",
 			"visible": true,
-			"name": "TB_Item",
+			"name": "tb_item",
 			"desc": "Tabela para o cadastro de itens que podem ser usados para os jogos.",
 			"estimatedSize": "",
 			"cols": [
@@ -434,7 +434,7 @@
 			"keys": [
 				{
 					"id": "0be16175-ff2d-4bd1-915c-bb32df9dacc4",
-					"name": "Primary key",
+					"name": "PK_Item",
 					"isPk": true,
 					"using": "",
 					"cols": [
@@ -448,7 +448,7 @@
 					"id": "f0ab4e85-e450-4f8c-90f2-d6c005741dbe",
 					"isPk": false,
 					"using": "na",
-					"name": "un_item_nm_item",
+					"name": "UN_Nome_Item",
 					"cols": [
 						{
 							"id": "91754efc-a82a-47d5-acbf-47eb6d338653",
@@ -470,7 +470,7 @@
 		"2f5d4a32-9eb2-4f5e-8965-d90e5ed06fd8": {
 			"id": "2f5d4a32-9eb2-4f5e-8965-d90e5ed06fd8",
 			"visible": true,
-			"name": "TB_Jogo_Item",
+			"name": "tb_jogo_item",
 			"desc": "Tebela relacionamento entre o item e o jogo que utilizara esse item.",
 			"estimatedSize": "",
 			"cols": [
@@ -549,7 +549,7 @@
 			"keys": [
 				{
 					"id": "27c9d8c6-348c-4884-bf06-9eeada8a4e43",
-					"name": "Primary key",
+					"name": "PK_Jogo_Item",
 					"isPk": true,
 					"using": "",
 					"cols": [
@@ -573,7 +573,7 @@
 		"4993bf46-242c-4785-b01f-22bb50e9df76": {
 			"id": "4993bf46-242c-4785-b01f-22bb50e9df76",
 			"visible": true,
-			"name": "TB_Regra",
+			"name": "tb_regra",
 			"desc": "Tabela para o cadastro das regras do jogo.",
 			"estimatedSize": "",
 			"cols": [
@@ -685,7 +685,7 @@
 			"keys": [
 				{
 					"id": "b526234c-7a31-4cc1-83a4-b0eefd6bbd6d",
-					"name": "Primary key",
+					"name": "PK_Regra",
 					"isPk": true,
 					"using": "",
 					"cols": [
@@ -709,7 +709,7 @@
 		"81441bbc-4af1-4048-9fd0-cedaa6bb974f": {
 			"id": "81441bbc-4af1-4048-9fd0-cedaa6bb974f",
 			"visible": true,
-			"name": "TB_Avaliacao",
+			"name": "tb_avaliacao",
 			"desc": "Tabela para o cadastro das avalizações do usuario.",
 			"estimatedSize": "",
 			"cols": [
@@ -839,7 +839,7 @@
 			"keys": [
 				{
 					"id": "9970e034-c3b3-48e5-ad6d-8fc3c1c98fb9",
-					"name": "Primary key",
+					"name": "PK_Avaliacao",
 					"isPk": true,
 					"using": "",
 					"cols": [
@@ -863,7 +863,7 @@
 		"a19db193-d33f-42c4-88b0-01471e08cce4": {
 			"id": "a19db193-d33f-42c4-88b0-01471e08cce4",
 			"visible": true,
-			"name": "TB_Categoria",
+			"name": "tb_categoria",
 			"desc": "",
 			"estimatedSize": "",
 			"cols": [
@@ -941,7 +941,7 @@
 			"keys": [
 				{
 					"id": "d0cd8bf9-1bb5-4630-bd43-d18281e41d0b",
-					"name": "Primary key",
+					"name": "PK_Categoria",
 					"isPk": true,
 					"using": "",
 					"cols": [
@@ -955,7 +955,7 @@
 					"id": "a16cb5ee-9478-40b0-9b0f-2e0ba3939523",
 					"isPk": false,
 					"using": "na",
-					"name": "un_nm_categoria",
+					"name": "UN_Nome_Categoria",
 					"cols": [
 						{
 							"id": "cf19ea77-ef59-41ef-871f-0b1c866cc8ee",
@@ -977,7 +977,7 @@
 		"4d182476-ecd5-4df0-824e-bf9d117e5773": {
 			"id": "4d182476-ecd5-4df0-824e-bf9d117e5773",
 			"visible": true,
-			"name": "TB_Grupo",
+			"name": "tb_grupo",
 			"desc": "",
 			"estimatedSize": "",
 			"cols": [
@@ -1039,7 +1039,7 @@
 			"keys": [
 				{
 					"id": "76c6331c-671d-4fdb-97d1-96d0afc841db",
-					"name": "Primary key",
+					"name": "PK_Grupo",
 					"isPk": true,
 					"using": "",
 					"cols": [
@@ -1063,13 +1063,13 @@
 		"b929ba88-f620-448f-ad3c-8f39ad3d07b2": {
 			"id": "b929ba88-f620-448f-ad3c-8f39ad3d07b2",
 			"visible": true,
-			"name": "TB_Grupo_Jogo",
+			"name": "tb_grupo_jogo",
 			"desc": "Tebela relacionamento entre o item e o jogo que utilizara esse item.",
 			"estimatedSize": "",
 			"cols": [
 				{
 					"id": "bc36eb87-1c0b-4144-9554-fac17623eb73",
-					"name": "id_Grupo_jogo",
+					"name": "id_grupo_jogo",
 					"datatype": "integer",
 					"pk": true,
 					"nn": true,
@@ -1176,7 +1176,7 @@
 			"keys": [
 				{
 					"id": "af84a7ac-af64-4027-ac07-755bb9669756",
-					"name": "Primary key",
+					"name": "PK_Grupo_Jogo",
 					"isPk": true,
 					"using": "",
 					"cols": [
@@ -1200,7 +1200,7 @@
 		"1cf17ead-fbb2-4816-a18a-d048bdc21a71": {
 			"id": "1cf17ead-fbb2-4816-a18a-d048bdc21a71",
 			"visible": true,
-			"name": "TB_Grupo_Usuario",
+			"name": "tb_grupo_usuario",
 			"desc": "",
 			"estimatedSize": "",
 			"cols": [
@@ -1296,7 +1296,7 @@
 			"keys": [
 				{
 					"id": "93abc90a-3388-4a8f-a623-393954c05eee",
-					"name": "Primary key",
+					"name": "PK_Grupo_Usuario",
 					"isPk": true,
 					"using": "",
 					"cols": [
@@ -1320,7 +1320,7 @@
 		"08006987-d2e7-46e2-853a-e78e3707c9b7": {
 			"id": "08006987-d2e7-46e2-853a-e78e3707c9b7",
 			"visible": true,
-			"name": "TB_Atividade",
+			"name": "tb_atividade",
 			"desc": "",
 			"estimatedSize": "",
 			"cols": [
@@ -1416,7 +1416,7 @@
 			"keys": [
 				{
 					"id": "c81297e2-8147-46a1-9d7d-644357c24cb6",
-					"name": "Primary key",
+					"name": "PK_Atividade",
 					"isPk": true,
 					"using": "",
 					"cols": [
@@ -1440,7 +1440,7 @@
 		"7b7c6ad4-94e7-4e0c-985d-ca37fe6808ab": {
 			"id": "7b7c6ad4-94e7-4e0c-985d-ca37fe6808ab",
 			"visible": true,
-			"name": "TB_Tipo_Atividade",
+			"name": "tb_tipo_atividade",
 			"desc": "",
 			"estimatedSize": "",
 			"cols": [
@@ -1518,7 +1518,7 @@
 			"keys": [
 				{
 					"id": "80cf985f-2417-4b65-9e6f-125629f274c2",
-					"name": "Primary key",
+					"name": "PK_Tipo_Atividade",
 					"isPk": true,
 					"using": "",
 					"cols": [
@@ -1907,7 +1907,7 @@
 		"replaceSpace": "_",
 		"color": "transparent",
 		"sideSelections": true,
-		"isDirty": false,
+		"isDirty": true,
 		"storedin": {
 			"major": 4,
 			"minor": 4,
@@ -1937,7 +1937,7 @@
 			"quotation": "if_needed",
 			"includeGeneratedNames": "always"
 		},
-		"lastSaved": "Fri Aug 19 2022 00:42:09 GMT-0300 (Brasilia Standard Time)",
+		"lastSaved": "Fri Aug 19 2022 00:44:12 GMT-0300 (Brasilia Standard Time)",
 		"writeFileParam": false,
 		"nameAutoGeneration": {
 			"keys": false,
@@ -1982,7 +1982,7 @@
 			"name": "SQ_Usuario",
 			"desc": "",
 			"type": "Sequence",
-			"code": "create sequence SQ_Usuario;",
+			"code": "create sequence sq_usuario;",
 			"lines": [],
 			"generate": true,
 			"generateCustomCode": true,
@@ -1996,7 +1996,7 @@
 			"name": "SQ_Avaliacao",
 			"desc": "",
 			"type": "Sequence",
-			"code": "create sequence SQ_Avaliacao;",
+			"code": "create sequence sq_avaliacao;",
 			"lines": [],
 			"generate": true,
 			"generateCustomCode": true,
@@ -2010,7 +2010,7 @@
 			"name": "SQ_Jogo",
 			"desc": "",
 			"type": "Sequence",
-			"code": "create sequence SQ_Jogo;",
+			"code": "create sequence sq_jogo;",
 			"lines": [],
 			"generate": true,
 			"generateCustomCode": true,
@@ -2024,7 +2024,7 @@
 			"name": "SQ_Regra",
 			"desc": "",
 			"type": "Sequence",
-			"code": "create sequence SQ_Regra;",
+			"code": "create sequence sq_regra;",
 			"lines": [],
 			"generate": true,
 			"generateCustomCode": true,
@@ -2038,7 +2038,7 @@
 			"name": "SQ_Item",
 			"desc": "",
 			"type": "Sequence",
-			"code": "create sequence SQ_Item;",
+			"code": "create sequence sq_item;",
 			"lines": [],
 			"generate": true,
 			"generateCustomCode": true,
@@ -2052,7 +2052,7 @@
 			"name": "SQ_Jogo_Item",
 			"desc": "",
 			"type": "Sequence",
-			"code": "create sequence SQ_Jogo_Item;",
+			"code": "create sequence sq_jogo_item;",
 			"lines": [],
 			"generate": true,
 			"generateCustomCode": true,
@@ -2081,7 +2081,7 @@
 			"name": "SQ_Grupo",
 			"desc": "",
 			"type": "Sequence",
-			"code": "create sequence SQ_Grupo;",
+			"code": "create sequence sq_grupo;",
 			"lines": [],
 			"generate": true,
 			"generateCustomCode": true,
@@ -2095,7 +2095,7 @@
 			"name": "SQ_Grupo_Usuario",
 			"desc": "",
 			"type": "Sequence",
-			"code": "create sequence SQ_Grupo_Usuario;",
+			"code": "create sequence sq_grupo_usuario;",
 			"lines": [],
 			"generate": true,
 			"generateCustomCode": true,
@@ -2109,7 +2109,7 @@
 			"name": "SQ_Categoria",
 			"desc": "",
 			"type": "Sequence",
-			"code": "create sequence SQ_Categoria;",
+			"code": "create sequence sq_categoria;",
 			"lines": [],
 			"generate": true,
 			"generateCustomCode": true,
@@ -2123,7 +2123,7 @@
 			"name": "SQ_Atividade",
 			"desc": "",
 			"type": "Sequence",
-			"code": "create sequence SQ_Atividade;",
+			"code": "create sequence sq_atividade;",
 			"lines": [],
 			"generate": true,
 			"generateCustomCode": true,
@@ -2137,7 +2137,7 @@
 			"name": "SQ_Tipo_Atividade",
 			"desc": "",
 			"type": "Sequence",
-			"code": "create sequence SQ_Tipo_Atividade;",
+			"code": "create sequence sq_tipo_atividade;",
 			"lines": [],
 			"generate": true,
 			"generateCustomCode": true,
@@ -2151,7 +2151,7 @@
 			"name": "SQ_Grupo_Jogo",
 			"desc": "",
 			"type": "Sequence",
-			"code": "create sequence SQ_Grupo_Jogo;",
+			"code": "create sequence sq_grupo_jogo;",
 			"lines": [],
 			"generate": true,
 			"generateCustomCode": true,
@@ -2203,7 +2203,7 @@
 			"diagramItems": {
 				"b63c7ff7-25fc-4d0c-96a0-3763ef3b7fd3": {
 					"referencedItemId": "b63c7ff7-25fc-4d0c-96a0-3763ef3b7fd3",
-					"x": 760,
+					"x": 759,
 					"y": 515,
 					"gHeight": 154,
 					"gWidth": 360,
@@ -2325,7 +2325,7 @@
 				"63c5af14-fc87-45a2-8dd5-939e26063a03": {
 					"referencedItemId": "63c5af14-fc87-45a2-8dd5-939e26063a03",
 					"x": 1019,
-					"y": 1418,
+					"y": 1419,
 					"gHeight": 44,
 					"gWidth": 150,
 					"color": "#eee",
@@ -2346,7 +2346,7 @@
 				},
 				"c884728c-c17a-484f-a108-b5c39da48666": {
 					"referencedItemId": "c884728c-c17a-484f-a108-b5c39da48666",
-					"x": 1198,
+					"x": 1199,
 					"y": 1418,
 					"gHeight": 44,
 					"gWidth": 150,
@@ -2434,7 +2434,7 @@
 				},
 				"1cf17ead-fbb2-4816-a18a-d048bdc21a71": {
 					"referencedItemId": "1cf17ead-fbb2-4816-a18a-d048bdc21a71",
-					"x": 1230,
+					"x": 1232,
 					"y": 515,
 					"gHeight": 117,
 					"gWidth": 238,
@@ -2467,7 +2467,7 @@
 				},
 				"571dc1b9-c4a2-40be-8846-566dd21173b0": {
 					"referencedItemId": "571dc1b9-c4a2-40be-8846-566dd21173b0",
-					"x": 670,
+					"x": 671,
 					"y": 1483,
 					"gHeight": 44,
 					"gWidth": 150,
@@ -2512,7 +2512,7 @@
 				"9a29efbd-65cd-49b8-9629-710d715e64c3": {
 					"referencedItemId": "9a29efbd-65cd-49b8-9629-710d715e64c3",
 					"x": 1019,
-					"y": 1483,
+					"y": 1484,
 					"gHeight": 44,
 					"gWidth": 150,
 					"color": "#eee",
