@@ -96,7 +96,7 @@ INSERT INTO tb_regra values (nextval('sq_regra'), 9, 3, 'Principal', 'Se a bola 
 INSERT INTO tb_regra values (nextval('sq_regra'), 9, 4, 'Principal', 'Os jogadores são "queimados" nos seguintes casos: quando a bola acerta qualquer parte do corpo ou quando pegam a bola, mas a deixam cair.', 'nao', current_timestamp);
 INSERT INTO tb_regra values (nextval('sq_regra'), 9, 5, 'Principal', 'Os jogadores "queimados" devem ir para uma área específica, atrás do campo do time adversário. Em alguns lugares no Brasil, esta é chamada de "prisão", "céu", "cemitério", "castigo", "base".', 'nao', current_timestamp);
 INSERT INTO tb_regra values (nextval('sq_regra'), 9, 6, 'Principal', 'O jogador "queimado" pode voltar ao jogo se queimar outro jogador.', 'nao', current_timestamp);
-INSERT INTO tb_regra values (nextval('sq_regra'), 9, 6, 'Principal', 'Vence o time que conseguir "queimar" o maior número de jogadores.', 'nao', current_timestamp);
+INSERT INTO tb_regra values (nextval('sq_regra'), 9, 7, 'Principal', 'Vence o time que conseguir "queimar" o maior número de jogadores.', 'nao', current_timestamp);
 INSERT INTO tb_regra values (nextval('sq_regra'), 10, 1, 'Principal', 'Nesse jogo só se pode responder com perguntas, o primeiro jogador que não fizer uma pergunta deve beber. Após isso a rodada se reinicia.', 'nao', current_timestamp);
 
 -- TB_Jogo_Item

@@ -2,8 +2,6 @@ SET check_function_bodies = false;
 
 CREATE TYPE en_bolleano AS ENUM('sim', 'nao');
 
-CREATE TYPE en_tp_avalicao AS ENUM('positivo', 'negativo');
-
 CREATE TYPE en_tp_item AS ENUM
   ('bola',  'carta',  'bebida alcoolica',  'bastao',  'quadra',  'papelaria', 'tabuleiro',  'dado',  'geral')
   ;
@@ -94,8 +92,8 @@ COMMENT ON TABLE tb_jogo_item IS
 CREATE TABLE tb_regra(
   id_regra integer NOT NULL,
   id_jogo integer NOT NULL,
-  nr_regra integer,
   nm_regra varchar(50) NOT NULL,
+  nr_regra integer,
   ds_regra varchar(500),
   fl_opcional en_bolleano,
   dt_registro timestamp,
@@ -108,9 +106,8 @@ CREATE TABLE tb_avaliacao(
   id_avaliacao integer NOT NULL,
   id_usuario integer NOT NULL,
   id_jogo integer NOT NULL,
-  tp_avaliacao en_tp_avalicao,
+  vl_avaliacao numeric,
   ds_avaliacao text,
-  fl_jogado en_bolleano,
   dt_registro timestamp,
   CONSTRAINT "PK_Avaliacao" PRIMARY KEY(id_avaliacao)
 );

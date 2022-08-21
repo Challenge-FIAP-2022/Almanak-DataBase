@@ -663,12 +663,12 @@
 					"ref": "TB_Jogo"
 				},
 				{
-					"id": "9a3f4cbb-c5f7-486f-bbd3-52608f8d2691",
-					"name": "nr_regra",
-					"datatype": "integer",
-					"param": "",
+					"id": "bfb6be58-e152-4f1d-8b86-81b0f875d56e",
+					"name": "nm_regra",
+					"datatype": "varchar",
+					"param": "50",
 					"pk": false,
-					"nn": false,
+					"nn": true,
 					"comment": "",
 					"defaultvalue": "",
 					"data": "",
@@ -680,12 +680,12 @@
 					}
 				},
 				{
-					"id": "bfb6be58-e152-4f1d-8b86-81b0f875d56e",
-					"name": "nm_regra",
-					"datatype": "varchar",
-					"param": "50",
+					"id": "9a3f4cbb-c5f7-486f-bbd3-52608f8d2691",
+					"name": "nr_regra",
+					"datatype": "integer",
+					"param": "",
 					"pk": false,
-					"nn": true,
+					"nn": false,
 					"comment": "",
 					"defaultvalue": "",
 					"data": "",
@@ -834,7 +834,7 @@
 				},
 				{
 					"id": "371bce3a-d6f6-4b14-a322-da74029f9cce",
-					"name": "nr_avaliacao",
+					"name": "vl_avaliacao",
 					"datatype": "numeric",
 					"param": "",
 					"pk": false,
@@ -2230,7 +2230,7 @@
 		"replaceSpace": "_",
 		"color": "transparent",
 		"sideSelections": true,
-		"isDirty": true,
+		"isDirty": false,
 		"storedin": {
 			"major": 4,
 			"minor": 4,
@@ -2260,7 +2260,7 @@
 			"quotation": "if_needed",
 			"includeGeneratedNames": "always"
 		},
-		"lastSaved": "Sun Aug 21 2022 15:08:14 GMT-0300 (Brasilia Standard Time)",
+		"lastSaved": "Sun Aug 21 2022 17:43:23 GMT-0300 (Brasilia Standard Time)",
 		"writeFileParam": false,
 		"nameAutoGeneration": {
 			"keys": false,

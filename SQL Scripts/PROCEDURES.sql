@@ -51,24 +51,24 @@ $$
         varQtdInsert integer:= 1;
     BEGIN
         -- Update Jogos antigos
-        open varCursorUpdate for
-        	select * from tb_grupo_jogo where id_grupo = 1 and fl_valido = 'sim';
+        -- open varCursorUpdate for
+        -- 	select * from tb_grupo_jogo where id_grupo = 1 and fl_valido = 'sim';
 
-		fetch varCursorUpdate into varRecordUpdate;
-		if not found then
-			insert into tb_erro values(nextval('sq_erro'), 'sp_grupo_jogo', 'Nenhum valor a ser atualizado.', current_timestamp);
-			raise notice 'Nenhum valor a ser atualizado.';
-		else
-			loop
-				update tb_grupo_jogo set fl_valido = 'nao', dt_encerramento = current_timestamp where id_grupo_jogo = varRecordUpdate.id_grupo_jogo;
-				fetch varCursorUpdate into varRecordUpdate;
-				exit when not found;
-				varQtdUpdate:= varQtdUpdate + 1;
-			end loop;
-			raise notice '% valores atualizados com sucesso.', TO_CHAR(varQtdUpdate, 'fm999G999');
-		end if;
+		-- fetch varCursorUpdate into varRecordUpdate;
+		-- if not found then
+		-- 	insert into tb_erro values(nextval('sq_erro'), 'sp_grupo_jogo', 'Nenhum valor a ser atualizado.', current_timestamp);
+		-- 	raise notice 'Nenhum valor a ser atualizado.';
+		-- else
+		-- 	loop
+		-- 		update tb_grupo_jogo set fl_valido = 'nao', dt_encerramento = current_timestamp where id_grupo_jogo = varRecordUpdate.id_grupo_jogo;
+		-- 		fetch varCursorUpdate into varRecordUpdate;
+		-- 		exit when not found;
+		-- 		varQtdUpdate:= varQtdUpdate + 1;
+		-- 	end loop;
+		-- 	raise notice '% valores atualizados com sucesso.', TO_CHAR(varQtdUpdate, 'fm999G999');
+		-- end if;
 
-        close varCursorUpdate;
+        -- close varCursorUpdate;
 
         -- Insert New Grupo
         open varCursorInsert for
