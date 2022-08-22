@@ -112,7 +112,8 @@
 				"aebc2e48-558f-434d-a3aa-50e0e7869a18",
 				"1241cf12-3c9e-4d26-8730-7ce5bf36ef15",
 				"e1dd14d8-25aa-4bc8-997b-f727756c0d77",
-				"049c29f8-7900-47d9-ae15-e404669286d9"
+				"049c29f8-7900-47d9-ae15-e404669286d9",
+				"39a76c84-f3e3-4b41-b04d-6ef1cb723cf1"
 			],
 			"lines": [],
 			"keys": [
@@ -261,6 +262,23 @@
 				{
 					"id": "83725987-38e0-4fa5-a76e-f62836247319",
 					"name": "fl_valido",
+					"datatype": "ad9008af-1465-4e0c-896a-809dfb511a1d",
+					"param": "",
+					"pk": false,
+					"nn": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"list": false,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					}
+				},
+				{
+					"id": "7de7b888-ea22-4149-9182-2da15c2225e5",
+					"name": "fl_elite",
 					"datatype": "ad9008af-1465-4e0c-896a-809dfb511a1d",
 					"param": "",
 					"pk": false,
@@ -1444,6 +1462,23 @@
 					"ref": "TB_Tipo_Atividade"
 				},
 				{
+					"id": "266bc883-a877-4478-88bf-4a7734966aff",
+					"name": "nm_tabela_alterada",
+					"datatype": "integer",
+					"param": "",
+					"pk": false,
+					"nn": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"list": false,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					}
+				},
+				{
 					"id": "e0b8422a-4850-4e83-b221-711c50626192",
 					"name": "ds_atividade",
 					"datatype": "text",
@@ -1811,6 +1846,308 @@
 				"rowsecurity": false,
 				"schema": ""
 			}
+		},
+		"c5370c7e-0b11-49ad-b8dc-6b0ad134f3c1": {
+			"id": "c5370c7e-0b11-49ad-b8dc-6b0ad134f3c1",
+			"visible": true,
+			"name": "tb_plano",
+			"desc": "",
+			"estimatedSize": "",
+			"cols": [
+				{
+					"id": "304f8c8e-ddd8-4475-82dc-e261688effda",
+					"name": "id_plano",
+					"datatype": "integer",
+					"pk": true,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					}
+				},
+				{
+					"id": "fde1ada1-1aa7-4bc9-bbf8-5d59301b4cbc",
+					"name": "nm_plano",
+					"datatype": "text",
+					"param": "",
+					"pk": false,
+					"nn": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"list": false,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					}
+				},
+				{
+					"id": "0313e8c9-f80c-40b3-8661-e3630682796d",
+					"name": "ds_plano",
+					"datatype": "text",
+					"param": "",
+					"pk": false,
+					"nn": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"list": false,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					}
+				},
+				{
+					"id": "4c40ee54-70f1-42df-a8ff-6d90dc6e2fe4",
+					"name": "vl_plano",
+					"datatype": "numeric",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"list": false,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					}
+				},
+				{
+					"id": "485c2014-46c5-429f-a6e0-7c8d8e8440e8",
+					"name": "fl_valido",
+					"datatype": "ad9008af-1465-4e0c-896a-809dfb511a1d",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"list": false,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					}
+				},
+				{
+					"id": "28010184-76c8-4dd0-8675-e9af7ebef90c",
+					"name": "dt_encerramento",
+					"datatype": "timestamp",
+					"param": "",
+					"pk": false,
+					"nn": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"list": false,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					}
+				},
+				{
+					"id": "cbb6879e-210f-4369-9db4-15aac97fc956",
+					"name": "dt_registro",
+					"datatype": "timestamp",
+					"param": "",
+					"pk": false,
+					"nn": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"list": false,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					}
+				}
+			],
+			"relations": [
+				"1ea28107-86b0-477a-aa46-1d13bf2e28ee"
+			],
+			"lines": [],
+			"keys": [
+				{
+					"id": "e67b6864-343d-413f-b5f4-3ff44695092b",
+					"name": "PK_Plano",
+					"isPk": true,
+					"using": "",
+					"cols": [
+						{
+							"id": "fbfe1752-b08e-40a1-9489-12e5cf3d5959",
+							"colid": "304f8c8e-ddd8-4475-82dc-e261688effda"
+						}
+					]
+				},
+				{
+					"id": "e86f6c04-254b-45c4-ae1f-8b6b60f09524",
+					"isPk": false,
+					"using": "na",
+					"name": "UN_Nome_Plano",
+					"cols": [
+						{
+							"id": "7307c70f-135b-4839-b590-9804a91d2029",
+							"colid": "fde1ada1-1aa7-4bc9-bbf8-5d59301b4cbc"
+						}
+					]
+				}
+			],
+			"indexes": [],
+			"embeddable": false,
+			"generate": true,
+			"generateCustomCode": true,
+			"objectType": "table",
+			"pg": {
+				"rowsecurity": false,
+				"schema": ""
+			}
+		},
+		"9d7c387c-97bf-4481-9be8-cd95ff23a010": {
+			"id": "9d7c387c-97bf-4481-9be8-cd95ff23a010",
+			"visible": true,
+			"name": "tb_plano_usuario",
+			"desc": "",
+			"estimatedSize": "",
+			"cols": [
+				{
+					"id": "ea2b1f8a-0ffa-41dd-8cde-d03b354da248",
+					"name": "id_plano_usuario",
+					"datatype": "integer",
+					"pk": true,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					}
+				},
+				{
+					"id": "51f94b57-54b5-4650-9512-ff2310d649ce",
+					"name": "id_usuario",
+					"datatype": "integer",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					},
+					"fk": true,
+					"ref": "tb_usuario"
+				},
+				{
+					"id": "b6ef3f2c-599a-4fb4-ba87-2862f3c54d5c",
+					"name": "id_plano",
+					"datatype": "integer",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					},
+					"fk": true,
+					"ref": "tb_planos"
+				},
+				{
+					"id": "a8af3aac-1471-4864-9f5c-64efc930a95d",
+					"name": "fl_valido",
+					"datatype": "ad9008af-1465-4e0c-896a-809dfb511a1d",
+					"param": "",
+					"pk": false,
+					"nn": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"list": false,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					}
+				},
+				{
+					"id": "82bb5d6b-71ea-43b2-8cbd-984dff671c79",
+					"name": "dt_encerramento",
+					"datatype": "regoperator",
+					"param": "",
+					"pk": false,
+					"nn": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"list": false,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					}
+				},
+				{
+					"id": "49cb6e21-1607-47d4-b0ee-6d3739d8b8ca",
+					"name": "dt_registro",
+					"datatype": "timestamp",
+					"param": "",
+					"pk": false,
+					"nn": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"list": false,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					}
+				}
+			],
+			"relations": [
+				"39a76c84-f3e3-4b41-b04d-6ef1cb723cf1",
+				"1ea28107-86b0-477a-aa46-1d13bf2e28ee"
+			],
+			"lines": [],
+			"keys": [
+				{
+					"id": "eaa04f43-a35a-4719-abd4-17588f17f1c5",
+					"name": "PK_Plano_Usario",
+					"isPk": true,
+					"using": "",
+					"cols": [
+						{
+							"id": "5607ceda-4d9a-4fd9-8e2e-b4789bc1a7f1",
+							"colid": "ea2b1f8a-0ffa-41dd-8cde-d03b354da248"
+						}
+					]
+				}
+			],
+			"indexes": [],
+			"embeddable": false,
+			"generate": true,
+			"generateCustomCode": true,
+			"objectType": "table",
+			"pg": {
+				"rowsecurity": false,
+				"schema": ""
+			}
 		}
 	},
 	"relations": {
@@ -2163,6 +2500,56 @@
 			],
 			"generate": true,
 			"generateCustomCode": true
+		},
+		"39a76c84-f3e3-4b41-b04d-6ef1cb723cf1": {
+			"id": "39a76c84-f3e3-4b41-b04d-6ef1cb723cf1",
+			"visible": true,
+			"name": "FK_Plano_Usario",
+			"desc": "",
+			"type": "identifying",
+			"parent_key": "8934ade1-c572-4af0-bd0a-c77266045aa4",
+			"parent": "b63c7ff7-25fc-4d0c-96a0-3763ef3b7fd3",
+			"child": "9d7c387c-97bf-4481-9be8-cd95ff23a010",
+			"c_mp": "true",
+			"c_mch": "true",
+			"c_p": "one",
+			"c_ch": "many",
+			"c_cp": "",
+			"c_cch": "",
+			"cols": [
+				{
+					"id": "af9828f5-0d57-4f1a-a928-dfa45ce42608",
+					"parentcol": "b1c12f76-e1e9-4801-9fcb-6ac5e83b926b",
+					"childcol": "51f94b57-54b5-4650-9512-ff2310d649ce"
+				}
+			],
+			"generate": true,
+			"generateCustomCode": true
+		},
+		"1ea28107-86b0-477a-aa46-1d13bf2e28ee": {
+			"id": "1ea28107-86b0-477a-aa46-1d13bf2e28ee",
+			"visible": true,
+			"name": "FK_Usuario_Plano",
+			"desc": "",
+			"type": "identifying",
+			"parent_key": "e67b6864-343d-413f-b5f4-3ff44695092b",
+			"parent": "c5370c7e-0b11-49ad-b8dc-6b0ad134f3c1",
+			"child": "9d7c387c-97bf-4481-9be8-cd95ff23a010",
+			"c_mp": "true",
+			"c_mch": "true",
+			"c_p": "one",
+			"c_ch": "many",
+			"c_cp": "",
+			"c_cch": "",
+			"cols": [
+				{
+					"id": "465b952a-0897-4e86-8e45-c7d384545436",
+					"parentcol": "304f8c8e-ddd8-4475-82dc-e261688effda",
+					"childcol": "b6ef3f2c-599a-4fb4-ba87-2862f3c54d5c"
+				}
+			],
+			"generate": true,
+			"generateCustomCode": true
 		}
 	},
 	"notes": {
@@ -2260,7 +2647,7 @@
 			"quotation": "if_needed",
 			"includeGeneratedNames": "always"
 		},
-		"lastSaved": "Sun Aug 21 2022 17:43:23 GMT-0300 (Brasilia Standard Time)",
+		"lastSaved": "Sun Aug 21 2022 22:27:30 GMT-0300 (Brasilia Standard Time)",
 		"writeFileParam": false,
 		"nameAutoGeneration": {
 			"keys": false,
@@ -2526,10 +2913,10 @@
 		"9b8d3e6b-b378-41dd-9b78-ba07298f5c4f": {
 			"id": "9b8d3e6b-b378-41dd-9b78-ba07298f5c4f",
 			"visible": true,
-			"name": "SP_Grupo_Inicial",
+			"name": "SP_Usuario_Sem_Grupo",
 			"desc": "",
 			"type": "Procedure",
-			"code": "create or replace procedure sp_grupo_inicial()\nlanguage plpgsql\nas\n$$\n    DECLARE\n        varCursor refcursor;\n        varId integer;\n        varQtd integer:= 1;\n    BEGIN\n        open varCursor for\n            select\n            u.id_usuario\n            from tb_usuario u\n            left join (select id_usuario from tb_grupo_usuario where fl_valido = 'sim') gu\n                on u.id_usuario = gu.id_usuario\n            where\n                gu.id_usuario is null\n        ;\n\t\tfetch varCursor into varId;\n\t\tif not found then\n\t\t\tinsert into tb_erro values(nextval('sq_erro'), 'sp_grupo_inicial', 'Nenhum valor a ser inserido.', current_timestamp);\n\t\t\traise notice 'Nenhum valor a ser inserido.';\n\t\telse\n\t\t\tloop\n\t\t\t\tinsert into tb_grupo_usuario values(nextval('sq_grupo_usuario'), varId, 1, 'sim',current_timestamp);\n\t\t\t\tfetch varCursor into varId;\n\t\t\t\texit when not found;\n\t\t\t\tvarQtd:= varQtd + 1;\n\t\t\tend loop;\n\t\t\traise notice '% valores inseridos com sucesso.', TO_CHAR(varQtd, 'fm999G999');\n\t\tend if;\n        close varCursor;\n    END;\n$$;",
+			"code": "create or replace procedure sp_usuario_sem_grupo()\nlanguage plpgsql\nas\n$$\n    DECLARE\n        varCursor refcursor;\n        varId integer;\n        varQtd integer:= 1;\n    BEGIN\n        open varCursor for\n            select\n            u.id_usuario\n            from tb_usuario u\n            left join (select distinct id_usuario from tb_grupo_usuario where fl_valido = 'sim') gu\n                on u.id_usuario = gu.id_usuario\n            where\n                gu.id_usuario is null\n        ;\n\t\tfetch varCursor into varId;\n\t\tif not found then\n\t\t\tinsert into tb_erro values(nextval('sq_erro'), 'sp_usuario_sem_grupo', 'Nenhum valor a ser inserido.', current_timestamp);\n\t\t\traise notice 'Nenhum valor a ser inserido.';\n\t\telse\n\t\t\tloop\n\t\t\t\tinsert into tb_grupo_usuario values(nextval('sq_grupo_usuario'), varId, 1, 'sim',current_timestamp);\n\t\t\t\tfetch varCursor into varId;\n\t\t\t\texit when not found;\n\t\t\t\tvarQtd:= varQtd + 1;\n\t\t\tend loop;\n\t\t\traise notice '% valores inseridos com sucesso.', TO_CHAR(varQtd, 'fm999G999');\n\t\tend if;\n        close varCursor;\n    END;\n$$;",
 			"lines": [],
 			"generate": true,
 			"generateCustomCode": true,
@@ -2540,10 +2927,10 @@
 		"712016e3-cfe8-47a4-becc-73ed179e3cd3": {
 			"id": "712016e3-cfe8-47a4-becc-73ed179e3cd3",
 			"visible": true,
-			"name": "SP_Grupo_Jogo_Inical",
+			"name": "SP_Usuario_Sem_Plano",
 			"desc": "",
 			"type": "Procedure",
-			"code": "create or replace procedure sp_grupo_jogo_inicial()\nlanguage plpgsql\nas\n$$\n    DECLARE\n        varCursorUpdate refcursor;\n        varRecordUpdate record;\n        varQtdUpdate integer:= 1;\n\n        varCursorInsert refcursor;\n        varIdInsert integer;\n        varQtdInsert integer:= 1;\n    BEGIN\n        -- Update Jogos antigos\n        open varCursorUpdate for\n        \tselect * from tb_grupo_jogo where id_grupo = 1 and fl_valido = 'sim';\n\n\t\tfetch varCursorUpdate into varRecordUpdate;\n\t\tif not found then\n\t\t\tinsert into tb_erro values(nextval('sq_erro'), 'sp_grupo_jogo', 'Nenhum valor a ser atualizado.', current_timestamp);\n\t\t\traise notice 'Nenhum valor a ser atualizado.';\n\t\telse\n\t\t\tloop\n\t\t\t\tupdate tb_grupo_jogo set fl_valido = 'nao', dt_encerramento = current_timestamp where id_grupo_jogo = varRecordUpdate.id_grupo_jogo;\n\t\t\t\tfetch varCursorUpdate into varRecordUpdate;\n\t\t\t\texit when not found;\n\t\t\t\tvarQtdUpdate:= varQtdUpdate + 1;\n\t\t\tend loop;\n\t\t\traise notice '% valores atualizados com sucesso.', TO_CHAR(varQtdUpdate, 'fm999G999');\n\t\tend if;\n\n        close varCursorUpdate;\n\n        -- Insert New Grupo\n        open varCursorInsert for\n\t\t\tselect\n\n\t\t\tj.id_jogo\n\n\t\t\tfrom tb_jogo j\n\n\t\t\tleft join tb_atividade a\n\t\t\t\ton j.id_jogo = fn_safe_cast_integer(a.ds_atividade)\n\n\t\t\tleft join tb_tipo_atividade ta\n\t\t\t\ton a.id_tipo_atividade = ta.id_tipo_atividade\n\t\t\t\tand ta.nm_grupo in ('Jogo', 'Busca')\n\t\t\t\tand ta.nm_subgrupo in ('Abertura tela do jogo', 'Busca por jogo')\n\n\t\t\torder by count(*) over (partition by nm_jogo) ,1\n\n\t\t\tlimit 5;\n\n\t\tfetch varCursorInsert into varIdInsert;\n\t\tif not found then\n\t\t\tinsert into tb_erro values(nextval('sq_erro'), 'sp_grupo_jogo', 'Nenhum valor a ser inserido.', current_timestamp);\n\t\t\traise notice 'Nenhum valor a ser inserido.';\n\t\telse\n\t\t\tloop\n\t\t\t\tinsert into tb_grupo_jogo values(nextval('sq_grupo_jogo'), 1, varIdInsert, 'sim', null, current_timestamp);\n\t\t\t\tfetch varCursorInsert into varIdInsert;\n\t\t\t\texit when not found;\n\t\t\t\tvarQtdInsert:= varQtdInsert + 1;\n\t\t\tend loop;\n\t\t\traise notice '% valores inseridos com sucesso.', TO_CHAR(varQtdInsert, 'fm999G999');\n\t\tend if;\n\n        close varCursorInsert;\n\n    END;\n$$;",
+			"code": "create or replace procedure sp_usuario_sem_plano()\nlanguage plpgsql\nas\n$$\n    DECLARE\n        varCursor refcursor;\n        varId integer;\n        varQtd integer:= 1;\n    BEGIN\n        open varCursor for\n            select\n            u.id_usuario\n            from tb_usuario u\n            left join (select distinct id_usuario from tb_plano_usuario where fl_valido = 'sim') gu\n                on u.id_usuario = gu.id_usuario\n            where\n                gu.id_usuario is null\n        ;\n\t\tfetch varCursor into varId;\n\t\tif not found then\n\t\t\tinsert into tb_erro values(nextval('sq_erro'), 'sp_usuario_sem_plano', 'Nenhum valor a ser inserido.', current_timestamp);\n\t\t\traise notice 'Nenhum valor a ser inserido.';\n\t\telse\n\t\t\tloop\n\t\t\t\tinsert into tb_plano_usuario values(nextval('sq_plano_usuario'), varId, 1, 'sim', null, current_timestamp);\n\t\t\t\tfetch varCursor into varId;\n\t\t\t\texit when not found;\n\t\t\t\tvarQtd:= varQtd + 1;\n\t\t\tend loop;\n\t\t\traise notice '% valores inseridos com sucesso.', TO_CHAR(varQtd, 'fm999G999');\n\t\tend if;\n        close varCursor;\n    END;\n$$;",
 			"lines": [],
 			"generate": true,
 			"generateCustomCode": true,
@@ -2568,10 +2955,10 @@
 		"7a72a58b-ba7b-4c78-8622-63536d60da0b": {
 			"id": "7a72a58b-ba7b-4c78-8622-63536d60da0b",
 			"visible": true,
-			"name": "TG_Grupo_Inicial",
+			"name": "TG_Cadastro_Usario",
 			"desc": "",
 			"type": "Trigger",
-			"code": "create or replace function fn_grupo_inical() returns trigger as\n$tb_usuario$\n    BEGIN\n        insert into tb_grupo_usuario values(nextval('sq_grupo_usuario'), new.id_usuario, 1, 'sim',current_timestamp);\n        return null;\n    END;\n$tb_usuario$ language plpgsql;\n\ncreate or replace trigger tg_grupo_inicial\n    after insert on tb_usuario\n    FOR EACH ROW EXECUTE FUNCTION fn_grupo_inical();",
+			"code": "create or replace function fn_cadastro_usuario() returns trigger as\n$tb_usuario$\n    BEGIN\n        insert into tb_grupo_usuario values(nextval('sq_grupo_usuario'), new.id_usuario, 1, 'sim', null, current_timestamp);\n        insert into tb_plano_usuario values(nextval('sq_plano_usuario'), new.id_usuario, 1, 'sim', null, current_timestamp);\n        return null;\n    END;\n$tb_usuario$ language plpgsql;\n\ncreate or replace trigger tg_cadastro_usuario\n    after insert on tb_usuario\n    FOR EACH ROW EXECUTE FUNCTION fn_cadastro_usuario();",
 			"lines": [],
 			"generate": true,
 			"generateCustomCode": true,
@@ -2586,6 +2973,76 @@
 			"desc": "",
 			"type": "Function",
 			"code": "create or replace function fn_safe_cast_integer(texto text)\nreturns integer language plpgsql\nas $$\n    begin\n        return texto::integer;\n    exception when others then\n        return null;\n    end;\n$$;",
+			"lines": [],
+			"generate": true,
+			"generateCustomCode": true,
+			"pg": {
+				"schema": ""
+			}
+		},
+		"87154a11-cdbd-436c-a027-afd820c20504": {
+			"id": "87154a11-cdbd-436c-a027-afd820c20504",
+			"visible": true,
+			"name": "SQ_Plano",
+			"desc": "",
+			"type": "Sequence",
+			"code": "create sequence sq_plano;",
+			"lines": [],
+			"generate": true,
+			"generateCustomCode": true,
+			"pg": {
+				"schema": ""
+			}
+		},
+		"fbad7a13-0c70-4e84-9cac-fb94436130e0": {
+			"id": "fbad7a13-0c70-4e84-9cac-fb94436130e0",
+			"visible": true,
+			"name": "SQ_Plano_Usario",
+			"desc": "",
+			"type": "Sequence",
+			"code": "create sequence sq_plano_usuario;",
+			"lines": [],
+			"generate": true,
+			"generateCustomCode": true,
+			"pg": {
+				"schema": ""
+			}
+		},
+		"c7ebf254-06be-4c40-80cc-1f543b31d83e": {
+			"id": "c7ebf254-06be-4c40-80cc-1f543b31d83e",
+			"visible": true,
+			"name": "TG_Plano_Usario",
+			"desc": "",
+			"type": "Trigger",
+			"code": "",
+			"lines": [],
+			"generate": true,
+			"generateCustomCode": true,
+			"pg": {
+				"schema": ""
+			}
+		},
+		"be9d4622-26e1-40af-9f76-418de1e60304": {
+			"id": "be9d4622-26e1-40af-9f76-418de1e60304",
+			"visible": true,
+			"name": "TG_Grupo_Usuario",
+			"desc": "",
+			"type": "Trigger",
+			"code": "",
+			"lines": [],
+			"generate": true,
+			"generateCustomCode": true,
+			"pg": {
+				"schema": ""
+			}
+		},
+		"4f2fc388-ddcf-4e46-b3eb-a00b29ba48f2": {
+			"id": "4f2fc388-ddcf-4e46-b3eb-a00b29ba48f2",
+			"visible": true,
+			"name": "TG_Grupo_Jogo",
+			"desc": "",
+			"type": "Trigger",
+			"code": "",
 			"lines": [],
 			"generate": true,
 			"generateCustomCode": true,
@@ -2633,7 +3090,7 @@
 					"referencedItemId": "eb66978e-e757-424f-8517-b3a06dcfa57e",
 					"x": 759.5,
 					"y": 96,
-					"gHeight": 207,
+					"gHeight": 226,
 					"gWidth": 265,
 					"color": "#ffffff",
 					"background": "#03a9f4",
@@ -2697,7 +3154,7 @@
 				},
 				"457b9266-642f-4a0d-92f2-83dc48b91122": {
 					"referencedItemId": "457b9266-642f-4a0d-92f2-83dc48b91122",
-					"x": 670,
+					"x": 669.75,
 					"y": 1353,
 					"gHeight": 44,
 					"gWidth": 150,
@@ -2708,7 +3165,7 @@
 				},
 				"82cb7113-6078-42aa-9c88-b9fdc92d608e": {
 					"referencedItemId": "82cb7113-6078-42aa-9c88-b9fdc92d608e",
-					"x": 670.5,
+					"x": 669.75,
 					"y": 1418,
 					"gHeight": 44,
 					"gWidth": 150,
@@ -2719,7 +3176,7 @@
 				},
 				"63c5af14-fc87-45a2-8dd5-939e26063a03": {
 					"referencedItemId": "63c5af14-fc87-45a2-8dd5-939e26063a03",
-					"x": 1019,
+					"x": 1018.5,
 					"y": 1419,
 					"gHeight": 44,
 					"gWidth": 150,
@@ -2842,7 +3299,7 @@
 					"referencedItemId": "08006987-d2e7-46e2-853a-e78e3707c9b7",
 					"x": 759.5,
 					"y": 751,
-					"gHeight": 117,
+					"gHeight": 136,
 					"gWidth": 265,
 					"color": "#ffffff",
 					"background": "#03a9f4",
@@ -2862,7 +3319,7 @@
 				},
 				"571dc1b9-c4a2-40be-8846-566dd21173b0": {
 					"referencedItemId": "571dc1b9-c4a2-40be-8846-566dd21173b0",
-					"x": 670.5,
+					"x": 669.75,
 					"y": 1483,
 					"gHeight": 44,
 					"gWidth": 150,
@@ -2906,7 +3363,7 @@
 				},
 				"9a29efbd-65cd-49b8-9629-710d715e64c3": {
 					"referencedItemId": "9a29efbd-65cd-49b8-9629-710d715e64c3",
-					"x": 1019,
+					"x": 1018.5,
 					"y": 1484,
 					"gHeight": 44,
 					"gWidth": 150,
@@ -3016,8 +3473,8 @@
 				},
 				"bbb5bfd7-f6c6-4eea-a816-5ad4b1e0816d": {
 					"referencedItemId": "bbb5bfd7-f6c6-4eea-a816-5ad4b1e0816d",
-					"x": 670.5,
-					"y": 1547.5,
+					"x": 669.75,
+					"y": 1547.75,
 					"gHeight": 44,
 					"gWidth": 150,
 					"color": "#eee",
@@ -3030,7 +3487,7 @@
 					"x": 45,
 					"y": 1198,
 					"gHeight": 44,
-					"gWidth": 150,
+					"gWidth": 153,
 					"color": "#eee",
 					"background": "#673ab7",
 					"resized": false,
@@ -3061,7 +3518,7 @@
 				"5450da57-9feb-4a72-85be-d146e68c8ad5": {
 					"referencedItemId": "5450da57-9feb-4a72-85be-d146e68c8ad5",
 					"x": 844,
-					"y": 1547.5,
+					"y": 1547.75,
 					"gHeight": 44,
 					"gWidth": 150,
 					"color": "#eee",
@@ -3071,7 +3528,7 @@
 				},
 				"7a72a58b-ba7b-4c78-8622-63536d60da0b": {
 					"referencedItemId": "7a72a58b-ba7b-4c78-8622-63536d60da0b",
-					"x": 670.5,
+					"x": 669.75,
 					"y": 1198,
 					"gHeight": 44,
 					"gWidth": 150,
@@ -3088,6 +3545,83 @@
 					"gWidth": 150,
 					"color": "#eee",
 					"background": "#607d8b",
+					"resized": false,
+					"autoExpand": true
+				},
+				"c5370c7e-0b11-49ad-b8dc-6b0ad134f3c1": {
+					"referencedItemId": "c5370c7e-0b11-49ad-b8dc-6b0ad134f3c1",
+					"x": 1583,
+					"y": 752,
+					"gHeight": 154,
+					"gWidth": 265,
+					"color": "#ffffff",
+					"background": "#03a9f4",
+					"resized": true,
+					"autoExpand": true
+				},
+				"87154a11-cdbd-436c-a027-afd820c20504": {
+					"referencedItemId": "87154a11-cdbd-436c-a027-afd820c20504",
+					"x": 1018.5,
+					"y": 1547.75,
+					"gHeight": 44,
+					"gWidth": 150,
+					"color": "#eee",
+					"background": "#795548",
+					"resized": false,
+					"autoExpand": true
+				},
+				"9d7c387c-97bf-4481-9be8-cd95ff23a010": {
+					"referencedItemId": "9d7c387c-97bf-4481-9be8-cd95ff23a010",
+					"x": 1232,
+					"y": 751,
+					"gHeight": 136,
+					"gWidth": 265,
+					"color": "#ffffff",
+					"background": "#03a9f4",
+					"resized": true,
+					"autoExpand": true
+				},
+				"fbad7a13-0c70-4e84-9cac-fb94436130e0": {
+					"referencedItemId": "fbad7a13-0c70-4e84-9cac-fb94436130e0",
+					"x": 1200,
+					"y": 1548,
+					"gHeight": 44,
+					"gWidth": 150,
+					"color": "#eee",
+					"background": "#795548",
+					"resized": false,
+					"autoExpand": true
+				},
+				"c7ebf254-06be-4c40-80cc-1f543b31d83e": {
+					"referencedItemId": "c7ebf254-06be-4c40-80cc-1f543b31d83e",
+					"x": 844,
+					"y": 1201,
+					"gHeight": 44,
+					"gWidth": 150,
+					"color": "#eee",
+					"background": "#009688",
+					"resized": false,
+					"autoExpand": true
+				},
+				"be9d4622-26e1-40af-9f76-418de1e60304": {
+					"referencedItemId": "be9d4622-26e1-40af-9f76-418de1e60304",
+					"x": 669.75,
+					"y": 1260,
+					"gHeight": 44,
+					"gWidth": 150,
+					"color": "#eee",
+					"background": "#009688",
+					"resized": false,
+					"autoExpand": true
+				},
+				"4f2fc388-ddcf-4e46-b3eb-a00b29ba48f2": {
+					"referencedItemId": "4f2fc388-ddcf-4e46-b3eb-a00b29ba48f2",
+					"x": 844,
+					"y": 1262,
+					"gHeight": 44,
+					"gWidth": 150,
+					"color": "#eee",
+					"background": "#009688",
 					"resized": false,
 					"autoExpand": true
 				}
@@ -3115,6 +3649,8 @@
 		"571dc1b9-c4a2-40be-8846-566dd21173b0",
 		"bbb5bfd7-f6c6-4eea-a816-5ad4b1e0816d",
 		"5450da57-9feb-4a72-85be-d146e68c8ad5",
+		"87154a11-cdbd-436c-a027-afd820c20504",
+		"fbad7a13-0c70-4e84-9cac-fb94436130e0",
 		"b63c7ff7-25fc-4d0c-96a0-3763ef3b7fd3",
 		"eb66978e-e757-424f-8517-b3a06dcfa57e",
 		"46db98b1-fb30-4d90-affa-9e57b8ab6f44",
@@ -3129,6 +3665,8 @@
 		"7b7c6ad4-94e7-4e0c-985d-ca37fe6808ab",
 		"9bf22457-1cdf-4726-b7e4-e40ed93c5703",
 		"d67fb300-16c5-4fb4-a0a3-a325a3b05881",
+		"c5370c7e-0b11-49ad-b8dc-6b0ad134f3c1",
+		"9d7c387c-97bf-4481-9be8-cd95ff23a010",
 		"bc8987c7-f96b-468c-852b-90ffa311925c",
 		"7fb5d30a-9db3-4bb2-a2d0-4ee9718a926c",
 		"030bcf72-be0a-45c9-ab2c-47909c92f25a",
@@ -3143,10 +3681,15 @@
 		"049c29f8-7900-47d9-ae15-e404669286d9",
 		"d7d7996e-d27a-4b2a-b414-1268d526a368",
 		"c9318851-d025-4864-bcbf-48650ee4bdd1",
+		"39a76c84-f3e3-4b41-b04d-6ef1cb723cf1",
+		"1ea28107-86b0-477a-aa46-1d13bf2e28ee",
 		"220444a6-ddfd-44f0-b336-28f96da138e9",
 		"9b8d3e6b-b378-41dd-9b78-ba07298f5c4f",
 		"712016e3-cfe8-47a4-becc-73ed179e3cd3",
 		"7a72a58b-ba7b-4c78-8622-63536d60da0b",
+		"c7ebf254-06be-4c40-80cc-1f543b31d83e",
+		"be9d4622-26e1-40af-9f76-418de1e60304",
+		"4f2fc388-ddcf-4e46-b3eb-a00b29ba48f2",
 		"50e0df72-fcd3-4dd3-9bb3-97e047b53c54",
 		"b7fe57fa-0f72-4058-adc6-4590c6843db8",
 		"18236b60-5d71-4b2e-af88-14d508ea928d"

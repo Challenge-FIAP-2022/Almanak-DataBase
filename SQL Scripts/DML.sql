@@ -2,9 +2,16 @@
 
 INSERT INTO tb_grupo values (nextval('sq_grupo'), 'inicial', current_timestamp);
 
+-- TB_Plano
+
+INSERT INTO tb_plano values (nextval('sq_plano'), 'Gamer', 'Plano gratuito, com anúncios.', 0, 'sim', null, current_timestamp);
+INSERT INTO tb_plano values (nextval('sq_plano'), 'Pro Gamer', 'Plano limitado com acesso a alguns jogos.', 2.99, 'sim', null, current_timestamp);
+INSERT INTO tb_plano values (nextval('sq_plano'), 'Elite', 'Acesso ilimitado a plataforma e maior peso nas decisões da comunidade.', 9.99, 'sim', null, current_timestamp);
+
+
 -- TB_Usuario
 
-insert into tb_usuario values( nextval('sq_usuario'), 'teste', 'teste', 'teste', current_date, current_timestamp); 
+insert into tb_usuario values( nextval('sq_usuario'), 'AlmanaK', 'almanak', 'almanak', current_date, current_timestamp); 
 insert into tb_usuario values( nextval('sq_usuario'), 'Carla Louise da Rocha', 'carla_louise_darocha@mundivox.com.br', '5YKUEmmHXW', '1996-07-01', current_timestamp);
 insert into tb_usuario values( nextval('sq_usuario'), 'Thomas Ruan Benício Farias', 'thomas-farias80@facebook.com', '0ctdOMUd0d', '1981-02-26', current_timestamp);
 insert into tb_usuario values( nextval('sq_usuario'), 'Alana Tereza Clara Freitas', 'alana-freitas71@stembalagens.com.br', 'BCGK695qhT', '1945-05-21', current_timestamp);
@@ -66,38 +73,39 @@ INSERT INTO tb_categoria values (nextval('sq_categoria'), 'Ao ar livre', 'Jogos 
 INSERT INTO tb_categoria values (nextval('sq_categoria'), 'Jogos de azar', 'Jogos que envolvem sorte.', current_timestamp);
 INSERT INTO tb_categoria values (nextval('sq_categoria'), 'Jogos para Adultos', 'Jogos unicos para adultos, geralmente envolvendo bebidas.', current_timestamp);
 INSERT INTO tb_categoria values (nextval('sq_categoria'), 'Diversos', 'Jogos que não se enquadram nas demais categorias.', current_timestamp);
+INSERT INTO tb_categoria values (nextval('sq_categoria'), 'Jogos para crianças', 'Jogos destinados para menores de 12 anos.', current_timestamp);
 
 -- TB_Jogo
 
-INSERT INTO tb_jogo values (nextval('sq_jogo'), 1, 'Taco', 4, 4, 'nao', 'sim', null, null, current_timestamp);
-INSERT INTO tb_jogo values (nextval('sq_jogo'), 1, 'Pega Pega', 3, null, 'nao', 'sim', null, null, current_timestamp);
-INSERT INTO tb_jogo values (nextval('sq_jogo'), 1, 'Truco', 4, 6, 'nao', 'sim', null, null, current_timestamp);
-INSERT INTO tb_jogo values (nextval('sq_jogo'), 1, 'Sueca', 2, null, 'sim', 'sim', null, null, current_timestamp);
-INSERT INTO tb_jogo values (nextval('sq_jogo'), 1, 'Bambole', 2, null, 'nao', 'sim', null, null, current_timestamp);
-INSERT INTO tb_jogo values (nextval('sq_jogo'), 1, 'Mimica', 2, null, 'nao', 'sim', null, null, current_timestamp);
-INSERT INTO tb_jogo values (nextval('sq_jogo'), 1, 'Stop!', 4, null, 'nao', 'sim', null, null, current_timestamp);
-INSERT INTO tb_jogo values (nextval('sq_jogo'), 1, 'Cordinha', 3, null, 'nao', 'sim', null, null, current_timestamp);
-INSERT INTO tb_jogo values (nextval('sq_jogo'), 1, 'Queimada', 4, null, 'nao', 'sim', null, null, current_timestamp);
-INSERT INTO tb_jogo values (nextval('sq_jogo'), 1, 'Proibido falar não', 3, null, 'sim', 'sim', null, null, current_timestamp);
+INSERT INTO tb_jogo values (nextval('sq_jogo'), 1, 'Taco', 4, 4, 'nao', 'sim', 'nao', null, null, current_timestamp);
+INSERT INTO tb_jogo values (nextval('sq_jogo'), 1, 'Pega Pega', 3, null, 'nao', 'sim', 'nao', null, null, current_timestamp);
+INSERT INTO tb_jogo values (nextval('sq_jogo'), 1, 'Truco', 4, 6, 'nao', 'sim', 'nao', null, null, current_timestamp);
+INSERT INTO tb_jogo values (nextval('sq_jogo'), 1, 'Sueca', 2, null, 'sim', 'sim', 'nao', null, null, current_timestamp);
+INSERT INTO tb_jogo values (nextval('sq_jogo'), 1, 'Bambole', 2, null, 'nao', 'sim', 'nao', null, null, current_timestamp);
+INSERT INTO tb_jogo values (nextval('sq_jogo'), 1, 'Mimica', 2, null, 'nao', 'sim', 'nao', null, null, current_timestamp);
+INSERT INTO tb_jogo values (nextval('sq_jogo'), 1, 'Stop!', 4, null, 'nao', 'sim', 'nao', null, null, current_timestamp);
+INSERT INTO tb_jogo values (nextval('sq_jogo'), 1, 'Cordinha', 3, null, 'nao', 'sim', 'nao', null, null, current_timestamp);
+INSERT INTO tb_jogo values (nextval('sq_jogo'), 1, 'Queimada', 4, null, 'nao', 'sim', 'nao', null, null, current_timestamp);
+INSERT INTO tb_jogo values (nextval('sq_jogo'), 1, 'Proibido falar não', 3, null, 'sim', 'sim', 'sim', null, null, current_timestamp);
 
 -- TB_Regra
 
-INSERT INTO tb_regra values (nextval('sq_regra'), 1, 1, 'Principal', 'Uma pessoa de cada dupla joga um taco para frente, com a missão de aproximá-lo ao máximo que puder de um determinado ponto – por exemplo: o meio fio de uma rua, ou um muro. Ganha essa a disputa o par do taco que aproximar mais perto do ponto escolhido. Se o bastão encostar ou passar do ponto, a dupla perde a disputa.', 'nao', current_timestamp);
-INSERT INTO tb_regra values (nextval('sq_regra'), 2, 1, 'Principal', 'Escolhe-se um pegador e os demais se espalham pelo espaço de jogo. Quando alguém é pego, dá a mão para o pegador e passa a atuar em dupla com ele. Em seguida, em trio, quarteto e assim sucessivamente, formando uma “corrente”, até que reste apenas um fugitivo, que será declarado vencedor.', 'nao', current_timestamp);
-INSERT INTO tb_regra values (nextval('sq_regra'), 3, 1, 'Principal', 'Em cada rodada, um jogador deve colocar uma de suas cartas na mesa, e o jogador com a carta mais forte vence a rodada. Quem ganhar 2 dessas rodadas ganha a mão e marca 1 ponto, e uma nova mão se inicia. Durante as rodadas, os jogadores têm a opção de pedir Truco, Seis, Nove e Doze, aumentando o valor da rodada.', 'nao', current_timestamp);
-INSERT INTO tb_regra values (nextval('sq_regra'), 4, 1, 'Principal', 'Rodada - uma sequência de 4 jogadas, onde cada jogador joga uma carta, e o vencedor leva as 4 cartas. Carta mais alta - a carta de maior valor do naipe. A ordem das cartas é a seguinte, da menor para a maior: 2, 3, 4, 5, 6, Q, J, K, 7, A. Seguir o naipe - jogar um carta do mesmo naipe da primeira carta da rodada.', 'nao', current_timestamp);
-INSERT INTO tb_regra values (nextval('sq_regra'), 5, 1, 'Principal', 'O desafio é ver quem consegue rodar o bambole por mais tempo na sintura. O último jogador que continuar rodando é o ganhador.', 'nao', current_timestamp);
-INSERT INTO tb_regra values (nextval('sq_regra'), 6, 1, 'Principal', 'A cada rodada um jogar se levanta e faz uma mimica para os demais, o primeiro a adivinhar o que era ganhar e se tornar o proximo jogador.', 'nao', current_timestamp);
-INSERT INTO tb_regra values (nextval('sq_regra'), 7, 1, 'Principal', 'Assim que a letra é escolhida, os participantes terão que escrever abaixo de cada tema, uma palavra com início da letra sorteada. Quem terminar primeiro de escrever em toda a linha com os temas grita: Stop!, e na mesma hora todos devem largar o lápis e parar de escrever. ', 'nao', current_timestamp);
-INSERT INTO tb_regra values (nextval('sq_regra'), 8, 1, 'Principal', 'Duas crianças batem ou giram a corda, enquanto uma terceira criança pula e diz: cor-di-nha Cada sílaba dita corresponde a um pulo. Quando a criança que pula fala a palavra completinha, ela sai da corda e dá vez a outro participante. Quem está pulando não pode pisar na corda.', 'nao', current_timestamp);
-INSERT INTO tb_regra values (nextval('sq_regra'), 9, 1, 'Principal', 'Os dois times se posicionam num campo dividido por uma linha central. Esta não pode ser ultrapassada e caso isto ocorra, o jogador infrator terá que ir para a área do queimado.', 'nao', current_timestamp);
-INSERT INTO tb_regra values (nextval('sq_regra'), 9, 2, 'Principal', 'O jogador deve arremessar a bola contra o time adversário, com o intuito de "queimá-los". Por sua parte, os adversários tentam se espalhar no campo ou ir ao fundo do mesmo, para não serem atingidos pela bola.', 'nao', current_timestamp);
-INSERT INTO tb_regra values (nextval('sq_regra'), 9, 3, 'Principal', 'Se a bola não atinge ninguém e apenas quica no campo adversário, o jogador pode pegá-la sem o risco de estar "queimado".', 'nao', current_timestamp);
-INSERT INTO tb_regra values (nextval('sq_regra'), 9, 4, 'Principal', 'Os jogadores são "queimados" nos seguintes casos: quando a bola acerta qualquer parte do corpo ou quando pegam a bola, mas a deixam cair.', 'nao', current_timestamp);
-INSERT INTO tb_regra values (nextval('sq_regra'), 9, 5, 'Principal', 'Os jogadores "queimados" devem ir para uma área específica, atrás do campo do time adversário. Em alguns lugares no Brasil, esta é chamada de "prisão", "céu", "cemitério", "castigo", "base".', 'nao', current_timestamp);
-INSERT INTO tb_regra values (nextval('sq_regra'), 9, 6, 'Principal', 'O jogador "queimado" pode voltar ao jogo se queimar outro jogador.', 'nao', current_timestamp);
-INSERT INTO tb_regra values (nextval('sq_regra'), 9, 7, 'Principal', 'Vence o time que conseguir "queimar" o maior número de jogadores.', 'nao', current_timestamp);
-INSERT INTO tb_regra values (nextval('sq_regra'), 10, 1, 'Principal', 'Nesse jogo só se pode responder com perguntas, o primeiro jogador que não fizer uma pergunta deve beber. Após isso a rodada se reinicia.', 'nao', current_timestamp);
+INSERT INTO tb_regra values (nextval('sq_regra'), 1, 'Principal', 1, 'Uma pessoa de cada dupla joga um taco para frente, com a missão de aproximá-lo ao máximo que puder de um determinado ponto – por exemplo: o meio fio de uma rua, ou um muro. Ganha essa a disputa o par do taco que aproximar mais perto do ponto escolhido. Se o bastão encostar ou passar do ponto, a dupla perde a disputa.', 'nao', current_timestamp);
+INSERT INTO tb_regra values (nextval('sq_regra'), 2, 'Principal', 1, 'Escolhe-se um pegador e os demais se espalham pelo espaço de jogo. Quando alguém é pego, dá a mão para o pegador e passa a atuar em dupla com ele. Em seguida, em trio, quarteto e assim sucessivamente, formando uma “corrente”, até que reste apenas um fugitivo, que será declarado vencedor.', 'nao', current_timestamp);
+INSERT INTO tb_regra values (nextval('sq_regra'), 3, 'Principal', 1, 'Em cada rodada, um jogador deve colocar uma de suas cartas na mesa, e o jogador com a carta mais forte vence a rodada. Quem ganhar 2 dessas rodadas ganha a mão e marca 1 ponto, e uma nova mão se inicia. Durante as rodadas, os jogadores têm a opção de pedir Truco, Seis, Nove e Doze, aumentando o valor da rodada.', 'nao', current_timestamp);
+INSERT INTO tb_regra values (nextval('sq_regra'), 4, 'Principal', 1, 'Rodada - uma sequência de 4 jogadas, onde cada jogador joga uma carta, e o vencedor leva as 4 cartas. Carta mais alta - a carta de maior valor do naipe. A ordem das cartas é a seguinte, da menor para a maior: 2, 3, 4, 5, 6, Q, J, K, 7, A. Seguir o naipe - jogar um carta do mesmo naipe da primeira carta da rodada.', 'nao', current_timestamp);
+INSERT INTO tb_regra values (nextval('sq_regra'), 5, 'Principal', 1, 'O desafio é ver quem consegue rodar o bambole por mais tempo na sintura. O último jogador que continuar rodando é o ganhador.', 'nao', current_timestamp);
+INSERT INTO tb_regra values (nextval('sq_regra'), 6, 'Principal', 1, 'A cada rodada um jogar se levanta e faz uma mimica para os demais, o primeiro a adivinhar o que era ganhar e se tornar o proximo jogador.', 'nao', current_timestamp);
+INSERT INTO tb_regra values (nextval('sq_regra'), 7, 'Principal', 1, 'Assim que a letra é escolhida, os participantes terão que escrever abaixo de cada tema, uma palavra com início da letra sorteada. Quem terminar primeiro de escrever em toda a linha com os temas grita: Stop!, e na mesma hora todos devem largar o lápis e parar de escrever. ', 'nao', current_timestamp);
+INSERT INTO tb_regra values (nextval('sq_regra'), 8, 'Principal', 1, 'Duas crianças batem ou giram a corda, enquanto uma terceira criança pula e diz: cor-di-nha Cada sílaba dita corresponde a um pulo. Quando a criança que pula fala a palavra completinha, ela sai da corda e dá vez a outro participante. Quem está pulando não pode pisar na corda.', 'nao', current_timestamp);
+INSERT INTO tb_regra values (nextval('sq_regra'), 9, 'Principal', 1, 'Os dois times se posicionam num campo dividido por uma linha central. Esta não pode ser ultrapassada e caso isto ocorra, o jogador infrator terá que ir para a área do queimado.', 'nao', current_timestamp);
+INSERT INTO tb_regra values (nextval('sq_regra'), 9, 'Principal', 2, 'O jogador deve arremessar a bola contra o time adversário, com o intuito de "queimá-los". Por sua parte, os adversários tentam se espalhar no campo ou ir ao fundo do mesmo, para não serem atingidos pela bola.', 'nao', current_timestamp);
+INSERT INTO tb_regra values (nextval('sq_regra'), 9, 'Principal', 3, 'Se a bola não atinge ninguém e apenas quica no campo adversário, o jogador pode pegá-la sem o risco de estar "queimado".', 'nao', current_timestamp);
+INSERT INTO tb_regra values (nextval('sq_regra'), 9, 'Principal', 4, 'Os jogadores são "queimados" nos seguintes casos: quando a bola acerta qualquer parte do corpo ou quando pegam a bola, mas a deixam cair.', 'nao', current_timestamp);
+INSERT INTO tb_regra values (nextval('sq_regra'), 9, 'Principal', 5, 'Os jogadores "queimados" devem ir para uma área específica, atrás do campo do time adversário. Em alguns lugares no Brasil, esta é chamada de "prisão", "céu", "cemitério", "castigo", "base".', 'nao', current_timestamp);
+INSERT INTO tb_regra values (nextval('sq_regra'), 9, 'Principal', 6, 'O jogador "queimado" pode voltar ao jogo se queimar outro jogador.', 'nao', current_timestamp);
+INSERT INTO tb_regra values (nextval('sq_regra'), 9, 'Principal', 7, 'Vence o time que conseguir "queimar" o maior número de jogadores.', 'nao', current_timestamp);
+INSERT INTO tb_regra values (nextval('sq_regra'), 10, 'Principal', 1, 'Nesse jogo só se pode responder com perguntas, o primeiro jogador que não fizer uma pergunta deve beber. Após isso a rodada se reinicia.', 'nao', current_timestamp);
 
 -- TB_Jogo_Item
 
@@ -131,4 +139,6 @@ INSERT INTO tb_jogo_categoria values (nextval('sq_jogo_categoria'), 8, 7, curren
 INSERT INTO tb_jogo_categoria values (nextval('sq_jogo_categoria'), 9, 2, current_timestamp);
 INSERT INTO tb_jogo_categoria values (nextval('sq_jogo_categoria'), 9, 4, current_timestamp);
 INSERT INTO tb_jogo_categoria values (nextval('sq_jogo_categoria'), 10, 6, current_timestamp);
-
+INSERT INTO tb_jogo_categoria values (nextval('sq_jogo_categoria'), 2, 8, current_timestamp);
+INSERT INTO tb_jogo_categoria values (nextval('sq_jogo_categoria'), 5, 8, current_timestamp);
+INSERT INTO tb_jogo_categoria values (nextval('sq_jogo_categoria'), 8, 8, current_timestamp);

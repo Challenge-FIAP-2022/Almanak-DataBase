@@ -34,6 +34,10 @@ create sequence sq_jogo_categoria;
 
 create sequence sq_erro;
 
+create sequence sq_plano;
+
+create sequence sq_plano_usuario;
+
 CREATE TABLE tb_usuario(
   id_usuario integer NOT NULL,
   nm_usuario varchar(50),
@@ -55,6 +59,7 @@ CREATE TABLE tb_jogo(
   nr_max_jogadores integer,
   fl_idade en_bolleano,
   fl_valido en_bolleano,
+  fl_elite en_bolleano,
   ds_encerramento text,
   dt_encerramento timestamp,
   dt_registro timestamp,
@@ -158,6 +163,7 @@ CREATE TABLE tb_atividade(
   id_atividade integer NOT NULL,
   id_usuario integer NOT NULL,
   id_tipo_atividade integer NOT NULL,
+  nm_tabela_alterada integer,
   ds_atividade text,
   dt_registro timestamp,
   CONSTRAINT "PK_Atividade" PRIMARY KEY(id_atividade)
@@ -189,6 +195,28 @@ CREATE TABLE tb_erro(
 
 COMMENT ON TABLE tb_erro IS
   'Tabela para o cadastro das exceções geradas dentro da base de dados.';
+
+CREATE TABLE tb_plano(
+  id_plano integer NOT NULL,
+  nm_plano text,
+  ds_plano text,
+  vl_plano numeric NOT NULL,
+  fl_valido en_bolleano NOT NULL,
+  dt_encerramento timestamp,
+  dt_registro timestamp,
+  CONSTRAINT "PK_Plano" PRIMARY KEY(id_plano),
+  CONSTRAINT "UN_Nome_Plano" UNIQUE(nm_plano)
+);
+
+CREATE TABLE tb_plano_usuario(
+  id_plano_usuario integer NOT NULL,
+  id_usuario integer NOT NULL,
+  id_plano integer NOT NULL,
+  fl_valido en_bolleano,
+  dt_encerramento regoperator,
+  dt_registro timestamp,
+  CONSTRAINT "PK_Plano_Usario" PRIMARY KEY(id_plano_usuario)
+);
 
 ALTER TABLE tb_jogo_item
   ADD CONSTRAINT "FK_Item_Jogo" FOREIGN KEY (id_jogo) REFERENCES tb_jogo (id_jogo)
@@ -247,6 +275,14 @@ ALTER TABLE tb_jogo_categoria
   ADD CONSTRAINT "FK_Categoria_Jogo"
     FOREIGN KEY (id_jogo) REFERENCES tb_jogo (id_jogo);
 
+ALTER TABLE tb_plano_usuario
+  ADD CONSTRAINT "FK_Plano_Usario"
+    FOREIGN KEY (id_usuario) REFERENCES tb_usuario (id_usuario);
+
+ALTER TABLE tb_plano_usuario
+  ADD CONSTRAINT "FK_Usuario_Plano"
+    FOREIGN KEY (id_plano) REFERENCES tb_plano (id_plano);
+
 create or replace function fn_safe_cast_integer(texto text)
 returns integer language plpgsql
 as $$
@@ -257,7 +293,7 @@ as $$
     end;
 $$;
 
-create or replace procedure sp_grupo_inicial()
+create or replace procedure sp_usuario_sem_grupo()
 language plpgsql
 as
 $$
@@ -270,14 +306,14 @@ $$
             select
             u.id_usuario
             from tb_usuario u
-            left join (select id_usuario from tb_grupo_usuario where fl_valido = 'sim') gu
+            left join (select distinct id_usuario from tb_grupo_usuario where fl_valido = 'sim') gu
                 on u.id_usuario = gu.id_usuario
             where
                 gu.id_usuario is null
         ;
 		fetch varCursor into varId;
 		if not found then
-			insert into tb_erro values(nextval('sq_erro'), 'sp_grupo_inicial', 'Nenhum valor a ser inserido.', current_timestamp);
+			insert into tb_erro values(nextval('sq_erro'), 'sp_usuario_sem_grupo', 'Nenhum valor a ser inserido.', current_timestamp);
 			raise notice 'Nenhum valor a ser inserido.';
 		else
 			loop
@@ -292,86 +328,50 @@ $$
     END;
 $$;
 
-create or replace procedure sp_grupo_jogo_inicial()
+create or replace procedure sp_usuario_sem_plano()
 language plpgsql
 as
 $$
     DECLARE
-        varCursorUpdate refcursor;
-        varRecordUpdate record;
-        varQtdUpdate integer:= 1;
-
-        varCursorInsert refcursor;
-        varIdInsert integer;
-        varQtdInsert integer:= 1;
+        varCursor refcursor;
+        varId integer;
+        varQtd integer:= 1;
     BEGIN
-        -- Update Jogos antigos
-        open varCursorUpdate for
-        	select * from tb_grupo_jogo where id_grupo = 1 and fl_valido = 'sim';
-
-		fetch varCursorUpdate into varRecordUpdate;
+        open varCursor for
+            select
+            u.id_usuario
+            from tb_usuario u
+            left join (select distinct id_usuario from tb_plano_usuario where fl_valido = 'sim') gu
+                on u.id_usuario = gu.id_usuario
+            where
+                gu.id_usuario is null
+        ;
+		fetch varCursor into varId;
 		if not found then
-			insert into tb_erro values(nextval('sq_erro'), 'sp_grupo_jogo', 'Nenhum valor a ser atualizado.', current_timestamp);
-			raise notice 'Nenhum valor a ser atualizado.';
-		else
-			loop
-				update tb_grupo_jogo set fl_valido = 'nao', dt_encerramento = current_timestamp where id_grupo_jogo = varRecordUpdate.id_grupo_jogo;
-				fetch varCursorUpdate into varRecordUpdate;
-				exit when not found;
-				varQtdUpdate:= varQtdUpdate + 1;
-			end loop;
-			raise notice '% valores atualizados com sucesso.', TO_CHAR(varQtdUpdate, 'fm999G999');
-		end if;
-
-        close varCursorUpdate;
-
-        -- Insert New Grupo
-        open varCursorInsert for
-			select
-
-			j.id_jogo
-
-			from tb_jogo j
-
-			left join tb_atividade a
-				on j.id_jogo = fn_safe_cast_integer(a.ds_atividade)
-
-			left join tb_tipo_atividade ta
-				on a.id_tipo_atividade = ta.id_tipo_atividade
-				and ta.nm_grupo in ('Jogo', 'Busca')
-				and ta.nm_subgrupo in ('Abertura tela do jogo', 'Busca por jogo')
-
-			order by count(*) over (partition by nm_jogo) ,1
-
-			limit 5;
-
-		fetch varCursorInsert into varIdInsert;
-		if not found then
-			insert into tb_erro values(nextval('sq_erro'), 'sp_grupo_jogo', 'Nenhum valor a ser inserido.', current_timestamp);
+			insert into tb_erro values(nextval('sq_erro'), 'sp_usuario_sem_plano', 'Nenhum valor a ser inserido.', current_timestamp);
 			raise notice 'Nenhum valor a ser inserido.';
 		else
 			loop
-				insert into tb_grupo_jogo values(nextval('sq_grupo_jogo'), 1, varIdInsert, 'sim', null, current_timestamp);
-				fetch varCursorInsert into varIdInsert;
+				insert into tb_plano_usuario values(nextval('sq_plano_usuario'), varId, 1, 'sim', null, current_timestamp);
+				fetch varCursor into varId;
 				exit when not found;
-				varQtdInsert:= varQtdInsert + 1;
+				varQtd:= varQtd + 1;
 			end loop;
-			raise notice '% valores inseridos com sucesso.', TO_CHAR(varQtdInsert, 'fm999G999');
+			raise notice '% valores inseridos com sucesso.', TO_CHAR(varQtd, 'fm999G999');
 		end if;
-
-        close varCursorInsert;
-
+        close varCursor;
     END;
 $$;
 
-create or replace function fn_grupo_inical() returns trigger as
+create or replace function fn_cadastro_usuario() returns trigger as
 $tb_usuario$
     BEGIN
-        insert into tb_grupo_usuario values(nextval('sq_grupo_usuario'), new.id_usuario, 1, 'sim',current_timestamp);
+        insert into tb_grupo_usuario values(nextval('sq_grupo_usuario'), new.id_usuario, 1, 'sim', null, current_timestamp);
+        insert into tb_plano_usuario values(nextval('sq_plano_usuario'), new.id_usuario, 1, 'sim', null, current_timestamp);
         return null;
     END;
 $tb_usuario$ language plpgsql;
 
-create or replace trigger tg_grupo_inicial
+create or replace trigger tg_cadastro_usuario
     after insert on tb_usuario
-    FOR EACH ROW EXECUTE FUNCTION fn_grupo_inical();
+    FOR EACH ROW EXECUTE FUNCTION fn_cadastro_usuario();
