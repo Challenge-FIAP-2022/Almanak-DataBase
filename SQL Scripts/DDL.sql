@@ -1,6 +1,6 @@
 SET check_function_bodies = false;
 
-CREATE TYPE en_bolleano AS ENUM('sim', 'nao');
+CREATE TYPE en_booleano AS ENUM('sim', 'nao');
 
 CREATE TYPE en_tp_item AS ENUM
   ('bola',  'carta',  'bebida alcoolica',  'bastao',  'quadra',  'papelaria', 'tabuleiro',  'dado',  'geral')
@@ -57,9 +57,9 @@ CREATE TABLE tb_jogo(
   nm_jogo varchar(50) NOT NULL,
   nr_min_jogadores integer NOT NULL,
   nr_max_jogadores integer,
-  fl_idade en_bolleano,
-  fl_valido en_bolleano,
-  fl_elite en_bolleano,
+  fl_idade en_booleano,
+  fl_valido en_booleano,
+  fl_elite en_booleano,
   ds_encerramento text,
   dt_encerramento timestamp,
   dt_registro timestamp,
@@ -86,7 +86,7 @@ CREATE TABLE tb_jogo_item(
   id_jogo integer NOT NULL,
   id_item integer NOT NULL,
   qt_item integer,
-  fl_necessario en_bolleano,
+  fl_necessario en_booleano,
   dt_registro timestamp,
   CONSTRAINT "PK_Jogo_Item" PRIMARY KEY(id_jogo_item)
 );
@@ -100,7 +100,7 @@ CREATE TABLE tb_regra(
   nm_regra varchar(50) NOT NULL,
   nr_regra integer,
   ds_regra varchar(500),
-  fl_opcional en_bolleano,
+  fl_opcional en_booleano,
   dt_registro timestamp,
   CONSTRAINT "PK_Regra" PRIMARY KEY(id_regra)
 );
@@ -140,7 +140,7 @@ CREATE TABLE tb_grupo_jogo(
   id_grupo_jogo integer NOT NULL,
   id_grupo integer NOT NULL,
   id_jogo integer NOT NULL,
-  fl_valido en_bolleano,
+  fl_valido en_booleano,
   dt_encerramento timestamp,
   dt_registro timestamp,
   CONSTRAINT "PK_Grupo_Jogo" PRIMARY KEY(id_grupo_jogo)
@@ -153,7 +153,7 @@ CREATE TABLE tb_grupo_usuario(
   id_grupo_usuario integer NOT NULL,
   id_usuario integer NOT NULL,
   id_grupo integer NOT NULL,
-  fl_valido en_bolleano NOT NULL,
+  fl_valido en_booleano NOT NULL,
   dt_encerramento timestamp,
   dt_registro timestamp,
   CONSTRAINT "PK_Grupo_Usuario" PRIMARY KEY(id_grupo_usuario)
@@ -201,7 +201,7 @@ CREATE TABLE tb_plano(
   nm_plano text,
   ds_plano text,
   vl_plano numeric NOT NULL,
-  fl_valido en_bolleano NOT NULL,
+  fl_valido en_booleano NOT NULL,
   dt_encerramento timestamp,
   dt_registro timestamp,
   CONSTRAINT "PK_Plano" PRIMARY KEY(id_plano),
@@ -212,7 +212,7 @@ CREATE TABLE tb_plano_usuario(
   id_plano_usuario integer NOT NULL,
   id_usuario integer NOT NULL,
   id_plano integer NOT NULL,
-  fl_valido en_bolleano,
+  fl_valido en_booleano,
   dt_encerramento regoperator,
   dt_registro timestamp,
   CONSTRAINT "PK_Plano_Usario" PRIMARY KEY(id_plano_usuario)

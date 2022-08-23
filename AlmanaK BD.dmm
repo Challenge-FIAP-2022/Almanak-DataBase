@@ -2617,7 +2617,7 @@
 		"replaceSpace": "_",
 		"color": "transparent",
 		"sideSelections": true,
-		"isDirty": false,
+		"isDirty": true,
 		"storedin": {
 			"major": 4,
 			"minor": 4,
@@ -2647,7 +2647,7 @@
 			"quotation": "if_needed",
 			"includeGeneratedNames": "always"
 		},
-		"lastSaved": "Sun Aug 21 2022 22:27:53 GMT-0300 (Brasilia Standard Time)",
+		"lastSaved": "Mon Aug 22 2022 20:41:55 GMT-0300 (Brasilia Standard Time)",
 		"writeFileParam": false,
 		"nameAutoGeneration": {
 			"keys": false,
@@ -2659,7 +2659,7 @@
 		"ad9008af-1465-4e0c-896a-809dfb511a1d": {
 			"id": "ad9008af-1465-4e0c-896a-809dfb511a1d",
 			"visible": true,
-			"name": "en_bolleano",
+			"name": "en_booleano",
 			"desc": "",
 			"type": "Enum",
 			"code": "",
@@ -3071,7 +3071,7 @@
 					"gHeight": 144,
 					"gWidth": 265,
 					"color": "#ffffff",
-					"background": "#03a9f4",
+					"background": "#009688",
 					"resized": true,
 					"autoExpand": true
 				},
@@ -3280,7 +3280,7 @@
 					"gHeight": 135,
 					"gWidth": 265,
 					"color": "#ffffff",
-					"background": "#03a9f4",
+					"background": "#009688",
 					"resized": true,
 					"autoExpand": true
 				},
@@ -3291,7 +3291,7 @@
 					"gHeight": 135,
 					"gWidth": 265,
 					"color": "#ffffff",
-					"background": "#03a9f4",
+					"background": "#009688",
 					"resized": true,
 					"autoExpand": true
 				},
@@ -3534,7 +3534,7 @@
 					"gWidth": 150,
 					"color": "#eee",
 					"background": "#009688",
-					"resized": false,
+					"resized": true,
 					"autoExpand": true
 				},
 				"220444a6-ddfd-44f0-b336-28f96da138e9": {
@@ -3577,7 +3577,7 @@
 					"gHeight": 136,
 					"gWidth": 265,
 					"color": "#ffffff",
-					"background": "#03a9f4",
+					"background": "#009688",
 					"resized": true,
 					"autoExpand": true
 				},
@@ -3595,7 +3595,7 @@
 				"c7ebf254-06be-4c40-80cc-1f543b31d83e": {
 					"referencedItemId": "c7ebf254-06be-4c40-80cc-1f543b31d83e",
 					"x": 844,
-					"y": 1201,
+					"y": 1200,
 					"gHeight": 44,
 					"gWidth": 150,
 					"color": "#eee",

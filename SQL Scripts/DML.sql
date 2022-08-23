@@ -8,7 +8,6 @@ INSERT INTO tb_plano values (nextval('sq_plano'), 'Gamer', 'Plano gratuito, com 
 INSERT INTO tb_plano values (nextval('sq_plano'), 'Pro Gamer', 'Plano limitado com acesso a alguns jogos.', 2.99, 'sim', null, current_timestamp);
 INSERT INTO tb_plano values (nextval('sq_plano'), 'Elite', 'Acesso ilimitado a plataforma e maior peso nas decisões da comunidade.', 9.99, 'sim', null, current_timestamp);
 
-
 -- TB_Usuario
 
 insert into tb_usuario values( nextval('sq_usuario'), 'AlmanaK', 'almanak', 'almanak', current_date, current_timestamp); 
