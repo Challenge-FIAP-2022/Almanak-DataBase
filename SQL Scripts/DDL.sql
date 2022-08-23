@@ -163,7 +163,7 @@ CREATE TABLE tb_atividade(
   id_atividade integer NOT NULL,
   id_usuario integer NOT NULL,
   id_tipo_atividade integer NOT NULL,
-  nm_tabela_alterada integer,
+  nm_tabela_alterada text,
   ds_atividade text,
   dt_registro timestamp,
   CONSTRAINT "PK_Atividade" PRIMARY KEY(id_atividade)
