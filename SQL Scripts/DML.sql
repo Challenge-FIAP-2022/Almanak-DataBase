@@ -43,6 +43,7 @@ INSERT INTO tb_tipo_atividade values (nextval('sq_tipo_atividade'), 'Filtro', 'F
 INSERT INTO tb_tipo_atividade values (nextval('sq_tipo_atividade'), 'Filtro', 'Filtro por Item', current_timestamp);
 INSERT INTO tb_tipo_atividade values (nextval('sq_tipo_atividade'), 'Cadastro', 'Cadastro de cartao', current_timestamp);
 INSERT INTO tb_tipo_atividade values (nextval('sq_tipo_atividade'), 'Jogo', 'Abertura tela do jogo', current_timestamp);
+INSERT INTO tb_tipo_atividade values (nextval('sq_tipo_atividade'), 'Login', 'Abrir App', current_timestamp);
 
 -- TB_Item
 
