@@ -142,3 +142,8 @@ INSERT INTO tb_jogo_categoria values (nextval('sq_jogo_categoria'), 10, 6, curre
 INSERT INTO tb_jogo_categoria values (nextval('sq_jogo_categoria'), 2, 8, current_timestamp);
 INSERT INTO tb_jogo_categoria values (nextval('sq_jogo_categoria'), 5, 8, current_timestamp);
 INSERT INTO tb_jogo_categoria values (nextval('sq_jogo_categoria'), 8, 8, current_timestamp);
+
+
+-- TB_Avaliacao
+
+insert into tb_avaliacao values (nextval('sq_avaliacao'), 1, 1, 3.4, null, current_timestamp);
