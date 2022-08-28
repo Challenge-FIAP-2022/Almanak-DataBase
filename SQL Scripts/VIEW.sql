@@ -12,8 +12,11 @@ usuario as (
     nm_usuario,
     date(dt_registro) as dt_registro,
     dt_nascimento,
-    min(date(dt_registro)) over() as min_data
+    min(date(dt_registro)) over() as min_data,
+    row_number() over (partition by id_usuario order by dt_registro desc) as nr_linha
     from tb_usuario
+    qualify
+
 ),
 
 contrato as (
@@ -27,7 +30,8 @@ contrato as (
     case
 		when tp.nm_plano != 'Gamer' then date(tpu.dt_registro) - lag(date(tpu.dt_registro)) over w1
 		else 0
-	end as nr_dias_upgrade_plano
+	end as nr_dias_upgrade_plano,
+    row_number() over (partition by tpu.id_usuario order by tpu.dt_registro desc) as nr_linha
     from tb_contrato tpu
     left join tb_plano tp on tpu.id_plano = tp.id_plano
     window
@@ -35,13 +39,14 @@ contrato as (
 ),
 
 avaliacaoTemp as (
-    select
+    select distinct
     id_avaliacao,
 	id_usuario,
 	date(dt_registro) as dt_registro,
 	vl_avaliacao,
 	min(date(ta.dt_registro)) over w1 as min_date,
-	max(date(ta.dt_registro)) over w1 as max_date
+	max(date(ta.dt_registro)) over w1 as max_date,
+	row_number() over (partition by id_usuario order by dt_registro desc) as nr_linha
 	from tb_avaliacao ta
 	window
 		w1 as (partition by ta.id_usuario order by ta.dt_registro rows between unbounded preceding and current row)
@@ -50,16 +55,18 @@ avaliacaoTemp as (
 avaliacao as (
 	select
 	dta.dt_array as dt_ref,
-	ta.id_usuario,
-	ta.dt_registro,
-	sum(case when ta.dt_registro = dta.dt_array then 1 else 0 end) over w1 as qtd,
-	sum(ta.vl_avaliacao * (date(ta.dt_registro) - min_date +1) / (date(ta.dt_registro) - max_date +1)) as vl_avaliacao_media
-	from avaliacaoTemp ta
+	a.id_usuario,
+	a.dt_registro,
+	sum(case when a.dt_registro = dta.dt_array then 1 else 0 end) over w1 as qtd,
+	sum(a.vl_avaliacao * (date(a.dt_registro) - min_date +1) / (date(a.dt_registro) - max_date +1)) as vl_avaliacao_media
+	from avaliacaoTemp a
 	left join DatasArray dta
-		on ta.dt_registro <= dta.dt_array
+		on a.dt_registro <= dta.dt_array
+	where
+	    a.nr_linha = 1
 	group by 1,2,3
 	window
-		w1 as (partition by ta.id_usuario order by ta.dt_registro rows between unbounded preceding and current row)
+		w1 as (partition by a.id_usuario order by a.dt_registro rows between unbounded preceding and current row)
 )
 
 select
@@ -95,5 +102,9 @@ left join contrato c
 left join avaliacao a
 	on u.id_usuario = a.id_usuario
 	and dta.dt_array = a.dt_ref
+
+where
+    u.nr_linha = 1
+	and c.nr_linha = 1
 
 order by 1,2;

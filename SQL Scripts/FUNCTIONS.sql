@@ -10,38 +10,52 @@ as $$
     end;
 $$;
 
+-- FN_Random_Between
+
+create or replace function fn_random_between(floor numeric, ceil numeric)
+returns integer language plpgsql
+as
+$$
+    begin
+        return floor(random()*(ceil-floor+1))+floor;
+    exception when others then
+        return null;
+    end;
+$$;
+
 -- FN_Nota_Jogo
 
 create or replace function fn_nota_jogo(nomeJogo text, dataref date)
-returns numeric language plpgsql
+returns numeric(6,4) language plpgsql
 as $$
     declare
-        varResult numeric;
+        varResult numeric(6,4);
 
     begin
 
-		with avaliacao as (
+		with avaliacaoTemp as (
 			select
-				ta.vl_avaliacao as valor,
-				ta.dt_registro,
-				min(ta.dt_registro) over w1 as min_date,
-				max(ta.dt_registro) over w1 as max_date,
-				count(*) over w1 as qtd
-				from tb_avaliacao ta
-				left join tb_jogo tj on ta.id_jogo = tj.id_jogo
-				where
-					lower(tj.nm_jogo) = lower(nomeJogo)
-					and ta.dt_registro <= dataref
-				window
-					w1 as (partition by tj.id_jogo)
+			ta.vl_avaliacao as valor,
+
+			cast(date(ta.dt_registro) - min(date(ta.dt_registro)) over () + 1 as decimal) /
+			cast(max(date(ta.dt_registro)) over () - min(date(ta.dt_registro)) over () + 1 as decimal)
+			as peso
+
+			from tb_avaliacao ta
+			left join tb_jogo tj on ta.id_jogo = tj.id_jogo
+			where
+				lower(tj.nm_jogo) = lower(nomeJogo)
+				and ta.dt_registro <= dataref
+		),
+
+		avaliacao as (
+		    select
+		    valor, peso, sum(peso) over () as pesoTotal
+		    from avaliacaoTemp
 		)
 
 		select
-		sum(
-			valor *
-			(date(dt_registro) - date(min_date) + 1)/
-			(date(dt_registro) - date(max_date) + 1)
-		) into varResult
+		sum(valor * peso/ pesoTotal)  into varResult
 		from avaliacao;
 
 		return varResult;
@@ -50,35 +64,35 @@ as $$
 $$;
 
 create or replace function fn_nota_jogo(id integer, dataref date)
-returns numeric language plpgsql
+returns numeric(6,4) language plpgsql
 as $$
     declare
-        varResult numeric;
+        varResult numeric(6,4);
 
     begin
 
-		with avaliacao as (
+		with avaliacaoTemp as (
 			select
-				ta.vl_avaliacao as valor,
-				ta.dt_registro,
-				min(ta.dt_registro) over w1 as min_date,
-				max(ta.dt_registro) over w1 as max_date,
-				count(*) over w1 as qtd
-				from tb_avaliacao ta
-				left join tb_jogo tj on ta.id_jogo = tj.id_jogo
-				where
-					tj.id_jogo = id
-					and ta.dt_registro <= dataref
-				window
-					w1 as (partition by tj.id_jogo)
+			ta.vl_avaliacao as valor,
+
+			cast(date(ta.dt_registro) - min(date(ta.dt_registro)) over () + 1 as decimal) /
+			cast(max(date(ta.dt_registro)) over () - min(date(ta.dt_registro)) over () + 1 as decimal)
+			as peso
+
+			from tb_avaliacao ta
+			where
+				ta.id_jogo = id
+				and ta.dt_registro <= dataref
+		),
+
+		avaliacao as (
+		    select
+		    valor, peso, sum(peso) over () as pesoTotal
+		    from avaliacaoTemp
 		)
 
 		select
-		sum(
-			valor *
-			(date(dt_registro) - date(min_date) + 1)/
-			(date(dt_registro) - date(max_date) + 1)
-		) into varResult
+		sum(valor * peso/ pesoTotal)  into varResult
 		from avaliacao;
 
 		return varResult;
@@ -86,38 +100,39 @@ as $$
     end;
 $$;
 
--- FN_Avalicao_Por_Usuario
+-- FN_Nota_Usuario
 
-create or replace function fn_nota_usuario(id integer, dataref date)
-returns numeric language plpgsql
+create or replace function fn_nota_usuario(nomeUsuario text, dataref date)
+returns numeric(6,4) language plpgsql
 as $$
     declare
-        varResult numeric;
+        varResult numeric(6,4);
 
     begin
 
-		with avaliacao as (
+		with avaliacaoTemp as (
 			select
-				ta.vl_avaliacao as valor,
-				ta.dt_registro,
-				min(ta.dt_registro) over w1 as min_date,
-				max(ta.dt_registro) over w1 as max_date,
-				count(*) over w1 as qtd
-				from tb_avaliacao ta
-				left join tb_usuario tu on ta.id_usuario = tu.id_usuario
-				where
-					tu.id_usuario = id
-					and ta.dt_registro <= dataref
-				window
-					w1 as (partition by tu.id_usuario)
+			ta.vl_avaliacao as valor,
+
+			cast(date(ta.dt_registro) - min(date(ta.dt_registro)) over () + 1 as decimal) /
+			cast(max(date(ta.dt_registro)) over () - min(date(ta.dt_registro)) over () + 1 as decimal)
+			as peso
+
+			from tb_avaliacao ta
+			left join tb_usuario tu on ta.id_usuario = tu.id_usuario
+			where
+				lower(tu.nm_usuario) = lower(nomeUsuario)
+				and ta.dt_registro <= dataref
+		),
+
+		avaliacao as (
+		    select
+		    valor, peso, sum(peso) over () as pesoTotal
+		    from avaliacaoTemp
 		)
 
 		select
-		sum(
-			valor *
-			(date(dt_registro) - date(min_date) + 1)/
-			(date(dt_registro) - date(max_date) + 1)
-		) into varResult
+		sum(valor * peso/ pesoTotal)  into varResult
 		from avaliacao;
 
 		return varResult;
@@ -126,35 +141,35 @@ as $$
 $$;
 
 create or replace function fn_nota_usuario(id integer, dataref date)
-returns numeric language plpgsql
+returns numeric(6,4) language plpgsql
 as $$
     declare
-        varResult numeric;
+        varResult numeric(6,4);
 
     begin
 
-		with avaliacao as (
+		with avaliacaoTemp as (
 			select
-				ta.vl_avaliacao as valor,
-				ta.dt_registro,
-				min(ta.dt_registro) over w1 as min_date,
-				max(ta.dt_registro) over w1 as max_date,
-				count(*) over w1 as qtd
-				from tb_avaliacao ta
-				left join tb_usuario tu on ta.id_usuario = tu.id_usuario
-				where
-					tu.id_usuario = id
-					and ta.dt_registro <= dataref
-				window
-					w1 as (partition by tu.id_usuario)
+			ta.vl_avaliacao as valor,
+
+			cast(date(ta.dt_registro) - min(date(ta.dt_registro)) over () + 1 as decimal) /
+			cast(max(date(ta.dt_registro)) over () - min(date(ta.dt_registro)) over () + 1 as decimal)
+			as peso
+
+			from tb_avaliacao ta
+			where
+				ta.id_usuario = id
+				and ta.dt_registro <= dataref
+		),
+
+		avaliacao as (
+		    select
+		    valor, peso, sum(peso) over () as pesoTotal
+		    from avaliacaoTemp
 		)
 
 		select
-		sum(
-			valor *
-			(date(dt_registro) - date(min_date) + 1)/
-			(date(dt_registro) - date(max_date) + 1)
-		) into varResult
+		sum(valor * peso/ pesoTotal)  into varResult
 		from avaliacao;
 
 		return varResult;

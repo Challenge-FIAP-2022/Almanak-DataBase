@@ -3,8 +3,8 @@
 create or replace function fn_cadastro_usuario() returns trigger as
 $tb_usuario$
     BEGIN
-        insert into tb_usuario_grupo values(nextval('sq_usuario_grupo'), new.id_usuario, 1, 'sim', null, current_timestamp);
-        insert into tb_contrato values(nextval('sq_contrato'), new.id_usuario, 1, 'sim', null ,current_timestamp);
+        insert into tb_usuario_grupo values(nextval('sq_usuario_grupo'), new.id_usuario, 1, 'sim', null, new.dt_registro);
+        insert into tb_contrato values(nextval('sq_contrato'), new.id_usuario, 1, 'sim', null ,new.dt_registro);
         return null;
     END;
 $tb_usuario$ language plpgsql;

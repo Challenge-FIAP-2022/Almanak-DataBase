@@ -209,6 +209,23 @@
 					}
 				},
 				{
+					"id": "df57a018-aa15-44be-8e88-0ecd44ba66d7",
+					"name": "lk_imagem",
+					"datatype": "text",
+					"param": "",
+					"pk": false,
+					"nn": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"list": false,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					}
+				},
+				{
 					"id": "9cdf483c-92eb-44ef-947e-72c9c270b723",
 					"name": "nr_min_jogadores",
 					"datatype": "integer",
@@ -960,6 +977,40 @@
 					"param": "",
 					"pk": false,
 					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"list": false,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					}
+				},
+				{
+					"id": "73bfc4ff-0b24-4e78-b309-9269ee815abc",
+					"name": "lk_icone",
+					"datatype": "text",
+					"param": "",
+					"pk": false,
+					"nn": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"list": false,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					}
+				},
+				{
+					"id": "fb4abb27-b503-4356-892f-096e3e284573",
+					"name": "lk_imagem",
+					"datatype": "text",
+					"param": "",
+					"pk": false,
+					"nn": false,
 					"comment": "",
 					"defaultvalue": "",
 					"data": "",
@@ -2617,7 +2668,7 @@
 		"replaceSpace": "_",
 		"color": "transparent",
 		"sideSelections": true,
-		"isDirty": false,
+		"isDirty": true,
 		"storedin": {
 			"major": 4,
 			"minor": 4,
@@ -2647,7 +2698,7 @@
 			"quotation": "if_needed",
 			"includeGeneratedNames": "always"
 		},
-		"lastSaved": "Sat Aug 27 2022 04:59:27 GMT-0300 (Brasilia Standard Time)",
+		"lastSaved": "Sun Aug 28 2022 19:48:58 GMT-0300 (Brasilia Standard Time)",
 		"writeFileParam": false,
 		"nameAutoGeneration": {
 			"keys": false,
@@ -2874,7 +2925,7 @@
 			"name": "VW_Usuario_KPI",
 			"desc": "",
 			"type": "View",
-			"code": "create or replace view vw_usuario_kpi as\n\nwith DatasArray as (\n    select\n        date(dt_array) as dt_array\n    from generate_series('2022-01-01', current_date, '1 day':: interval) as dt_array\n),\n\nusuario as (\n    select\n    id_usuario,\n    nm_usuario,\n    date(dt_registro) as dt_registro,\n    dt_nascimento,\n    min(date(dt_registro)) over() as min_data\n    from tb_usuario\n),\n\ncontrato as (\n    select\n    tpu.id_usuario,\n    tp.id_plano,\n    tp.nm_plano,\n    tp.vl_plano,\n    date(tpu.dt_registro) as dt_registro,\n    coalesce(tp.dt_encerramento :: date, '2500-01-01') as dt_encerramento,\n    case\n\t\twhen tp.nm_plano != 'Gamer' then date(tpu.dt_registro) - lag(date(tpu.dt_registro)) over w1\n\t\telse 0\n\tend as nr_dias_upgrade_plano\n    from tb_contrato tpu\n    left join tb_plano tp on tpu.id_plano = tp.id_plano\n    window\n    \tw1 as (partition by tpu.id_usuario order by tpu.dt_registro rows between unbounded preceding and current row)\n),\n\navaliacaoTemp as (\n    select\n    id_avaliacao,\n\tid_usuario,\n\tdate(dt_registro) as dt_registro,\n\tvl_avaliacao,\n\tmin(date(ta.dt_registro)) over w1 as min_date,\n\tmax(date(ta.dt_registro)) over w1 as max_date\n\tfrom tb_avaliacao ta\n\twindow\n\t\tw1 as (partition by ta.id_usuario order by ta.dt_registro rows between unbounded preceding and current row)\n),\n\navaliacao as (\n\tselect\n\tdta.dt_array as dt_ref,\n\tta.id_usuario,\n\tta.dt_registro,\n\tsum(case when ta.dt_registro = dta.dt_array then 1 else 0 end) over w1 as qtd,\n\tsum(ta.vl_avaliacao * (date(ta.dt_registro) - min_date +1) / (date(ta.dt_registro) - max_date +1)) as vl_avaliacao_media\n\tfrom avaliacaoTemp ta\n\tleft join DatasArray dta\n\t\ton ta.dt_registro <= dta.dt_array\n\tgroup by 1,2,3\n\twindow\n\t\tw1 as (partition by ta.id_usuario order by ta.dt_registro rows between unbounded preceding and current row)\n)\n\nselect\n\ndta.dt_array as dt_ref,\n\nu.id_usuario,\nu.nm_usuario,\ncase\n    when extract(year from current_timestamp - u.dt_nascimento) > 18 then 'sim'\n    else 'nao'\nend as fl_maiorirdade,\nu.dt_registro as dt_registro,\ncoalesce(current_date - u.dt_registro, 0) as nr_dias_registrado,\n\nc.id_plano,\nc.nm_plano as nm_current_plano,\nc.nr_dias_upgrade_plano,\n\ncoalesce(a.qtd, 0) as nr_avaliacoes,\ncoalesce(a.vl_avaliacao_media, 0)\n\nfrom usuario u\n\nleft join DatasArray dta\n    on u.min_data <= dta.dt_array\n\nleft join contrato c\n    on u.id_usuario = c.id_usuario\n\tand dta.dt_array >= c.dt_registro\n\tand dta.dt_array < c.dt_encerramento\n\nleft join avaliacao a\n\ton u.id_usuario = a.id_usuario\n\tand dta.dt_array = a.dt_ref\n\norder by 1,2;",
+			"code": "create or replace view vw_usuario_kpi as\n\nwith DatasArray as (\n    select\n        date(dt_array) as dt_array\n    from generate_series('2022-01-01', current_date, '1 day':: interval) as dt_array\n),\n\nusuario as (\n    select\n    id_usuario,\n    nm_usuario,\n    date(dt_registro) as dt_registro,\n    dt_nascimento,\n    min(date(dt_registro)) over() as min_data,\n    row_number() over (partition by id_usuario order by dt_registro desc) as nr_linha\n    from tb_usuario\n    qualify\n\n),\n\ncontrato as (\n    select\n    tpu.id_usuario,\n    tp.id_plano,\n    tp.nm_plano,\n    tp.vl_plano,\n    date(tpu.dt_registro) as dt_registro,\n    coalesce(tp.dt_encerramento :: date, '2500-01-01') as dt_encerramento,\n    case\n\t\twhen tp.nm_plano != 'Gamer' then date(tpu.dt_registro) - lag(date(tpu.dt_registro)) over w1\n\t\telse 0\n\tend as nr_dias_upgrade_plano,\n    row_number() over (partition by tpu.id_usuario order by tpu.dt_registro desc) as nr_linha\n    from tb_contrato tpu\n    left join tb_plano tp on tpu.id_plano = tp.id_plano\n    window\n    \tw1 as (partition by tpu.id_usuario order by tpu.dt_registro rows between unbounded preceding and current row)\n),\n\navaliacaoTemp as (\n    select distinct\n    id_avaliacao,\n\tid_usuario,\n\tdate(dt_registro) as dt_registro,\n\tvl_avaliacao,\n\tmin(date(ta.dt_registro)) over w1 as min_date,\n\tmax(date(ta.dt_registro)) over w1 as max_date,\n\trow_number() over (partition by id_usuario order by dt_registro desc) as nr_linha\n\tfrom tb_avaliacao ta\n\twindow\n\t\tw1 as (partition by ta.id_usuario order by ta.dt_registro rows between unbounded preceding and current row)\n),\n\navaliacao as (\n\tselect\n\tdta.dt_array as dt_ref,\n\ta.id_usuario,\n\ta.dt_registro,\n\tsum(case when a.dt_registro = dta.dt_array then 1 else 0 end) over w1 as qtd,\n\tsum(a.vl_avaliacao * (date(a.dt_registro) - min_date +1) / (date(a.dt_registro) - max_date +1)) as vl_avaliacao_media\n\tfrom avaliacaoTemp a\n\tleft join DatasArray dta\n\t\ton a.dt_registro <= dta.dt_array\n\twhere\n\t    a.nr_linha = 1\n\tgroup by 1,2,3\n\twindow\n\t\tw1 as (partition by a.id_usuario order by a.dt_registro rows between unbounded preceding and current row)\n)\n\nselect\n\ndta.dt_array as dt_ref,\n\nu.id_usuario,\nu.nm_usuario,\ncase\n    when extract(year from current_timestamp - u.dt_nascimento) > 18 then 'sim'\n    else 'nao'\nend as fl_maiorirdade,\nu.dt_registro as dt_registro,\ncoalesce(current_date - u.dt_registro, 0) as nr_dias_registrado,\n\nc.id_plano,\nc.nm_plano as nm_current_plano,\nc.nr_dias_upgrade_plano,\n\ncoalesce(a.qtd, 0) as nr_avaliacoes,\ncoalesce(a.vl_avaliacao_media, 0)\n\nfrom usuario u\n\nleft join DatasArray dta\n    on u.min_data <= dta.dt_array\n\nleft join contrato c\n    on u.id_usuario = c.id_usuario\n\tand dta.dt_array >= c.dt_registro\n\tand dta.dt_array < c.dt_encerramento\n\nleft join avaliacao a\n\ton u.id_usuario = a.id_usuario\n\tand dta.dt_array = a.dt_ref\n\nwhere\n    u.nr_linha = 1\n\tand c.nr_linha = 1\n\norder by 1,2;",
 			"lines": [],
 			"generate": true,
 			"generateCustomCode": true,
@@ -2885,7 +2936,7 @@
 		"18236b60-5d71-4b2e-af88-14d508ea928d": {
 			"id": "18236b60-5d71-4b2e-af88-14d508ea928d",
 			"visible": true,
-			"name": "VW_Atividade",
+			"name": "VW_Jogo_KPI",
 			"desc": "",
 			"type": "View",
 			"code": "",
@@ -2958,7 +3009,7 @@
 			"name": "TG_Cadastro_Usario",
 			"desc": "",
 			"type": "Trigger",
-			"code": "create or replace function fn_cadastro_usuario() returns trigger as\n$tb_usuario$\n    BEGIN\n        insert into tb_usuario_grupo values(nextval('sq_usuario_grupo'), new.id_usuario, 1, 'sim', null, current_timestamp);\n        insert into tb_contrato values(nextval('sq_contrato'), new.id_usuario, 1, 'sim', null ,current_timestamp);\n        return null;\n    END;\n$tb_usuario$ language plpgsql;\n\ncreate or replace trigger tg_cadastro_usuario\n    after insert on tb_usuario\n    FOR EACH ROW EXECUTE FUNCTION fn_cadastro_usuario();",
+			"code": "create or replace function fn_cadastro_usuario() returns trigger as\n$tb_usuario$\n    BEGIN\n        insert into tb_usuario_grupo values(nextval('sq_usuario_grupo'), new.id_usuario, 1, 'sim', null, new.dt_registro);\n        insert into tb_contrato values(nextval('sq_contrato'), new.id_usuario, 1, 'sim', null ,new.dt_registro);\n        return null;\n    END;\n$tb_usuario$ language plpgsql;\n\ncreate or replace trigger tg_cadastro_usuario\n    after insert on tb_usuario\n    FOR EACH ROW EXECUTE FUNCTION fn_cadastro_usuario();",
 			"lines": [],
 			"generate": true,
 			"generateCustomCode": true,
@@ -3056,7 +3107,7 @@
 			"name": "FN_Nota_Usario",
 			"desc": "",
 			"type": "Function",
-			"code": "create or replace function fn_nota_usuario(id integer, dataref date)\nreturns numeric language plpgsql\nas $$\n    declare\n        varResult numeric;\n\n    begin\n\n\t\twith avaliacao as (\n\t\t\tselect\n\t\t\t\tta.vl_avaliacao as valor,\n\t\t\t\tta.dt_registro,\n\t\t\t\tmin(ta.dt_registro) over w1 as min_date,\n\t\t\t\tmax(ta.dt_registro) over w1 as max_date,\n\t\t\t\tcount(*) over w1 as qtd\n\t\t\t\tfrom tb_avaliacao ta\n\t\t\t\tleft join tb_usuario tu on ta.id_usuario = tu.id_usuario\n\t\t\t\twhere\n\t\t\t\t\ttu.id_usuario = id\n\t\t\t\t\tand ta.dt_registro <= dataref\n\t\t\t\twindow\n\t\t\t\t\tw1 as (partition by tu.id_usuario)\n\t\t)\n\n\t\tselect\n\t\tsum(\n\t\t\tvalor *\n\t\t\t(date(dt_registro) - date(min_date) + 1)/\n\t\t\t(date(dt_registro) - date(max_date) + 1)\n\t\t) into varResult\n\t\tfrom avaliacao;\n\n\t\treturn varResult;\n\n    end;\n$$;\n\ncreate or replace function fn_nota_usuario(id integer, dataref date)\nreturns numeric language plpgsql\nas $$\n    declare\n        varResult numeric;\n\n    begin\n\n\t\twith avaliacao as (\n\t\t\tselect\n\t\t\t\tta.vl_avaliacao as valor,\n\t\t\t\tta.dt_registro,\n\t\t\t\tmin(ta.dt_registro) over w1 as min_date,\n\t\t\t\tmax(ta.dt_registro) over w1 as max_date,\n\t\t\t\tcount(*) over w1 as qtd\n\t\t\t\tfrom tb_avaliacao ta\n\t\t\t\tleft join tb_usuario tu on ta.id_usuario = tu.id_usuario\n\t\t\t\twhere\n\t\t\t\t\ttu.id_usuario = id\n\t\t\t\t\tand ta.dt_registro <= dataref\n\t\t\t\twindow\n\t\t\t\t\tw1 as (partition by tu.id_usuario)\n\t\t)\n\n\t\tselect\n\t\tsum(\n\t\t\tvalor *\n\t\t\t(date(dt_registro) - date(min_date) + 1)/\n\t\t\t(date(dt_registro) - date(max_date) + 1)\n\t\t) into varResult\n\t\tfrom avaliacao;\n\n\t\treturn varResult;\n\n    end;\n$$;",
+			"code": "create or replace function fn_nota_usuario(nomeUsuario text, dataref date)\nreturns numeric(6,4) language plpgsql\nas $$\n    declare\n        varResult numeric(6,4);\n\n    begin\n\n\t\twith avaliacaoTemp as (\n\t\t\tselect\n\t\t\tta.vl_avaliacao as valor,\n\n\t\t\tcast(date(ta.dt_registro) - min(date(ta.dt_registro)) over () + 1 as decimal) /\n\t\t\tcast(max(date(ta.dt_registro)) over () - min(date(ta.dt_registro)) over () + 1 as decimal)\n\t\t\tas peso\n\n\t\t\tfrom tb_avaliacao ta\n\t\t\tleft join tb_usuario tu on ta.id_usuario = tu.id_usuario\n\t\t\twhere\n\t\t\t\tlower(tu.nm_usuario) = lower(nomeUsuario)\n\t\t\t\tand ta.dt_registro <= dataref\n\t\t),\n\n\t\tavaliacao as (\n\t\t    select\n\t\t    valor, peso, sum(peso) over () as pesoTotal\n\t\t    from avaliacaoTemp\n\t\t)\n\n\t\tselect\n\t\tsum(valor * peso/ pesoTotal)  into varResult\n\t\tfrom avaliacao;\n\n\t\treturn varResult;\n\n    end;\n$$;\n\ncreate or replace function fn_nota_usuario(id integer, dataref date)\nreturns numeric(6,4) language plpgsql\nas $$\n    declare\n        varResult numeric(6,4);\n\n    begin\n\n\t\twith avaliacaoTemp as (\n\t\t\tselect\n\t\t\tta.vl_avaliacao as valor,\n\n\t\t\tcast(date(ta.dt_registro) - min(date(ta.dt_registro)) over () + 1 as decimal) /\n\t\t\tcast(max(date(ta.dt_registro)) over () - min(date(ta.dt_registro)) over () + 1 as decimal)\n\t\t\tas peso\n\n\t\t\tfrom tb_avaliacao ta\n\t\t\twhere\n\t\t\t\tta.id_usuario = id\n\t\t\t\tand ta.dt_registro <= dataref\n\t\t),\n\n\t\tavaliacao as (\n\t\t    select\n\t\t    valor, peso, sum(peso) over () as pesoTotal\n\t\t    from avaliacaoTemp\n\t\t)\n\n\t\tselect\n\t\tsum(valor * peso/ pesoTotal)  into varResult\n\t\tfrom avaliacao;\n\n\t\treturn varResult;\n\n    end;\n$$;",
 			"lines": [],
 			"generate": true,
 			"generateCustomCode": true,
@@ -3070,7 +3121,7 @@
 			"name": "FN_Nota_Jogo",
 			"desc": "",
 			"type": "Function",
-			"code": "create or replace function fn_nota_jogo(nomeJogo text, dataref date)\nreturns numeric language plpgsql\nas $$\n    declare\n        varResult numeric;\n\n    begin\n\n\t\twith avaliacao as (\n\t\t\tselect\n\t\t\t\tta.vl_avaliacao as valor,\n\t\t\t\tta.dt_registro,\n\t\t\t\tmin(ta.dt_registro) over w1 as min_date,\n\t\t\t\tmax(ta.dt_registro) over w1 as max_date,\n\t\t\t\tcount(*) over w1 as qtd\n\t\t\t\tfrom tb_avaliacao ta\n\t\t\t\tleft join tb_jogo tj on ta.id_jogo = tj.id_jogo\n\t\t\t\twhere\n\t\t\t\t\tlower(tj.nm_jogo) = lower(nomeJogo)\n\t\t\t\t\tand ta.dt_registro <= dataref\n\t\t\t\twindow\n\t\t\t\t\tw1 as (partition by tj.id_jogo)\n\t\t)\n\n\t\tselect\n\t\tsum(\n\t\t\tvalor *\n\t\t\t(date(dt_registro) - date(min_date) + 1)/\n\t\t\t(date(dt_registro) - date(max_date) + 1)\n\t\t) into varResult\n\t\tfrom avaliacao;\n\n\t\treturn varResult;\n\n    end;\n$$;\n\ncreate or replace function fn_nota_jogo(id integer, dataref date)\nreturns numeric language plpgsql\nas $$\n    declare\n        varResult numeric;\n\n    begin\n\n\t\twith avaliacao as (\n\t\t\tselect\n\t\t\t\tta.vl_avaliacao as valor,\n\t\t\t\tta.dt_registro,\n\t\t\t\tmin(ta.dt_registro) over w1 as min_date,\n\t\t\t\tmax(ta.dt_registro) over w1 as max_date,\n\t\t\t\tcount(*) over w1 as qtd\n\t\t\t\tfrom tb_avaliacao ta\n\t\t\t\tleft join tb_jogo tj on ta.id_jogo = tj.id_jogo\n\t\t\t\twhere\n\t\t\t\t\ttj.id_jogo = id\n\t\t\t\t\tand ta.dt_registro <= dataref\n\t\t\t\twindow\n\t\t\t\t\tw1 as (partition by tj.id_jogo)\n\t\t)\n\n\t\tselect\n\t\tsum(\n\t\t\tvalor *\n\t\t\t(date(dt_registro) - date(min_date) + 1)/\n\t\t\t(date(dt_registro) - date(max_date) + 1)\n\t\t) into varResult\n\t\tfrom avaliacao;\n\n\t\treturn varResult;\n\n    end;\n$$;",
+			"code": "create or replace function fn_nota_jogo(nomeJogo text, dataref date)\nreturns numeric(6,4) language plpgsql\nas $$\n    declare\n        varResult numeric(6,4);\n\n    begin\n\n\t\twith avaliacaoTemp as (\n\t\t\tselect\n\t\t\tta.vl_avaliacao as valor,\n\n\t\t\tcast(date(ta.dt_registro) - min(date(ta.dt_registro)) over () + 1 as decimal) /\n\t\t\tcast(max(date(ta.dt_registro)) over () - min(date(ta.dt_registro)) over () + 1 as decimal)\n\t\t\tas peso\n\n\t\t\tfrom tb_avaliacao ta\n\t\t\tleft join tb_jogo tj on ta.id_jogo = tj.id_jogo\n\t\t\twhere\n\t\t\t\tlower(tj.nm_jogo) = lower(nomeJogo)\n\t\t\t\tand ta.dt_registro <= dataref\n\t\t),\n\n\t\tavaliacao as (\n\t\t    select\n\t\t    valor, peso, sum(peso) over () as pesoTotal\n\t\t    from avaliacaoTemp\n\t\t)\n\n\t\tselect\n\t\tsum(valor * peso/ pesoTotal)  into varResult\n\t\tfrom avaliacao;\n\n\t\treturn varResult;\n\n    end;\n$$;\n\ncreate or replace function fn_nota_jogo(id integer, dataref date)\nreturns numeric(6,4) language plpgsql\nas $$\n    declare\n        varResult numeric(6,4);\n\n    begin\n\n\t\twith avaliacaoTemp as (\n\t\t\tselect\n\t\t\tta.vl_avaliacao as valor,\n\n\t\t\tcast(date(ta.dt_registro) - min(date(ta.dt_registro)) over () + 1 as decimal) /\n\t\t\tcast(max(date(ta.dt_registro)) over () - min(date(ta.dt_registro)) over () + 1 as decimal)\n\t\t\tas peso\n\n\t\t\tfrom tb_avaliacao ta\n\t\t\twhere\n\t\t\t\tta.id_jogo = id\n\t\t\t\tand ta.dt_registro <= dataref\n\t\t),\n\n\t\tavaliacao as (\n\t\t    select\n\t\t    valor, peso, sum(peso) over () as pesoTotal\n\t\t    from avaliacaoTemp\n\t\t)\n\n\t\tselect\n\t\tsum(valor * peso/ pesoTotal)  into varResult\n\t\tfrom avaliacao;\n\n\t\treturn varResult;\n\n    end;\n$$;",
 			"lines": [],
 			"generate": true,
 			"generateCustomCode": true,
@@ -3085,6 +3136,34 @@
 			"desc": "",
 			"type": "Other",
 			"code": "commit;",
+			"lines": [],
+			"generate": true,
+			"generateCustomCode": true,
+			"pg": {
+				"schema": ""
+			}
+		},
+		"56e8ec0a-570c-4682-a3c6-fa3db5fdea48": {
+			"id": "56e8ec0a-570c-4682-a3c6-fa3db5fdea48",
+			"visible": true,
+			"name": "FN_Random_Between",
+			"desc": "",
+			"type": "Function",
+			"code": "create or replace function fn_random_between(floor numeric, ceil numeric)\nreturns integer language plpgsql\nas\n$$\n    begin\n        return floor(random()*(ceil-floor+1))+floor;\n    exception when others then\n        return null;\n    end;\n$$;",
+			"lines": [],
+			"generate": true,
+			"generateCustomCode": true,
+			"pg": {
+				"schema": ""
+			}
+		},
+		"f04f0b47-3f1e-441d-8bc4-425c1e381536": {
+			"id": "f04f0b47-3f1e-441d-8bc4-425c1e381536",
+			"visible": true,
+			"name": "SP_Preencher_Avaliacoes",
+			"desc": "",
+			"type": "Procedure",
+			"code": "create or replace procedure sp_preencher_avaliacao(nr_loops integer)\nlanguage plpgsql\nas\n$$\n    DECLARE\n        varIdUsuario integer;\n        varQtdUsuario integer;\n        varArrUsuario integer array;\n        varDtRegistro timestamp;\n\n        varIdJogo integer;\n        varQtdjogo integer;\n        varArrjogo integer array;\n\n        vl_nota numeric;\n\n    BEGIN\n\n        select count(*),array_agg(id_usuario) into varQtdUsuario, varArrUsuario from tb_usuario;\n        select count(*),array_agg(id_jogo) into varQtdjogo, varArrjogo from tb_jogo;\n\n        for i in 1..nr_loops loop\n\n            vl_nota:= random();\n\t\t\tif vl_nota >= 0.5 then\n\t\t\t\tvl_nota:= 0;\n\t\t\telse\n\t\t\t\tvl_nota:= 0.5;\n\t\t\tend if;\n            vl_nota:= fn_random_between(2,5) + vl_nota;\n\n            if vl_nota > 5 then vl_nota:= 5; end if;\n\n            varIdUsuario = varArrUsuario[fn_random_between(1,varQtdUsuario)];\n            varIdJogo = varArrjogo[fn_random_between(1,varQtdjogo)];\n\n            select dt_registro into varDtRegistro from tb_usuario where id_usuario = varIdUsuario;\n            varDtRegistro:= varDtRegistro + random() * (current_timestamp - varDtRegistro);\n\n            insert into tb_avaliacao values (nextval('sq_avaliacao'), varIdUsuario, varIdJogo, vl_nota, null, varDtRegistro);\n\n\t\tend loop;\n\n    END;\n$$;",
 			"lines": [],
 			"generate": true,
 			"generateCustomCode": true,
@@ -3132,7 +3211,7 @@
 					"referencedItemId": "eb66978e-e757-424f-8517-b3a06dcfa57e",
 					"x": 759.5,
 					"y": 96,
-					"gHeight": 226,
+					"gHeight": 244,
 					"gWidth": 265,
 					"color": "#ffffff",
 					"background": "#03a9f4",
@@ -3251,7 +3330,7 @@
 				},
 				"b1801aa7-6068-44d2-a55d-b03653e7ee4a": {
 					"referencedItemId": "b1801aa7-6068-44d2-a55d-b03653e7ee4a",
-					"x": 1375,
+					"x": 1376.5,
 					"y": 1418,
 					"gHeight": 44,
 					"gWidth": 150,
@@ -3286,7 +3365,7 @@
 					"referencedItemId": "a19db193-d33f-42c4-88b0-01471e08cce4",
 					"x": 1584,
 					"y": 96,
-					"gHeight": 99,
+					"gHeight": 136,
 					"gWidth": 265,
 					"color": "#ffffff",
 					"background": "#03a9f4",
@@ -3306,8 +3385,8 @@
 				},
 				"08988c15-893c-4ba6-903e-1e6f6dc06391": {
 					"referencedItemId": "08988c15-893c-4ba6-903e-1e6f6dc06391",
-					"x": 214.5,
-					"y": 1417.5,
+					"x": 230,
+					"y": 1418,
 					"gHeight": 44,
 					"gWidth": 150,
 					"color": "#eee",
@@ -3372,7 +3451,7 @@
 				},
 				"367d18ad-1d37-4c07-bc37-aa60b02ce804": {
 					"referencedItemId": "367d18ad-1d37-4c07-bc37-aa60b02ce804",
-					"x": 1375,
+					"x": 1376.5,
 					"y": 1483,
 					"gHeight": 44,
 					"gWidth": 150,
@@ -3472,7 +3551,7 @@
 				"50e0df72-fcd3-4dd3-9bb3-97e047b53c54": {
 					"referencedItemId": "50e0df72-fcd3-4dd3-9bb3-97e047b53c54",
 					"x": 45,
-					"y": 995,
+					"y": 995.5,
 					"gHeight": 44,
 					"gWidth": 150,
 					"color": "#eee",
@@ -3482,8 +3561,8 @@
 				},
 				"b7fe57fa-0f72-4058-adc6-4590c6843db8": {
 					"referencedItemId": "b7fe57fa-0f72-4058-adc6-4590c6843db8",
-					"x": 215,
-					"y": 996,
+					"x": 229,
+					"y": 995.5,
 					"gHeight": 44,
 					"gWidth": 150,
 					"color": "#eee",
@@ -3527,7 +3606,7 @@
 				"9b8d3e6b-b378-41dd-9b78-ba07298f5c4f": {
 					"referencedItemId": "9b8d3e6b-b378-41dd-9b78-ba07298f5c4f",
 					"x": 45,
-					"y": 1198,
+					"y": 1199,
 					"gHeight": 44,
 					"gWidth": 153,
 					"color": "#eee",
@@ -3537,8 +3616,8 @@
 				},
 				"712016e3-cfe8-47a4-becc-73ed179e3cd3": {
 					"referencedItemId": "712016e3-cfe8-47a4-becc-73ed179e3cd3",
-					"x": 214.5,
-					"y": 1198,
+					"x": 230,
+					"y": 1199,
 					"gHeight": 44,
 					"gWidth": 150,
 					"color": "#eee",
@@ -3570,8 +3649,8 @@
 				},
 				"7a72a58b-ba7b-4c78-8622-63536d60da0b": {
 					"referencedItemId": "7a72a58b-ba7b-4c78-8622-63536d60da0b",
-					"x": 669.75,
-					"y": 1199.5,
+					"x": 671,
+					"y": 1199,
 					"gHeight": 44,
 					"gWidth": 150,
 					"color": "#eee",
@@ -3582,7 +3661,7 @@
 				"220444a6-ddfd-44f0-b336-28f96da138e9": {
 					"referencedItemId": "220444a6-ddfd-44f0-b336-28f96da138e9",
 					"x": 1199,
-					"y": 1199.5,
+					"y": 1199,
 					"gHeight": 44,
 					"gWidth": 150,
 					"color": "#eee",
@@ -3637,7 +3716,7 @@
 				"c7ebf254-06be-4c40-80cc-1f543b31d83e": {
 					"referencedItemId": "c7ebf254-06be-4c40-80cc-1f543b31d83e",
 					"x": 844,
-					"y": 1199.5,
+					"y": 1199,
 					"gHeight": 44,
 					"gWidth": 150,
 					"color": "#eee",
@@ -3681,7 +3760,7 @@
 				"4c0114bc-b670-4c94-92b7-babab23b130d": {
 					"referencedItemId": "4c0114bc-b670-4c94-92b7-babab23b130d",
 					"x": 1378,
-					"y": 1199.5,
+					"y": 1199,
 					"gHeight": 44,
 					"gWidth": 150,
 					"color": "#eee",
@@ -3691,12 +3770,34 @@
 				},
 				"d3e15c8b-b715-4392-8c73-125b8f38751a": {
 					"referencedItemId": "d3e15c8b-b715-4392-8c73-125b8f38751a",
-					"x": 669.75,
-					"y": 996,
+					"x": 669,
+					"y": 995.5,
 					"gHeight": 44,
 					"gWidth": 150,
 					"color": "#eee",
 					"background": "#4caf50",
+					"resized": false,
+					"autoExpand": true
+				},
+				"56e8ec0a-570c-4682-a3c6-fa3db5fdea48": {
+					"referencedItemId": "56e8ec0a-570c-4682-a3c6-fa3db5fdea48",
+					"x": 1376,
+					"y": 1262,
+					"gHeight": 44,
+					"gWidth": 150,
+					"color": "#eee",
+					"background": "#607d8b",
+					"resized": false,
+					"autoExpand": true
+				},
+				"f04f0b47-3f1e-441d-8bc4-425c1e381536": {
+					"referencedItemId": "f04f0b47-3f1e-441d-8bc4-425c1e381536",
+					"x": 45,
+					"y": 1260,
+					"gHeight": 44,
+					"gWidth": 160,
+					"color": "#eee",
+					"background": "#673ab7",
 					"resized": false,
 					"autoExpand": true
 				}
@@ -3761,8 +3862,10 @@
 		"220444a6-ddfd-44f0-b336-28f96da138e9",
 		"1582d019-bfd6-4d99-ae58-9c33436084ce",
 		"4c0114bc-b670-4c94-92b7-babab23b130d",
+		"56e8ec0a-570c-4682-a3c6-fa3db5fdea48",
 		"9b8d3e6b-b378-41dd-9b78-ba07298f5c4f",
 		"712016e3-cfe8-47a4-becc-73ed179e3cd3",
+		"f04f0b47-3f1e-441d-8bc4-425c1e381536",
 		"7a72a58b-ba7b-4c78-8622-63536d60da0b",
 		"c7ebf254-06be-4c40-80cc-1f543b31d83e",
 		"be9d4622-26e1-40af-9f76-418de1e60304",

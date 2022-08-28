@@ -55,6 +55,7 @@ CREATE TABLE tb_jogo(
   id_jogo integer NOT NULL,
   id_usuario integer NOT NULL,
   nm_jogo varchar(50) NOT NULL,
+  lk_imagem text,
   nr_min_jogadores integer NOT NULL,
   nr_max_jogadores integer,
   fl_idade en_booleano,
@@ -123,6 +124,8 @@ COMMENT ON TABLE tb_avaliacao IS
 CREATE TABLE tb_categoria(
   id_categoria integer NOT NULL,
   nm_categoria text NOT NULL,
+  lk_icone text,
+  lk_imagem text,
   ds_categoria text,
   dt_registro timestamp,
   CONSTRAINT "PK_Categoria" PRIMARY KEY(id_categoria),
@@ -293,36 +296,37 @@ as $$
     end;
 $$;
 
-create or replace function fn_nota_usuario(id integer, dataref date)
-returns numeric language plpgsql
+create or replace function fn_nota_usuario(nomeUsuario text, dataref date)
+returns numeric(6,4) language plpgsql
 as $$
     declare
-        varResult numeric;
+        varResult numeric(6,4);
 
     begin
 
-		with avaliacao as (
+		with avaliacaoTemp as (
 			select
-				ta.vl_avaliacao as valor,
-				ta.dt_registro,
-				min(ta.dt_registro) over w1 as min_date,
-				max(ta.dt_registro) over w1 as max_date,
-				count(*) over w1 as qtd
-				from tb_avaliacao ta
-				left join tb_usuario tu on ta.id_usuario = tu.id_usuario
-				where
-					tu.id_usuario = id
-					and ta.dt_registro <= dataref
-				window
-					w1 as (partition by tu.id_usuario)
+			ta.vl_avaliacao as valor,
+
+			cast(date(ta.dt_registro) - min(date(ta.dt_registro)) over () + 1 as decimal) /
+			cast(max(date(ta.dt_registro)) over () - min(date(ta.dt_registro)) over () + 1 as decimal)
+			as peso
+
+			from tb_avaliacao ta
+			left join tb_usuario tu on ta.id_usuario = tu.id_usuario
+			where
+				lower(tu.nm_usuario) = lower(nomeUsuario)
+				and ta.dt_registro <= dataref
+		),
+
+		avaliacao as (
+		    select
+		    valor, peso, sum(peso) over () as pesoTotal
+		    from avaliacaoTemp
 		)
 
 		select
-		sum(
-			valor *
-			(date(dt_registro) - date(min_date) + 1)/
-			(date(dt_registro) - date(max_date) + 1)
-		) into varResult
+		sum(valor * peso/ pesoTotal)  into varResult
 		from avaliacao;
 
 		return varResult;
@@ -331,35 +335,35 @@ as $$
 $$;
 
 create or replace function fn_nota_usuario(id integer, dataref date)
-returns numeric language plpgsql
+returns numeric(6,4) language plpgsql
 as $$
     declare
-        varResult numeric;
+        varResult numeric(6,4);
 
     begin
 
-		with avaliacao as (
+		with avaliacaoTemp as (
 			select
-				ta.vl_avaliacao as valor,
-				ta.dt_registro,
-				min(ta.dt_registro) over w1 as min_date,
-				max(ta.dt_registro) over w1 as max_date,
-				count(*) over w1 as qtd
-				from tb_avaliacao ta
-				left join tb_usuario tu on ta.id_usuario = tu.id_usuario
-				where
-					tu.id_usuario = id
-					and ta.dt_registro <= dataref
-				window
-					w1 as (partition by tu.id_usuario)
+			ta.vl_avaliacao as valor,
+
+			cast(date(ta.dt_registro) - min(date(ta.dt_registro)) over () + 1 as decimal) /
+			cast(max(date(ta.dt_registro)) over () - min(date(ta.dt_registro)) over () + 1 as decimal)
+			as peso
+
+			from tb_avaliacao ta
+			where
+				ta.id_usuario = id
+				and ta.dt_registro <= dataref
+		),
+
+		avaliacao as (
+		    select
+		    valor, peso, sum(peso) over () as pesoTotal
+		    from avaliacaoTemp
 		)
 
 		select
-		sum(
-			valor *
-			(date(dt_registro) - date(min_date) + 1)/
-			(date(dt_registro) - date(max_date) + 1)
-		) into varResult
+		sum(valor * peso/ pesoTotal)  into varResult
 		from avaliacao;
 
 		return varResult;
@@ -368,35 +372,36 @@ as $$
 $$;
 
 create or replace function fn_nota_jogo(nomeJogo text, dataref date)
-returns numeric language plpgsql
+returns numeric(6,4) language plpgsql
 as $$
     declare
-        varResult numeric;
+        varResult numeric(6,4);
 
     begin
 
-		with avaliacao as (
+		with avaliacaoTemp as (
 			select
-				ta.vl_avaliacao as valor,
-				ta.dt_registro,
-				min(ta.dt_registro) over w1 as min_date,
-				max(ta.dt_registro) over w1 as max_date,
-				count(*) over w1 as qtd
-				from tb_avaliacao ta
-				left join tb_jogo tj on ta.id_jogo = tj.id_jogo
-				where
-					lower(tj.nm_jogo) = lower(nomeJogo)
-					and ta.dt_registro <= dataref
-				window
-					w1 as (partition by tj.id_jogo)
+			ta.vl_avaliacao as valor,
+
+			cast(date(ta.dt_registro) - min(date(ta.dt_registro)) over () + 1 as decimal) /
+			cast(max(date(ta.dt_registro)) over () - min(date(ta.dt_registro)) over () + 1 as decimal)
+			as peso
+
+			from tb_avaliacao ta
+			left join tb_jogo tj on ta.id_jogo = tj.id_jogo
+			where
+				lower(tj.nm_jogo) = lower(nomeJogo)
+				and ta.dt_registro <= dataref
+		),
+
+		avaliacao as (
+		    select
+		    valor, peso, sum(peso) over () as pesoTotal
+		    from avaliacaoTemp
 		)
 
 		select
-		sum(
-			valor *
-			(date(dt_registro) - date(min_date) + 1)/
-			(date(dt_registro) - date(max_date) + 1)
-		) into varResult
+		sum(valor * peso/ pesoTotal)  into varResult
 		from avaliacao;
 
 		return varResult;
@@ -405,39 +410,50 @@ as $$
 $$;
 
 create or replace function fn_nota_jogo(id integer, dataref date)
-returns numeric language plpgsql
+returns numeric(6,4) language plpgsql
 as $$
     declare
-        varResult numeric;
+        varResult numeric(6,4);
 
     begin
 
-		with avaliacao as (
+		with avaliacaoTemp as (
 			select
-				ta.vl_avaliacao as valor,
-				ta.dt_registro,
-				min(ta.dt_registro) over w1 as min_date,
-				max(ta.dt_registro) over w1 as max_date,
-				count(*) over w1 as qtd
-				from tb_avaliacao ta
-				left join tb_jogo tj on ta.id_jogo = tj.id_jogo
-				where
-					tj.id_jogo = id
-					and ta.dt_registro <= dataref
-				window
-					w1 as (partition by tj.id_jogo)
+			ta.vl_avaliacao as valor,
+
+			cast(date(ta.dt_registro) - min(date(ta.dt_registro)) over () + 1 as decimal) /
+			cast(max(date(ta.dt_registro)) over () - min(date(ta.dt_registro)) over () + 1 as decimal)
+			as peso
+
+			from tb_avaliacao ta
+			where
+				ta.id_jogo = id
+				and ta.dt_registro <= dataref
+		),
+
+		avaliacao as (
+		    select
+		    valor, peso, sum(peso) over () as pesoTotal
+		    from avaliacaoTemp
 		)
 
 		select
-		sum(
-			valor *
-			(date(dt_registro) - date(min_date) + 1)/
-			(date(dt_registro) - date(max_date) + 1)
-		) into varResult
+		sum(valor * peso/ pesoTotal)  into varResult
 		from avaliacao;
 
 		return varResult;
 
+    end;
+$$;
+
+create or replace function fn_random_between(floor numeric, ceil numeric)
+returns integer language plpgsql
+as
+$$
+    begin
+        return floor(random()*(ceil-floor+1))+floor;
+    exception when others then
+        return null;
     end;
 $$;
 
@@ -511,11 +527,57 @@ $$
     END;
 $$;
 
+create or replace procedure sp_preencher_avaliacao(nr_loops integer)
+language plpgsql
+as
+$$
+    DECLARE
+        varIdUsuario integer;
+        varQtdUsuario integer;
+        varArrUsuario integer array;
+        varDtRegistro timestamp;
+
+        varIdJogo integer;
+        varQtdjogo integer;
+        varArrjogo integer array;
+
+        vl_nota numeric;
+
+    BEGIN
+
+        select count(*),array_agg(id_usuario) into varQtdUsuario, varArrUsuario from tb_usuario;
+        select count(*),array_agg(id_jogo) into varQtdjogo, varArrjogo from tb_jogo;
+
+        for i in 1..nr_loops loop
+
+            vl_nota:= random();
+			if vl_nota >= 0.5 then
+				vl_nota:= 0;
+			else
+				vl_nota:= 0.5;
+			end if;
+            vl_nota:= fn_random_between(2,5) + vl_nota;
+
+            if vl_nota > 5 then vl_nota:= 5; end if;
+
+            varIdUsuario = varArrUsuario[fn_random_between(1,varQtdUsuario)];
+            varIdJogo = varArrjogo[fn_random_between(1,varQtdjogo)];
+
+            select dt_registro into varDtRegistro from tb_usuario where id_usuario = varIdUsuario;
+            varDtRegistro:= varDtRegistro + random() * (current_timestamp - varDtRegistro);
+
+            insert into tb_avaliacao values (nextval('sq_avaliacao'), varIdUsuario, varIdJogo, vl_nota, null, varDtRegistro);
+
+		end loop;
+
+    END;
+$$;
+
 create or replace function fn_cadastro_usuario() returns trigger as
 $tb_usuario$
     BEGIN
-        insert into tb_usuario_grupo values(nextval('sq_usuario_grupo'), new.id_usuario, 1, 'sim', null, current_timestamp);
-        insert into tb_contrato values(nextval('sq_contrato'), new.id_usuario, 1, 'sim', null ,current_timestamp);
+        insert into tb_usuario_grupo values(nextval('sq_usuario_grupo'), new.id_usuario, 1, 'sim', null, new.dt_registro);
+        insert into tb_contrato values(nextval('sq_contrato'), new.id_usuario, 1, 'sim', null ,new.dt_registro);
         return null;
     END;
 $tb_usuario$ language plpgsql;
@@ -627,8 +689,11 @@ usuario as (
     nm_usuario,
     date(dt_registro) as dt_registro,
     dt_nascimento,
-    min(date(dt_registro)) over() as min_data
+    min(date(dt_registro)) over() as min_data,
+    row_number() over (partition by id_usuario order by dt_registro desc) as nr_linha
     from tb_usuario
+    qualify
+
 ),
 
 contrato as (
@@ -642,7 +707,8 @@ contrato as (
     case
 		when tp.nm_plano != 'Gamer' then date(tpu.dt_registro) - lag(date(tpu.dt_registro)) over w1
 		else 0
-	end as nr_dias_upgrade_plano
+	end as nr_dias_upgrade_plano,
+    row_number() over (partition by tpu.id_usuario order by tpu.dt_registro desc) as nr_linha
     from tb_contrato tpu
     left join tb_plano tp on tpu.id_plano = tp.id_plano
     window
@@ -650,13 +716,14 @@ contrato as (
 ),
 
 avaliacaoTemp as (
-    select
+    select distinct
     id_avaliacao,
 	id_usuario,
 	date(dt_registro) as dt_registro,
 	vl_avaliacao,
 	min(date(ta.dt_registro)) over w1 as min_date,
-	max(date(ta.dt_registro)) over w1 as max_date
+	max(date(ta.dt_registro)) over w1 as max_date,
+	row_number() over (partition by id_usuario order by dt_registro desc) as nr_linha
 	from tb_avaliacao ta
 	window
 		w1 as (partition by ta.id_usuario order by ta.dt_registro rows between unbounded preceding and current row)
@@ -665,16 +732,18 @@ avaliacaoTemp as (
 avaliacao as (
 	select
 	dta.dt_array as dt_ref,
-	ta.id_usuario,
-	ta.dt_registro,
-	sum(case when ta.dt_registro = dta.dt_array then 1 else 0 end) over w1 as qtd,
-	sum(ta.vl_avaliacao * (date(ta.dt_registro) - min_date +1) / (date(ta.dt_registro) - max_date +1)) as vl_avaliacao_media
-	from avaliacaoTemp ta
+	a.id_usuario,
+	a.dt_registro,
+	sum(case when a.dt_registro = dta.dt_array then 1 else 0 end) over w1 as qtd,
+	sum(a.vl_avaliacao * (date(a.dt_registro) - min_date +1) / (date(a.dt_registro) - max_date +1)) as vl_avaliacao_media
+	from avaliacaoTemp a
 	left join DatasArray dta
-		on ta.dt_registro <= dta.dt_array
+		on a.dt_registro <= dta.dt_array
+	where
+	    a.nr_linha = 1
 	group by 1,2,3
 	window
-		w1 as (partition by ta.id_usuario order by ta.dt_registro rows between unbounded preceding and current row)
+		w1 as (partition by a.id_usuario order by a.dt_registro rows between unbounded preceding and current row)
 )
 
 select
@@ -710,6 +779,10 @@ left join contrato c
 left join avaliacao a
 	on u.id_usuario = a.id_usuario
 	and dta.dt_array = a.dt_ref
+
+where
+    u.nr_linha = 1
+	and c.nr_linha = 1
 
 order by 1,2;
 
