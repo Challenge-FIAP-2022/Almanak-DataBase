@@ -3,7 +3,7 @@
 		"b63c7ff7-25fc-4d0c-96a0-3763ef3b7fd3": {
 			"id": "b63c7ff7-25fc-4d0c-96a0-3763ef3b7fd3",
 			"visible": true,
-			"name": "TB_Usuario",
+			"name": "tb_usuario",
 			"desc": "Tabela para armazenamento do dados do usuario.",
 			"estimatedSize": "",
 			"cols": [
@@ -111,13 +111,15 @@
 			"relations": [
 				"aebc2e48-558f-434d-a3aa-50e0e7869a18",
 				"1241cf12-3c9e-4d26-8730-7ce5bf36ef15",
-				"e1dd14d8-25aa-4bc8-997b-f727756c0d77"
+				"e1dd14d8-25aa-4bc8-997b-f727756c0d77",
+				"049c29f8-7900-47d9-ae15-e404669286d9",
+				"39a76c84-f3e3-4b41-b04d-6ef1cb723cf1"
 			],
 			"lines": [],
 			"keys": [
 				{
 					"id": "8934ade1-c572-4af0-bd0a-c77266045aa4",
-					"name": "pk_usuario",
+					"name": "PK_Usuario",
 					"isPk": true,
 					"using": "",
 					"cols": [
@@ -131,7 +133,7 @@
 					"id": "c35de700-5c18-4d13-8d21-3cd0c3ee4ca2",
 					"isPk": false,
 					"using": "na",
-					"name": "un_usuario_email",
+					"name": "UN_Usuario_Email",
 					"cols": [
 						{
 							"id": "c140ed40-1f33-4cf2-8205-a1097e0dccc0",
@@ -153,7 +155,7 @@
 		"eb66978e-e757-424f-8517-b3a06dcfa57e": {
 			"id": "eb66978e-e757-424f-8517-b3a06dcfa57e",
 			"visible": true,
-			"name": "TB_Jogo",
+			"name": "tb_jogo",
 			"desc": "Tabela para o cadastro dos jogos da plataforma.",
 			"estimatedSize": "",
 			"cols": [
@@ -173,8 +175,8 @@
 					}
 				},
 				{
-					"id": "c9e21747-0b27-4a20-82ca-eaa01b85ce84",
-					"name": "id_categoria",
+					"id": "c1d047af-fa2f-4c9e-abe7-e62c3cb12920",
+					"name": "id_usuario",
 					"datatype": "integer",
 					"pk": false,
 					"nn": true,
@@ -187,7 +189,7 @@
 						"generatedIdentity": "no"
 					},
 					"fk": true,
-					"ref": "TB_Categoria"
+					"ref": "tb_usuario"
 				},
 				{
 					"id": "cc86254c-c20d-46a5-b4be-d73ce77810b3",
@@ -275,6 +277,57 @@
 					}
 				},
 				{
+					"id": "7de7b888-ea22-4149-9182-2da15c2225e5",
+					"name": "fl_elite",
+					"datatype": "ad9008af-1465-4e0c-896a-809dfb511a1d",
+					"param": "",
+					"pk": false,
+					"nn": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"list": false,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					}
+				},
+				{
+					"id": "a48126a1-997d-48b8-832d-b28f47401b95",
+					"name": "ds_encerramento",
+					"datatype": "text",
+					"param": "",
+					"pk": false,
+					"nn": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"list": false,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					}
+				},
+				{
+					"id": "3f6ccb9f-3488-4aec-bd41-346a0d1f7cab",
+					"name": "dt_encerramento",
+					"datatype": "timestamp",
+					"param": "",
+					"pk": false,
+					"nn": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"list": false,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					}
+				},
+				{
 					"id": "3ea7a193-46e1-4ab2-ab43-0b1d2e399f5b",
 					"name": "dt_registro",
 					"datatype": "timestamp",
@@ -296,14 +349,15 @@
 				"bc8987c7-f96b-468c-852b-90ffa311925c",
 				"030bcf72-be0a-45c9-ab2c-47909c92f25a",
 				"64bf2a6d-c718-4a11-923c-953bcc26869c",
-				"9155cedf-1629-4306-88d8-af8bd979d9ad",
-				"5cdd9f82-b14b-4d70-9478-6908fd1630bb"
+				"5cdd9f82-b14b-4d70-9478-6908fd1630bb",
+				"049c29f8-7900-47d9-ae15-e404669286d9",
+				"c9318851-d025-4864-bcbf-48650ee4bdd1"
 			],
 			"lines": [],
 			"keys": [
 				{
 					"id": "511f02af-e73b-435a-992f-b39552c64cbe",
-					"name": "Primary key",
+					"name": "PK_jogo",
 					"isPk": true,
 					"using": "",
 					"cols": [
@@ -317,7 +371,7 @@
 					"id": "925bdb86-d772-40fc-9bb5-38fdbae9155d",
 					"isPk": false,
 					"using": "na",
-					"name": "un_jogo_nm_jogo",
+					"name": "UN_Nome_Jogo",
 					"cols": [
 						{
 							"id": "8fbcd420-1586-4b12-9a3b-7021f2d3c428",
@@ -339,7 +393,7 @@
 		"46db98b1-fb30-4d90-affa-9e57b8ab6f44": {
 			"id": "46db98b1-fb30-4d90-affa-9e57b8ab6f44",
 			"visible": true,
-			"name": "TB_Item",
+			"name": "tb_item",
 			"desc": "Tabela para o cadastro de itens que podem ser usados para os jogos.",
 			"estimatedSize": "",
 			"cols": [
@@ -393,23 +447,6 @@
 					}
 				},
 				{
-					"id": "00e46607-34d9-4251-9959-41f9b667ebc2",
-					"name": "fl_necessario",
-					"datatype": "ad9008af-1465-4e0c-896a-809dfb511a1d",
-					"param": "",
-					"pk": false,
-					"nn": false,
-					"comment": "",
-					"defaultvalue": "",
-					"data": "",
-					"collation": null,
-					"list": false,
-					"after": "",
-					"pg": {
-						"generatedIdentity": "no"
-					}
-				},
-				{
 					"id": "e5f7b1ba-36c4-4246-9a85-fdc306ea3191",
 					"name": "dt_registro",
 					"datatype": "timestamp",
@@ -434,7 +471,7 @@
 			"keys": [
 				{
 					"id": "0be16175-ff2d-4bd1-915c-bb32df9dacc4",
-					"name": "Primary key",
+					"name": "PK_Item",
 					"isPk": true,
 					"using": "",
 					"cols": [
@@ -448,7 +485,7 @@
 					"id": "f0ab4e85-e450-4f8c-90f2-d6c005741dbe",
 					"isPk": false,
 					"using": "na",
-					"name": "un_item_nm_item",
+					"name": "UN_Nome_Item",
 					"cols": [
 						{
 							"id": "91754efc-a82a-47d5-acbf-47eb6d338653",
@@ -470,7 +507,7 @@
 		"2f5d4a32-9eb2-4f5e-8965-d90e5ed06fd8": {
 			"id": "2f5d4a32-9eb2-4f5e-8965-d90e5ed06fd8",
 			"visible": true,
-			"name": "TB_Jogo_Item",
+			"name": "tb_jogo_item",
 			"desc": "Tebela relacionamento entre o item e o jogo que utilizara esse item.",
 			"estimatedSize": "",
 			"cols": [
@@ -524,6 +561,40 @@
 					"ref": "TB_Item"
 				},
 				{
+					"id": "cb7c5e3f-c5c8-432d-b44a-34f42352f2ef",
+					"name": "qt_item",
+					"datatype": "integer",
+					"param": "",
+					"pk": false,
+					"nn": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"list": false,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					}
+				},
+				{
+					"id": "564d31c5-46f6-4a8b-b19c-c9bec67fef5c",
+					"name": "fl_necessario",
+					"datatype": "ad9008af-1465-4e0c-896a-809dfb511a1d",
+					"param": "",
+					"pk": false,
+					"nn": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"list": false,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					}
+				},
+				{
 					"id": "9f83813e-2590-461e-90b4-34227850785d",
 					"name": "dt_registro",
 					"datatype": "timestamp",
@@ -549,7 +620,7 @@
 			"keys": [
 				{
 					"id": "27c9d8c6-348c-4884-bf06-9eeada8a4e43",
-					"name": "Primary key",
+					"name": "PK_Jogo_Item",
 					"isPk": true,
 					"using": "",
 					"cols": [
@@ -573,7 +644,7 @@
 		"4993bf46-242c-4785-b01f-22bb50e9df76": {
 			"id": "4993bf46-242c-4785-b01f-22bb50e9df76",
 			"visible": true,
-			"name": "TB_Regra",
+			"name": "tb_regra",
 			"desc": "Tabela para o cadastro das regras do jogo.",
 			"estimatedSize": "",
 			"cols": [
@@ -616,6 +687,23 @@
 					"param": "50",
 					"pk": false,
 					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"list": false,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					}
+				},
+				{
+					"id": "9a3f4cbb-c5f7-486f-bbd3-52608f8d2691",
+					"name": "nr_regra",
+					"datatype": "integer",
+					"param": "",
+					"pk": false,
+					"nn": false,
 					"comment": "",
 					"defaultvalue": "",
 					"data": "",
@@ -685,7 +773,7 @@
 			"keys": [
 				{
 					"id": "b526234c-7a31-4cc1-83a4-b0eefd6bbd6d",
-					"name": "Primary key",
+					"name": "PK_Regra",
 					"isPk": true,
 					"using": "",
 					"cols": [
@@ -709,7 +797,7 @@
 		"81441bbc-4af1-4048-9fd0-cedaa6bb974f": {
 			"id": "81441bbc-4af1-4048-9fd0-cedaa6bb974f",
 			"visible": true,
-			"name": "TB_Avaliacao",
+			"name": "tb_avaliacao",
 			"desc": "Tabela para o cadastro das avalizações do usuario.",
 			"estimatedSize": "",
 			"cols": [
@@ -764,8 +852,8 @@
 				},
 				{
 					"id": "371bce3a-d6f6-4b14-a322-da74029f9cce",
-					"name": "tp_avaliacao",
-					"datatype": "c8cf8f9e-f1bc-485d-8e0c-37ec7bba20df",
+					"name": "vl_avaliacao",
+					"datatype": "numeric",
 					"param": "",
 					"pk": false,
 					"nn": false,
@@ -783,23 +871,6 @@
 					"id": "c524608d-de42-444a-8a8f-87f69b70f91d",
 					"name": "ds_avaliacao",
 					"datatype": "text",
-					"param": "",
-					"pk": false,
-					"nn": false,
-					"comment": "",
-					"defaultvalue": "",
-					"data": "",
-					"collation": null,
-					"list": false,
-					"after": "",
-					"pg": {
-						"generatedIdentity": "no"
-					}
-				},
-				{
-					"id": "10de215b-7d1f-42fe-8f94-1685538677b6",
-					"name": "fl_jogado",
-					"datatype": "ad9008af-1465-4e0c-896a-809dfb511a1d",
 					"param": "",
 					"pk": false,
 					"nn": false,
@@ -839,7 +910,7 @@
 			"keys": [
 				{
 					"id": "9970e034-c3b3-48e5-ad6d-8fc3c1c98fb9",
-					"name": "Primary key",
+					"name": "PK_Avaliacao",
 					"isPk": true,
 					"using": "",
 					"cols": [
@@ -863,7 +934,7 @@
 		"a19db193-d33f-42c4-88b0-01471e08cce4": {
 			"id": "a19db193-d33f-42c4-88b0-01471e08cce4",
 			"visible": true,
-			"name": "TB_Categoria",
+			"name": "tb_categoria",
 			"desc": "",
 			"estimatedSize": "",
 			"cols": [
@@ -935,13 +1006,13 @@
 				}
 			],
 			"relations": [
-				"9155cedf-1629-4306-88d8-af8bd979d9ad"
+				"d7d7996e-d27a-4b2a-b414-1268d526a368"
 			],
 			"lines": [],
 			"keys": [
 				{
 					"id": "d0cd8bf9-1bb5-4630-bd43-d18281e41d0b",
-					"name": "Primary key",
+					"name": "PK_Categoria",
 					"isPk": true,
 					"using": "",
 					"cols": [
@@ -955,7 +1026,7 @@
 					"id": "a16cb5ee-9478-40b0-9b0f-2e0ba3939523",
 					"isPk": false,
 					"using": "na",
-					"name": "un_nm_categoria",
+					"name": "UN_Nome_Categoria",
 					"cols": [
 						{
 							"id": "cf19ea77-ef59-41ef-871f-0b1c866cc8ee",
@@ -977,7 +1048,7 @@
 		"4d182476-ecd5-4df0-824e-bf9d117e5773": {
 			"id": "4d182476-ecd5-4df0-824e-bf9d117e5773",
 			"visible": true,
-			"name": "TB_Grupo",
+			"name": "tb_grupo",
 			"desc": "",
 			"estimatedSize": "",
 			"cols": [
@@ -1039,7 +1110,7 @@
 			"keys": [
 				{
 					"id": "76c6331c-671d-4fdb-97d1-96d0afc841db",
-					"name": "Primary key",
+					"name": "PK_Grupo",
 					"isPk": true,
 					"using": "",
 					"cols": [
@@ -1063,13 +1134,13 @@
 		"b929ba88-f620-448f-ad3c-8f39ad3d07b2": {
 			"id": "b929ba88-f620-448f-ad3c-8f39ad3d07b2",
 			"visible": true,
-			"name": "TB_Grupo_Jogo",
+			"name": "tb_jogo_grupo",
 			"desc": "Tebela relacionamento entre o item e o jogo que utilizara esse item.",
 			"estimatedSize": "",
 			"cols": [
 				{
 					"id": "bc36eb87-1c0b-4144-9554-fac17623eb73",
-					"name": "id_Grupo_jogo",
+					"name": "id_jogo_grupo",
 					"datatype": "integer",
 					"pk": true,
 					"nn": true,
@@ -1135,7 +1206,7 @@
 				},
 				{
 					"id": "ceda0bc9-b8db-4964-93a7-847c576e50f5",
-					"name": "dt _encerramento",
+					"name": "dt_encerramento",
 					"datatype": "timestamp",
 					"param": "",
 					"pk": false,
@@ -1176,7 +1247,7 @@
 			"keys": [
 				{
 					"id": "af84a7ac-af64-4027-ac07-755bb9669756",
-					"name": "Primary key",
+					"name": "PK_Grupo_Jogo",
 					"isPk": true,
 					"using": "",
 					"cols": [
@@ -1200,13 +1271,13 @@
 		"1cf17ead-fbb2-4816-a18a-d048bdc21a71": {
 			"id": "1cf17ead-fbb2-4816-a18a-d048bdc21a71",
 			"visible": true,
-			"name": "TB_Grupo_Usuario",
+			"name": "tb_usuario_grupo",
 			"desc": "",
 			"estimatedSize": "",
 			"cols": [
 				{
 					"id": "8c38a20d-602a-4721-a2a6-3576acb5a282",
-					"name": "id_grupo_usuario",
+					"name": "id_usuario_grupo",
 					"datatype": "integer",
 					"pk": true,
 					"nn": true,
@@ -1256,10 +1327,27 @@
 				{
 					"id": "c95341c7-5038-4ce4-a6be-b2f744e1a86e",
 					"name": "fl_valido",
-					"datatype": "date",
+					"datatype": "ad9008af-1465-4e0c-896a-809dfb511a1d",
 					"param": "",
 					"pk": false,
 					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"list": false,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					}
+				},
+				{
+					"id": "67a4e897-658a-4f13-8b41-3aea5bb0d925",
+					"name": "dt_encerramento",
+					"datatype": "timestamp",
+					"param": "",
+					"pk": false,
+					"nn": false,
 					"comment": "",
 					"defaultvalue": "",
 					"data": "",
@@ -1296,7 +1384,7 @@
 			"keys": [
 				{
 					"id": "93abc90a-3388-4a8f-a623-393954c05eee",
-					"name": "Primary key",
+					"name": "PK_Grupo_Usuario",
 					"isPk": true,
 					"using": "",
 					"cols": [
@@ -1320,7 +1408,7 @@
 		"08006987-d2e7-46e2-853a-e78e3707c9b7": {
 			"id": "08006987-d2e7-46e2-853a-e78e3707c9b7",
 			"visible": true,
-			"name": "TB_Atividade",
+			"name": "tb_atividade",
 			"desc": "",
 			"estimatedSize": "",
 			"cols": [
@@ -1374,6 +1462,23 @@
 					"ref": "TB_Tipo_Atividade"
 				},
 				{
+					"id": "266bc883-a877-4478-88bf-4a7734966aff",
+					"name": "nm_tabela_alterada",
+					"datatype": "text",
+					"param": "",
+					"pk": false,
+					"nn": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"list": false,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					}
+				},
+				{
 					"id": "e0b8422a-4850-4e83-b221-711c50626192",
 					"name": "ds_atividade",
 					"datatype": "text",
@@ -1416,7 +1521,7 @@
 			"keys": [
 				{
 					"id": "c81297e2-8147-46a1-9d7d-644357c24cb6",
-					"name": "Primary key",
+					"name": "PK_Atividade",
 					"isPk": true,
 					"using": "",
 					"cols": [
@@ -1440,7 +1545,7 @@
 		"7b7c6ad4-94e7-4e0c-985d-ca37fe6808ab": {
 			"id": "7b7c6ad4-94e7-4e0c-985d-ca37fe6808ab",
 			"visible": true,
-			"name": "TB_Tipo_Atividade",
+			"name": "tb_tipo_atividade",
 			"desc": "",
 			"estimatedSize": "",
 			"cols": [
@@ -1461,7 +1566,7 @@
 				},
 				{
 					"id": "0d19215c-f6f2-41a9-8ae7-c38b20307e04",
-					"name": "ds_grupo",
+					"name": "nm_grupo",
 					"datatype": "text",
 					"param": "",
 					"pk": false,
@@ -1478,7 +1583,7 @@
 				},
 				{
 					"id": "8b1d70d9-5df9-44c0-b4c0-f82b9c8c11a1",
-					"name": "ds_subgrupo",
+					"name": "nm_subgrupo",
 					"datatype": "text",
 					"param": "",
 					"pk": false,
@@ -1518,13 +1623,518 @@
 			"keys": [
 				{
 					"id": "80cf985f-2417-4b65-9e6f-125629f274c2",
-					"name": "Primary key",
+					"name": "PK_Tipo_Atividade",
 					"isPk": true,
 					"using": "",
 					"cols": [
 						{
 							"id": "cfcc145c-9f1b-4568-9d3b-52c9fa48b01d",
 							"colid": "0f27934d-bc01-4dcf-b837-53cfc4f8acf7"
+						}
+					]
+				}
+			],
+			"indexes": [],
+			"embeddable": false,
+			"generate": true,
+			"generateCustomCode": true,
+			"objectType": "table",
+			"pg": {
+				"rowsecurity": false,
+				"schema": ""
+			}
+		},
+		"9bf22457-1cdf-4726-b7e4-e40ed93c5703": {
+			"id": "9bf22457-1cdf-4726-b7e4-e40ed93c5703",
+			"visible": true,
+			"name": "tb_jogo_categoria",
+			"desc": "",
+			"estimatedSize": "",
+			"cols": [
+				{
+					"id": "324bec36-e0ab-45a9-9347-aceb0fe6500e",
+					"name": "id_jogo_categoria",
+					"datatype": "integer",
+					"pk": true,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					}
+				},
+				{
+					"id": "ac7b9c7a-1376-428d-b63e-1e42258339b3",
+					"name": "id_jogo",
+					"datatype": "integer",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					},
+					"fk": true,
+					"ref": "tb_jogo"
+				},
+				{
+					"id": "25a284ac-b1a7-4ef0-9f31-c6fc13d2d308",
+					"name": "id_categoria",
+					"datatype": "integer",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					},
+					"fk": true,
+					"ref": "tb_categoria"
+				},
+				{
+					"id": "6ec2fe79-f5a9-45cf-b318-be39bb7479eb",
+					"name": "dt_registro",
+					"datatype": "timestamp",
+					"param": "",
+					"pk": false,
+					"nn": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"list": false,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					}
+				}
+			],
+			"relations": [
+				"d7d7996e-d27a-4b2a-b414-1268d526a368",
+				"c9318851-d025-4864-bcbf-48650ee4bdd1"
+			],
+			"lines": [],
+			"keys": [
+				{
+					"id": "fc06736c-637d-45a2-9169-7e19ef354fda",
+					"name": "PK_Jogo_Categoria",
+					"isPk": true,
+					"using": "",
+					"cols": [
+						{
+							"id": "f3b594d3-b0c3-4bc8-b02c-74be6310d893",
+							"colid": "324bec36-e0ab-45a9-9347-aceb0fe6500e"
+						}
+					]
+				}
+			],
+			"indexes": [],
+			"embeddable": false,
+			"generate": true,
+			"generateCustomCode": true,
+			"objectType": "table",
+			"pg": {
+				"rowsecurity": false,
+				"schema": ""
+			}
+		},
+		"d67fb300-16c5-4fb4-a0a3-a325a3b05881": {
+			"id": "d67fb300-16c5-4fb4-a0a3-a325a3b05881",
+			"visible": true,
+			"name": "tb_erro",
+			"desc": "Tabela para o cadastro das exceções geradas dentro da base de dados.",
+			"estimatedSize": "",
+			"cols": [
+				{
+					"id": "c4740adb-ba88-4ad4-b763-059859e74d13",
+					"name": "id_erro",
+					"datatype": "integer",
+					"pk": true,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					}
+				},
+				{
+					"id": "02ce6a9a-3f08-44f2-82ac-d01b5732f67e",
+					"name": "nm_erro",
+					"datatype": "text",
+					"param": "",
+					"pk": false,
+					"nn": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"list": false,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					}
+				},
+				{
+					"id": "f5a08e09-a7ef-45b2-88f6-946352a1ee18",
+					"name": "ds_erro",
+					"datatype": "text",
+					"param": "",
+					"pk": false,
+					"nn": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"list": false,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					}
+				},
+				{
+					"id": "e3f86371-ee94-4178-804b-a7dc9413687c",
+					"name": "dt_registro",
+					"datatype": "timestamp",
+					"param": "",
+					"pk": false,
+					"nn": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"list": false,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					}
+				}
+			],
+			"relations": [],
+			"lines": [],
+			"keys": [
+				{
+					"id": "2419281e-a282-449e-8ee5-58f05567c4ee",
+					"name": "PK_Id_Erro",
+					"isPk": true,
+					"using": "",
+					"cols": [
+						{
+							"id": "dafe20b4-d47d-4630-8cbe-d172487e72b9",
+							"colid": "c4740adb-ba88-4ad4-b763-059859e74d13"
+						}
+					]
+				}
+			],
+			"indexes": [],
+			"embeddable": false,
+			"generate": true,
+			"generateCustomCode": true,
+			"objectType": "table",
+			"pg": {
+				"rowsecurity": false,
+				"schema": ""
+			}
+		},
+		"c5370c7e-0b11-49ad-b8dc-6b0ad134f3c1": {
+			"id": "c5370c7e-0b11-49ad-b8dc-6b0ad134f3c1",
+			"visible": true,
+			"name": "tb_plano",
+			"desc": "",
+			"estimatedSize": "",
+			"cols": [
+				{
+					"id": "304f8c8e-ddd8-4475-82dc-e261688effda",
+					"name": "id_plano",
+					"datatype": "integer",
+					"pk": true,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					}
+				},
+				{
+					"id": "fde1ada1-1aa7-4bc9-bbf8-5d59301b4cbc",
+					"name": "nm_plano",
+					"datatype": "text",
+					"param": "",
+					"pk": false,
+					"nn": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"list": false,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					}
+				},
+				{
+					"id": "0313e8c9-f80c-40b3-8661-e3630682796d",
+					"name": "ds_plano",
+					"datatype": "text",
+					"param": "",
+					"pk": false,
+					"nn": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"list": false,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					}
+				},
+				{
+					"id": "4c40ee54-70f1-42df-a8ff-6d90dc6e2fe4",
+					"name": "vl_plano",
+					"datatype": "numeric",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"list": false,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					}
+				},
+				{
+					"id": "485c2014-46c5-429f-a6e0-7c8d8e8440e8",
+					"name": "fl_valido",
+					"datatype": "ad9008af-1465-4e0c-896a-809dfb511a1d",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"list": false,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					}
+				},
+				{
+					"id": "28010184-76c8-4dd0-8675-e9af7ebef90c",
+					"name": "dt_encerramento",
+					"datatype": "timestamp",
+					"param": "",
+					"pk": false,
+					"nn": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"list": false,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					}
+				},
+				{
+					"id": "cbb6879e-210f-4369-9db4-15aac97fc956",
+					"name": "dt_registro",
+					"datatype": "timestamp",
+					"param": "",
+					"pk": false,
+					"nn": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"list": false,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					}
+				}
+			],
+			"relations": [
+				"1ea28107-86b0-477a-aa46-1d13bf2e28ee"
+			],
+			"lines": [],
+			"keys": [
+				{
+					"id": "e67b6864-343d-413f-b5f4-3ff44695092b",
+					"name": "PK_Plano",
+					"isPk": true,
+					"using": "",
+					"cols": [
+						{
+							"id": "fbfe1752-b08e-40a1-9489-12e5cf3d5959",
+							"colid": "304f8c8e-ddd8-4475-82dc-e261688effda"
+						}
+					]
+				},
+				{
+					"id": "e86f6c04-254b-45c4-ae1f-8b6b60f09524",
+					"isPk": false,
+					"using": "na",
+					"name": "UN_Nome_Plano",
+					"cols": [
+						{
+							"id": "7307c70f-135b-4839-b590-9804a91d2029",
+							"colid": "fde1ada1-1aa7-4bc9-bbf8-5d59301b4cbc"
+						}
+					]
+				}
+			],
+			"indexes": [],
+			"embeddable": false,
+			"generate": true,
+			"generateCustomCode": true,
+			"objectType": "table",
+			"pg": {
+				"rowsecurity": false,
+				"schema": ""
+			}
+		},
+		"9d7c387c-97bf-4481-9be8-cd95ff23a010": {
+			"id": "9d7c387c-97bf-4481-9be8-cd95ff23a010",
+			"visible": true,
+			"name": "tb_contrato",
+			"desc": "",
+			"estimatedSize": "",
+			"cols": [
+				{
+					"id": "ea2b1f8a-0ffa-41dd-8cde-d03b354da248",
+					"name": "id_contrato",
+					"datatype": "integer",
+					"pk": true,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					}
+				},
+				{
+					"id": "51f94b57-54b5-4650-9512-ff2310d649ce",
+					"name": "id_usuario",
+					"datatype": "integer",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					},
+					"fk": true,
+					"ref": "tb_usuario"
+				},
+				{
+					"id": "b6ef3f2c-599a-4fb4-ba87-2862f3c54d5c",
+					"name": "id_plano",
+					"datatype": "integer",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					},
+					"fk": true,
+					"ref": "tb_planos"
+				},
+				{
+					"id": "a8af3aac-1471-4864-9f5c-64efc930a95d",
+					"name": "fl_valido",
+					"datatype": "ad9008af-1465-4e0c-896a-809dfb511a1d",
+					"param": "",
+					"pk": false,
+					"nn": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"list": false,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					}
+				},
+				{
+					"id": "82bb5d6b-71ea-43b2-8cbd-984dff671c79",
+					"name": "dt_encerramento",
+					"datatype": "timestamp",
+					"param": "",
+					"pk": false,
+					"nn": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"list": false,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					}
+				},
+				{
+					"id": "49cb6e21-1607-47d4-b0ee-6d3739d8b8ca",
+					"name": "dt_registro",
+					"datatype": "timestamp",
+					"param": "",
+					"pk": false,
+					"nn": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"list": false,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					}
+				}
+			],
+			"relations": [
+				"39a76c84-f3e3-4b41-b04d-6ef1cb723cf1",
+				"1ea28107-86b0-477a-aa46-1d13bf2e28ee"
+			],
+			"lines": [],
+			"keys": [
+				{
+					"id": "eaa04f43-a35a-4719-abd4-17588f17f1c5",
+					"name": "PK_Plano_Usario",
+					"isPk": true,
+					"using": "",
+					"cols": [
+						{
+							"id": "5607ceda-4d9a-4fd9-8e2e-b4789bc1a7f1",
+							"colid": "ea2b1f8a-0ffa-41dd-8cde-d03b354da248"
 						}
 					]
 				}
@@ -1661,31 +2271,6 @@
 					"id": "d615f116-31ac-4775-affc-9540ffe6f5ea",
 					"parentcol": "ff417707-76ac-4330-8b20-51c70ae37067",
 					"childcol": "e663489a-efbb-4c9a-99cc-7a769c62bb6e"
-				}
-			],
-			"generate": true,
-			"generateCustomCode": true
-		},
-		"9155cedf-1629-4306-88d8-af8bd979d9ad": {
-			"id": "9155cedf-1629-4306-88d8-af8bd979d9ad",
-			"visible": true,
-			"name": "FK_Jogo_Categoria",
-			"desc": "",
-			"type": "identifying",
-			"parent_key": "d0cd8bf9-1bb5-4630-bd43-d18281e41d0b",
-			"parent": "a19db193-d33f-42c4-88b0-01471e08cce4",
-			"child": "eb66978e-e757-424f-8517-b3a06dcfa57e",
-			"c_mp": "true",
-			"c_mch": "true",
-			"c_p": "one",
-			"c_ch": "many",
-			"c_cp": "",
-			"c_cch": "",
-			"cols": [
-				{
-					"id": "ff1453c0-4d6b-4601-ba9f-cd2b50898219",
-					"parentcol": "146ea10f-abec-4db4-add7-f8b349c256b0",
-					"childcol": "c9e21747-0b27-4a20-82ca-eaa01b85ce84"
 				}
 			],
 			"generate": true,
@@ -1840,6 +2425,131 @@
 			],
 			"generate": true,
 			"generateCustomCode": true
+		},
+		"049c29f8-7900-47d9-ae15-e404669286d9": {
+			"id": "049c29f8-7900-47d9-ae15-e404669286d9",
+			"visible": true,
+			"name": "FK_Jogo_Usuario",
+			"desc": "",
+			"type": "identifying",
+			"parent_key": "8934ade1-c572-4af0-bd0a-c77266045aa4",
+			"parent": "b63c7ff7-25fc-4d0c-96a0-3763ef3b7fd3",
+			"child": "eb66978e-e757-424f-8517-b3a06dcfa57e",
+			"c_mp": "true",
+			"c_mch": "true",
+			"c_p": "one",
+			"c_ch": "many",
+			"c_cp": "",
+			"c_cch": "",
+			"cols": [
+				{
+					"id": "c6dc63ab-ad04-41b2-afbd-647d658de694",
+					"parentcol": "b1c12f76-e1e9-4801-9fcb-6ac5e83b926b",
+					"childcol": "c1d047af-fa2f-4c9e-abe7-e62c3cb12920"
+				}
+			],
+			"generate": true,
+			"generateCustomCode": true
+		},
+		"d7d7996e-d27a-4b2a-b414-1268d526a368": {
+			"id": "d7d7996e-d27a-4b2a-b414-1268d526a368",
+			"visible": true,
+			"name": "FK_Jogo_Categoria",
+			"desc": "",
+			"type": "identifying",
+			"parent_key": "d0cd8bf9-1bb5-4630-bd43-d18281e41d0b",
+			"parent": "a19db193-d33f-42c4-88b0-01471e08cce4",
+			"child": "9bf22457-1cdf-4726-b7e4-e40ed93c5703",
+			"c_mp": "true",
+			"c_mch": "true",
+			"c_p": "one",
+			"c_ch": "many",
+			"c_cp": "",
+			"c_cch": "",
+			"cols": [
+				{
+					"id": "c9ddf812-0168-46f8-881b-82f3de6c912f",
+					"parentcol": "146ea10f-abec-4db4-add7-f8b349c256b0",
+					"childcol": "25a284ac-b1a7-4ef0-9f31-c6fc13d2d308"
+				}
+			],
+			"generate": true,
+			"generateCustomCode": true
+		},
+		"c9318851-d025-4864-bcbf-48650ee4bdd1": {
+			"id": "c9318851-d025-4864-bcbf-48650ee4bdd1",
+			"visible": true,
+			"name": "FK_Categoria_Jogo",
+			"desc": "",
+			"type": "identifying",
+			"parent_key": "511f02af-e73b-435a-992f-b39552c64cbe",
+			"parent": "eb66978e-e757-424f-8517-b3a06dcfa57e",
+			"child": "9bf22457-1cdf-4726-b7e4-e40ed93c5703",
+			"c_mp": "true",
+			"c_mch": "true",
+			"c_p": "one",
+			"c_ch": "many",
+			"c_cp": "",
+			"c_cch": "",
+			"cols": [
+				{
+					"id": "d0747797-d979-491d-9e22-a67d6c4f17c3",
+					"parentcol": "ff417707-76ac-4330-8b20-51c70ae37067",
+					"childcol": "ac7b9c7a-1376-428d-b63e-1e42258339b3"
+				}
+			],
+			"generate": true,
+			"generateCustomCode": true
+		},
+		"39a76c84-f3e3-4b41-b04d-6ef1cb723cf1": {
+			"id": "39a76c84-f3e3-4b41-b04d-6ef1cb723cf1",
+			"visible": true,
+			"name": "FK_Plano_Usario",
+			"desc": "",
+			"type": "identifying",
+			"parent_key": "8934ade1-c572-4af0-bd0a-c77266045aa4",
+			"parent": "b63c7ff7-25fc-4d0c-96a0-3763ef3b7fd3",
+			"child": "9d7c387c-97bf-4481-9be8-cd95ff23a010",
+			"c_mp": "true",
+			"c_mch": "true",
+			"c_p": "one",
+			"c_ch": "many",
+			"c_cp": "",
+			"c_cch": "",
+			"cols": [
+				{
+					"id": "af9828f5-0d57-4f1a-a928-dfa45ce42608",
+					"parentcol": "b1c12f76-e1e9-4801-9fcb-6ac5e83b926b",
+					"childcol": "51f94b57-54b5-4650-9512-ff2310d649ce"
+				}
+			],
+			"generate": true,
+			"generateCustomCode": true
+		},
+		"1ea28107-86b0-477a-aa46-1d13bf2e28ee": {
+			"id": "1ea28107-86b0-477a-aa46-1d13bf2e28ee",
+			"visible": true,
+			"name": "FK_Usuario_Plano",
+			"desc": "",
+			"type": "identifying",
+			"parent_key": "e67b6864-343d-413f-b5f4-3ff44695092b",
+			"parent": "c5370c7e-0b11-49ad-b8dc-6b0ad134f3c1",
+			"child": "9d7c387c-97bf-4481-9be8-cd95ff23a010",
+			"c_mp": "true",
+			"c_mch": "true",
+			"c_p": "one",
+			"c_ch": "many",
+			"c_cp": "",
+			"c_cch": "",
+			"cols": [
+				{
+					"id": "465b952a-0897-4e86-8e45-c7d384545436",
+					"parentcol": "304f8c8e-ddd8-4475-82dc-e261688effda",
+					"childcol": "b6ef3f2c-599a-4fb4-ba87-2862f3c54d5c"
+				}
+			],
+			"generate": true,
+			"generateCustomCode": true
 		}
 	},
 	"notes": {
@@ -1937,7 +2647,7 @@
 			"quotation": "if_needed",
 			"includeGeneratedNames": "always"
 		},
-		"lastSaved": "Fri Aug 19 2022 00:42:09 GMT-0300 (Brasilia Standard Time)",
+		"lastSaved": "Sat Aug 27 2022 04:59:27 GMT-0300 (Brasilia Standard Time)",
 		"writeFileParam": false,
 		"nameAutoGeneration": {
 			"keys": false,
@@ -1949,7 +2659,7 @@
 		"ad9008af-1465-4e0c-896a-809dfb511a1d": {
 			"id": "ad9008af-1465-4e0c-896a-809dfb511a1d",
 			"visible": true,
-			"name": "en_bolleano",
+			"name": "en_booleano",
 			"desc": "",
 			"type": "Enum",
 			"code": "",
@@ -1961,28 +2671,13 @@
 			},
 			"enumValues": "'sim', 'nao'"
 		},
-		"c8cf8f9e-f1bc-485d-8e0c-37ec7bba20df": {
-			"id": "c8cf8f9e-f1bc-485d-8e0c-37ec7bba20df",
-			"visible": true,
-			"name": "en_tp_avalicao",
-			"desc": "",
-			"type": "Enum",
-			"code": "",
-			"lines": [],
-			"generate": true,
-			"generateCustomCode": true,
-			"pg": {
-				"schema": ""
-			},
-			"enumValues": "'positivo', 'negativo'"
-		},
 		"82cb7113-6078-42aa-9c88-b9fdc92d608e": {
 			"id": "82cb7113-6078-42aa-9c88-b9fdc92d608e",
 			"visible": true,
 			"name": "SQ_Usuario",
 			"desc": "",
 			"type": "Sequence",
-			"code": "create sequence SQ_Usuario;",
+			"code": "create sequence sq_usuario;",
 			"lines": [],
 			"generate": true,
 			"generateCustomCode": true,
@@ -1996,7 +2691,7 @@
 			"name": "SQ_Avaliacao",
 			"desc": "",
 			"type": "Sequence",
-			"code": "create sequence SQ_Avaliacao;",
+			"code": "create sequence sq_avaliacao;",
 			"lines": [],
 			"generate": true,
 			"generateCustomCode": true,
@@ -2010,7 +2705,7 @@
 			"name": "SQ_Jogo",
 			"desc": "",
 			"type": "Sequence",
-			"code": "create sequence SQ_Jogo;",
+			"code": "create sequence sq_jogo;",
 			"lines": [],
 			"generate": true,
 			"generateCustomCode": true,
@@ -2024,7 +2719,7 @@
 			"name": "SQ_Regra",
 			"desc": "",
 			"type": "Sequence",
-			"code": "create sequence SQ_Regra;",
+			"code": "create sequence sq_regra;",
 			"lines": [],
 			"generate": true,
 			"generateCustomCode": true,
@@ -2038,7 +2733,7 @@
 			"name": "SQ_Item",
 			"desc": "",
 			"type": "Sequence",
-			"code": "create sequence SQ_Item;",
+			"code": "create sequence sq_item;",
 			"lines": [],
 			"generate": true,
 			"generateCustomCode": true,
@@ -2052,7 +2747,7 @@
 			"name": "SQ_Jogo_Item",
 			"desc": "",
 			"type": "Sequence",
-			"code": "create sequence SQ_Jogo_Item;",
+			"code": "create sequence sq_jogo_item;",
 			"lines": [],
 			"generate": true,
 			"generateCustomCode": true,
@@ -2073,7 +2768,7 @@
 			"pg": {
 				"schema": ""
 			},
-			"enumValues": "'bola',  'carta',  'bebida',  'taco',  'quadra', ' papelaria', 'geral'"
+			"enumValues": "'bola',  'carta',  'bebida alcoolica',  'bastao',  'quadra',  'papelaria', 'tabuleiro',  'dado',  'geral'"
 		},
 		"571dc1b9-c4a2-40be-8846-566dd21173b0": {
 			"id": "571dc1b9-c4a2-40be-8846-566dd21173b0",
@@ -2081,7 +2776,7 @@
 			"name": "SQ_Grupo",
 			"desc": "",
 			"type": "Sequence",
-			"code": "create sequence SQ_Grupo;",
+			"code": "create sequence sq_grupo;",
 			"lines": [],
 			"generate": true,
 			"generateCustomCode": true,
@@ -2092,10 +2787,10 @@
 		"367d18ad-1d37-4c07-bc37-aa60b02ce804": {
 			"id": "367d18ad-1d37-4c07-bc37-aa60b02ce804",
 			"visible": true,
-			"name": "SQ_Grupo_Usuario",
+			"name": "SQ_Usuario_Grupo",
 			"desc": "",
 			"type": "Sequence",
-			"code": "create sequence SQ_Grupo_Usuario;",
+			"code": "create sequence sq_usuario_grupo;",
 			"lines": [],
 			"generate": true,
 			"generateCustomCode": true,
@@ -2109,7 +2804,7 @@
 			"name": "SQ_Categoria",
 			"desc": "",
 			"type": "Sequence",
-			"code": "create sequence SQ_Categoria;",
+			"code": "create sequence sq_categoria;",
 			"lines": [],
 			"generate": true,
 			"generateCustomCode": true,
@@ -2123,7 +2818,7 @@
 			"name": "SQ_Atividade",
 			"desc": "",
 			"type": "Sequence",
-			"code": "create sequence SQ_Atividade;",
+			"code": "create sequence sq_atividade;",
 			"lines": [],
 			"generate": true,
 			"generateCustomCode": true,
@@ -2137,7 +2832,7 @@
 			"name": "SQ_Tipo_Atividade",
 			"desc": "",
 			"type": "Sequence",
-			"code": "create sequence SQ_Tipo_Atividade;",
+			"code": "create sequence sq_tipo_atividade;",
 			"lines": [],
 			"generate": true,
 			"generateCustomCode": true,
@@ -2148,10 +2843,10 @@
 		"ed3d8c9b-668c-4d99-bc32-2f1116dfeaef": {
 			"id": "ed3d8c9b-668c-4d99-bc32-2f1116dfeaef",
 			"visible": true,
-			"name": "SQ_Grupo_Jogo",
+			"name": "SQ_Jogo_Grupo",
 			"desc": "",
 			"type": "Sequence",
-			"code": "create sequence SQ_Grupo_Jogo;",
+			"code": "create sequence sq_jogo_grupo;",
 			"lines": [],
 			"generate": true,
 			"generateCustomCode": true,
@@ -2179,7 +2874,217 @@
 			"name": "VW_Usuario_KPI",
 			"desc": "",
 			"type": "View",
+			"code": "create or replace view vw_usuario_kpi as\n\nwith DatasArray as (\n    select\n        date(dt_array) as dt_array\n    from generate_series('2022-01-01', current_date, '1 day':: interval) as dt_array\n),\n\nusuario as (\n    select\n    id_usuario,\n    nm_usuario,\n    date(dt_registro) as dt_registro,\n    dt_nascimento,\n    min(date(dt_registro)) over() as min_data\n    from tb_usuario\n),\n\ncontrato as (\n    select\n    tpu.id_usuario,\n    tp.id_plano,\n    tp.nm_plano,\n    tp.vl_plano,\n    date(tpu.dt_registro) as dt_registro,\n    coalesce(tp.dt_encerramento :: date, '2500-01-01') as dt_encerramento,\n    case\n\t\twhen tp.nm_plano != 'Gamer' then date(tpu.dt_registro) - lag(date(tpu.dt_registro)) over w1\n\t\telse 0\n\tend as nr_dias_upgrade_plano\n    from tb_contrato tpu\n    left join tb_plano tp on tpu.id_plano = tp.id_plano\n    window\n    \tw1 as (partition by tpu.id_usuario order by tpu.dt_registro rows between unbounded preceding and current row)\n),\n\navaliacaoTemp as (\n    select\n    id_avaliacao,\n\tid_usuario,\n\tdate(dt_registro) as dt_registro,\n\tvl_avaliacao,\n\tmin(date(ta.dt_registro)) over w1 as min_date,\n\tmax(date(ta.dt_registro)) over w1 as max_date\n\tfrom tb_avaliacao ta\n\twindow\n\t\tw1 as (partition by ta.id_usuario order by ta.dt_registro rows between unbounded preceding and current row)\n),\n\navaliacao as (\n\tselect\n\tdta.dt_array as dt_ref,\n\tta.id_usuario,\n\tta.dt_registro,\n\tsum(case when ta.dt_registro = dta.dt_array then 1 else 0 end) over w1 as qtd,\n\tsum(ta.vl_avaliacao * (date(ta.dt_registro) - min_date +1) / (date(ta.dt_registro) - max_date +1)) as vl_avaliacao_media\n\tfrom avaliacaoTemp ta\n\tleft join DatasArray dta\n\t\ton ta.dt_registro <= dta.dt_array\n\tgroup by 1,2,3\n\twindow\n\t\tw1 as (partition by ta.id_usuario order by ta.dt_registro rows between unbounded preceding and current row)\n)\n\nselect\n\ndta.dt_array as dt_ref,\n\nu.id_usuario,\nu.nm_usuario,\ncase\n    when extract(year from current_timestamp - u.dt_nascimento) > 18 then 'sim'\n    else 'nao'\nend as fl_maiorirdade,\nu.dt_registro as dt_registro,\ncoalesce(current_date - u.dt_registro, 0) as nr_dias_registrado,\n\nc.id_plano,\nc.nm_plano as nm_current_plano,\nc.nr_dias_upgrade_plano,\n\ncoalesce(a.qtd, 0) as nr_avaliacoes,\ncoalesce(a.vl_avaliacao_media, 0)\n\nfrom usuario u\n\nleft join DatasArray dta\n    on u.min_data <= dta.dt_array\n\nleft join contrato c\n    on u.id_usuario = c.id_usuario\n\tand dta.dt_array >= c.dt_registro\n\tand dta.dt_array < c.dt_encerramento\n\nleft join avaliacao a\n\ton u.id_usuario = a.id_usuario\n\tand dta.dt_array = a.dt_ref\n\norder by 1,2;",
+			"lines": [],
+			"generate": true,
+			"generateCustomCode": true,
+			"pg": {
+				"schema": ""
+			}
+		},
+		"18236b60-5d71-4b2e-af88-14d508ea928d": {
+			"id": "18236b60-5d71-4b2e-af88-14d508ea928d",
+			"visible": true,
+			"name": "VW_Atividade",
+			"desc": "",
+			"type": "View",
 			"code": "",
+			"lines": [],
+			"generate": true,
+			"generateCustomCode": true,
+			"pg": {
+				"schema": ""
+			}
+		},
+		"bbb5bfd7-f6c6-4eea-a816-5ad4b1e0816d": {
+			"id": "bbb5bfd7-f6c6-4eea-a816-5ad4b1e0816d",
+			"visible": true,
+			"name": "SQ_Jogo_Categoria",
+			"desc": "",
+			"type": "Sequence",
+			"code": "create sequence sq_jogo_categoria;",
+			"lines": [],
+			"generate": true,
+			"generateCustomCode": true,
+			"pg": {
+				"schema": ""
+			}
+		},
+		"9b8d3e6b-b378-41dd-9b78-ba07298f5c4f": {
+			"id": "9b8d3e6b-b378-41dd-9b78-ba07298f5c4f",
+			"visible": true,
+			"name": "SP_Usuario_Sem_Grupo",
+			"desc": "",
+			"type": "Procedure",
+			"code": "create or replace procedure sp_usuario_sem_grupo()\nlanguage plpgsql\nas\n$$\n    DECLARE\n        varCursor refcursor;\n        varId integer;\n        varQtd integer:= 1;\n    BEGIN\n        open varCursor for\n            select\n            u.id_usuario\n            from tb_usuario u\n            left join (select distinct id_usuario from tb_usuario_grupo where fl_valido = 'sim') gu\n                on u.id_usuario = gu.id_usuario\n            where\n                gu.id_usuario is null\n        ;\n\t\tfetch varCursor into varId;\n\t\tif not found then\n\t\t\tinsert into tb_erro values(nextval('sq_erro'), 'sp_usuario_sem_grupo', 'Nenhum valor a ser inserido.', current_timestamp);\n\t\t\traise notice 'Nenhum valor a ser inserido.';\n\t\telse\n\t\t\tloop\n\t\t\t\tinsert into tb_usuario_grupo values(nextval('sq_usuario_grupo'), varId, 1, 'sim', null, current_timestamp);\n\t\t\t\tfetch varCursor into varId;\n\t\t\t\texit when not found;\n\t\t\t\tvarQtd:= varQtd + 1;\n\t\t\tend loop;\n\t\t\traise notice '% valores inseridos com sucesso.', TO_CHAR(varQtd, 'fm999G999');\n\t\tend if;\n        close varCursor;\n    END;\n$$;",
+			"lines": [],
+			"generate": true,
+			"generateCustomCode": true,
+			"pg": {
+				"schema": ""
+			}
+		},
+		"712016e3-cfe8-47a4-becc-73ed179e3cd3": {
+			"id": "712016e3-cfe8-47a4-becc-73ed179e3cd3",
+			"visible": true,
+			"name": "SP_Usuario_Sem_Plano",
+			"desc": "",
+			"type": "Procedure",
+			"code": "create or replace procedure sp_usuario_sem_plano()\nlanguage plpgsql\nas\n$$\n    DECLARE\n        varCursor refcursor;\n        varId integer;\n        varQtd integer:= 1;\n    BEGIN\n        open varCursor for\n            select\n            u.id_usuario\n            from tb_usuario u\n            left join (select distinct id_usuario from tb_contrato where fl_valido = 'sim') gu\n                on u.id_usuario = gu.id_usuario\n            where\n                gu.id_usuario is null\n        ;\n\t\tfetch varCursor into varId;\n\t\tif not found then\n\t\t\tinsert into tb_erro values(nextval('sq_erro'), 'sp_usuario_sem_plano', 'Nenhum valor a ser inserido.', current_timestamp);\n\t\t\traise notice 'Nenhum valor a ser inserido.';\n\t\telse\n\t\t\tloop\n\t\t\t\tinsert into tb_contrato values(nextval('sq_contrato'), varId, 1, 'sim', null, current_timestamp);\n\t\t\t\tfetch varCursor into varId;\n\t\t\t\texit when not found;\n\t\t\t\tvarQtd:= varQtd + 1;\n\t\t\tend loop;\n\t\t\traise notice '% valores inseridos com sucesso.', TO_CHAR(varQtd, 'fm999G999');\n\t\tend if;\n        close varCursor;\n    END;\n$$;",
+			"lines": [],
+			"generate": true,
+			"generateCustomCode": true,
+			"pg": {
+				"schema": ""
+			}
+		},
+		"5450da57-9feb-4a72-85be-d146e68c8ad5": {
+			"id": "5450da57-9feb-4a72-85be-d146e68c8ad5",
+			"visible": true,
+			"name": "SQ_Erro",
+			"desc": "",
+			"type": "Sequence",
+			"code": "create sequence sq_erro;",
+			"lines": [],
+			"generate": true,
+			"generateCustomCode": true,
+			"pg": {
+				"schema": ""
+			}
+		},
+		"7a72a58b-ba7b-4c78-8622-63536d60da0b": {
+			"id": "7a72a58b-ba7b-4c78-8622-63536d60da0b",
+			"visible": true,
+			"name": "TG_Cadastro_Usario",
+			"desc": "",
+			"type": "Trigger",
+			"code": "create or replace function fn_cadastro_usuario() returns trigger as\n$tb_usuario$\n    BEGIN\n        insert into tb_usuario_grupo values(nextval('sq_usuario_grupo'), new.id_usuario, 1, 'sim', null, current_timestamp);\n        insert into tb_contrato values(nextval('sq_contrato'), new.id_usuario, 1, 'sim', null ,current_timestamp);\n        return null;\n    END;\n$tb_usuario$ language plpgsql;\n\ncreate or replace trigger tg_cadastro_usuario\n    after insert on tb_usuario\n    FOR EACH ROW EXECUTE FUNCTION fn_cadastro_usuario();",
+			"lines": [],
+			"generate": true,
+			"generateCustomCode": true,
+			"pg": {
+				"schema": ""
+			}
+		},
+		"220444a6-ddfd-44f0-b336-28f96da138e9": {
+			"id": "220444a6-ddfd-44f0-b336-28f96da138e9",
+			"visible": true,
+			"name": "FN_Safe_Cast_Integer",
+			"desc": "",
+			"type": "Function",
+			"code": "create or replace function fn_safe_cast_integer(texto text)\nreturns integer language plpgsql\nas $$\n    begin\n        return texto::integer;\n    exception when others then\n        return null;\n    end;\n$$;",
+			"lines": [],
+			"generate": true,
+			"generateCustomCode": true,
+			"pg": {
+				"schema": ""
+			}
+		},
+		"87154a11-cdbd-436c-a027-afd820c20504": {
+			"id": "87154a11-cdbd-436c-a027-afd820c20504",
+			"visible": true,
+			"name": "SQ_Plano",
+			"desc": "",
+			"type": "Sequence",
+			"code": "create sequence sq_plano;",
+			"lines": [],
+			"generate": true,
+			"generateCustomCode": true,
+			"pg": {
+				"schema": ""
+			}
+		},
+		"fbad7a13-0c70-4e84-9cac-fb94436130e0": {
+			"id": "fbad7a13-0c70-4e84-9cac-fb94436130e0",
+			"visible": true,
+			"name": "SQ_Contrato",
+			"desc": "",
+			"type": "Sequence",
+			"code": "create sequence sq_contrato;",
+			"lines": [],
+			"generate": true,
+			"generateCustomCode": true,
+			"pg": {
+				"schema": ""
+			}
+		},
+		"c7ebf254-06be-4c40-80cc-1f543b31d83e": {
+			"id": "c7ebf254-06be-4c40-80cc-1f543b31d83e",
+			"visible": true,
+			"name": "TG_Cadastro_Contrato",
+			"desc": "",
+			"type": "Trigger",
+			"code": "create or replace function fn_cadastro_contrato() returns trigger as\n$tb_contrato$\n    DECLARE\n        varCursor refcursor;\n        varRecord record;\n        varQtd Integer;\n\n    BEGIN\n        select count(*) into varQtd from tb_contrato where id_usuario = new.id_usuario;\n        if varQtd = 0 then\n            return new;\n\n        else\n            select count(*) into varQtd from tb_contrato where id_usuario = new.id_usuario and fl_valido = 'sim';\n\n            if varQtd = 0 then\n                insert into tb_erro values(nextval('sq_erro'), 'tg_cadastro_contrato', concat('Usuario ', new.id_usuario, ' sem um contrato valido.'), current_timestamp);\n\t\t\t    raise notice 'TG_Cadastro_Contrato: Usuario % sem um contrato valido.', new.id_usuario;\n                return new;\n\n            elsif varQtd > 1 then\n                insert into tb_erro values(nextval('sq_erro'), 'tg_cadastro_contrato', concat('Usuario ', new.id_usuario, ' com mais de um contrato valido.'), current_timestamp);\n\t\t\t    raise notice 'TG_Cadastro_Contrato: Usuario % com mais de um contrato valido.', new.id_usuario;\n\n            end if;\n\n                open varCursor for\n                    select * from tb_contrato where id_usuario = new.id_usuario and fl_valido = 'sim'\n                ;\n\n                loop\n                    fetch varCursor into varRecord;\n                    exit when not found;\n                    update tb_contrato set dt_encerramento = current_timestamp, fl_valido = 'nao' where id_contrato = varRecord.id_contrato;\n\t\t\t    end loop;\n                return new;\n        end if;\n    END;\n$tb_contrato$ language plpgsql;\n\ncreate or replace trigger tg_cadastro_contrato\n    before insert on tb_contrato\n    FOR EACH ROW EXECUTE FUNCTION fn_cadastro_contrato();",
+			"lines": [],
+			"generate": true,
+			"generateCustomCode": true,
+			"pg": {
+				"schema": ""
+			}
+		},
+		"be9d4622-26e1-40af-9f76-418de1e60304": {
+			"id": "be9d4622-26e1-40af-9f76-418de1e60304",
+			"visible": true,
+			"name": "TG_Usuario_Grupo",
+			"desc": "",
+			"type": "Trigger",
+			"code": "create or replace function fn_agrupar_usuario() returns trigger as\n$tb_usuario_grupo$\n    DECLARE\n\n        varCursor refcursor;\n        varRecord record;\n        varQtd Integer;\n\n    BEGIN\n        select count(*) into varQtd from tb_usuario_grupo where id_usuario = new.id_usuario;\n        if varQtd = 0 then\n            return new;\n\n        else\n            select count(*) into varQtd from tb_usuario_grupo where id_usuario = new.id_usuario and fl_valido = 'sim';\n\n            if varQtd = 0 then\n                insert into tb_erro values(nextval('sq_erro'), 'tg_usuario_grupo', concat('Usuario ', new.id_usuario, ' sem um grupo valido.'), current_timestamp);\n\t\t\t    raise notice 'TG_Classificacao_Grupo: Usuario % sem um contrato valido.', new.id_usuario;\n                return new;\n\n            elsif varQtd > 1 then\n                insert into tb_erro values(nextval('sq_erro'), 'tg_usuario_grupo', concat('Usuario ', new.id_usuario, ' com mais de um grupo valido.'), current_timestamp);\n\t\t\t    raise notice 'TG_Classificacao_Grupo: Usuario % com mais de um contrato valido.', new.id_usuario;\n\n            end if;\n\n                open varCursor for\n                    select * from tb_usuario_grupo where id_usuario = new.id_usuario and fl_valido = 'sim'\n                ;\n\n                loop\n                    fetch varCursor into varRecord;\n                    exit when not found;\n                    update tb_usuario_grupo set dt_encerramento = current_timestamp, fl_valido = 'nao' where id_usuario_grupo = varRecord.id_usuario_grupo;\n\t\t\t    end loop;\n                return new;\n        end if;\n    END;\n$tb_usuario_grupo$ language plpgsql;\n\ncreate or replace trigger tg_agrupar_usuario\n    before insert on tb_usuario_grupo\n    FOR EACH ROW EXECUTE FUNCTION fn_agrupar_usuario();",
+			"lines": [],
+			"generate": true,
+			"generateCustomCode": true,
+			"pg": {
+				"schema": ""
+			}
+		},
+		"4f2fc388-ddcf-4e46-b3eb-a00b29ba48f2": {
+			"id": "4f2fc388-ddcf-4e46-b3eb-a00b29ba48f2",
+			"visible": true,
+			"name": "TG_Grupo_Jogo",
+			"desc": "",
+			"type": "Trigger",
+			"code": "",
+			"lines": [],
+			"generate": true,
+			"generateCustomCode": true,
+			"pg": {
+				"schema": ""
+			}
+		},
+		"1582d019-bfd6-4d99-ae58-9c33436084ce": {
+			"id": "1582d019-bfd6-4d99-ae58-9c33436084ce",
+			"visible": true,
+			"name": "FN_Nota_Usario",
+			"desc": "",
+			"type": "Function",
+			"code": "create or replace function fn_nota_usuario(id integer, dataref date)\nreturns numeric language plpgsql\nas $$\n    declare\n        varResult numeric;\n\n    begin\n\n\t\twith avaliacao as (\n\t\t\tselect\n\t\t\t\tta.vl_avaliacao as valor,\n\t\t\t\tta.dt_registro,\n\t\t\t\tmin(ta.dt_registro) over w1 as min_date,\n\t\t\t\tmax(ta.dt_registro) over w1 as max_date,\n\t\t\t\tcount(*) over w1 as qtd\n\t\t\t\tfrom tb_avaliacao ta\n\t\t\t\tleft join tb_usuario tu on ta.id_usuario = tu.id_usuario\n\t\t\t\twhere\n\t\t\t\t\ttu.id_usuario = id\n\t\t\t\t\tand ta.dt_registro <= dataref\n\t\t\t\twindow\n\t\t\t\t\tw1 as (partition by tu.id_usuario)\n\t\t)\n\n\t\tselect\n\t\tsum(\n\t\t\tvalor *\n\t\t\t(date(dt_registro) - date(min_date) + 1)/\n\t\t\t(date(dt_registro) - date(max_date) + 1)\n\t\t) into varResult\n\t\tfrom avaliacao;\n\n\t\treturn varResult;\n\n    end;\n$$;\n\ncreate or replace function fn_nota_usuario(id integer, dataref date)\nreturns numeric language plpgsql\nas $$\n    declare\n        varResult numeric;\n\n    begin\n\n\t\twith avaliacao as (\n\t\t\tselect\n\t\t\t\tta.vl_avaliacao as valor,\n\t\t\t\tta.dt_registro,\n\t\t\t\tmin(ta.dt_registro) over w1 as min_date,\n\t\t\t\tmax(ta.dt_registro) over w1 as max_date,\n\t\t\t\tcount(*) over w1 as qtd\n\t\t\t\tfrom tb_avaliacao ta\n\t\t\t\tleft join tb_usuario tu on ta.id_usuario = tu.id_usuario\n\t\t\t\twhere\n\t\t\t\t\ttu.id_usuario = id\n\t\t\t\t\tand ta.dt_registro <= dataref\n\t\t\t\twindow\n\t\t\t\t\tw1 as (partition by tu.id_usuario)\n\t\t)\n\n\t\tselect\n\t\tsum(\n\t\t\tvalor *\n\t\t\t(date(dt_registro) - date(min_date) + 1)/\n\t\t\t(date(dt_registro) - date(max_date) + 1)\n\t\t) into varResult\n\t\tfrom avaliacao;\n\n\t\treturn varResult;\n\n    end;\n$$;",
+			"lines": [],
+			"generate": true,
+			"generateCustomCode": true,
+			"pg": {
+				"schema": ""
+			}
+		},
+		"4c0114bc-b670-4c94-92b7-babab23b130d": {
+			"id": "4c0114bc-b670-4c94-92b7-babab23b130d",
+			"visible": true,
+			"name": "FN_Nota_Jogo",
+			"desc": "",
+			"type": "Function",
+			"code": "create or replace function fn_nota_jogo(nomeJogo text, dataref date)\nreturns numeric language plpgsql\nas $$\n    declare\n        varResult numeric;\n\n    begin\n\n\t\twith avaliacao as (\n\t\t\tselect\n\t\t\t\tta.vl_avaliacao as valor,\n\t\t\t\tta.dt_registro,\n\t\t\t\tmin(ta.dt_registro) over w1 as min_date,\n\t\t\t\tmax(ta.dt_registro) over w1 as max_date,\n\t\t\t\tcount(*) over w1 as qtd\n\t\t\t\tfrom tb_avaliacao ta\n\t\t\t\tleft join tb_jogo tj on ta.id_jogo = tj.id_jogo\n\t\t\t\twhere\n\t\t\t\t\tlower(tj.nm_jogo) = lower(nomeJogo)\n\t\t\t\t\tand ta.dt_registro <= dataref\n\t\t\t\twindow\n\t\t\t\t\tw1 as (partition by tj.id_jogo)\n\t\t)\n\n\t\tselect\n\t\tsum(\n\t\t\tvalor *\n\t\t\t(date(dt_registro) - date(min_date) + 1)/\n\t\t\t(date(dt_registro) - date(max_date) + 1)\n\t\t) into varResult\n\t\tfrom avaliacao;\n\n\t\treturn varResult;\n\n    end;\n$$;\n\ncreate or replace function fn_nota_jogo(id integer, dataref date)\nreturns numeric language plpgsql\nas $$\n    declare\n        varResult numeric;\n\n    begin\n\n\t\twith avaliacao as (\n\t\t\tselect\n\t\t\t\tta.vl_avaliacao as valor,\n\t\t\t\tta.dt_registro,\n\t\t\t\tmin(ta.dt_registro) over w1 as min_date,\n\t\t\t\tmax(ta.dt_registro) over w1 as max_date,\n\t\t\t\tcount(*) over w1 as qtd\n\t\t\t\tfrom tb_avaliacao ta\n\t\t\t\tleft join tb_jogo tj on ta.id_jogo = tj.id_jogo\n\t\t\t\twhere\n\t\t\t\t\ttj.id_jogo = id\n\t\t\t\t\tand ta.dt_registro <= dataref\n\t\t\t\twindow\n\t\t\t\t\tw1 as (partition by tj.id_jogo)\n\t\t)\n\n\t\tselect\n\t\tsum(\n\t\t\tvalor *\n\t\t\t(date(dt_registro) - date(min_date) + 1)/\n\t\t\t(date(dt_registro) - date(max_date) + 1)\n\t\t) into varResult\n\t\tfrom avaliacao;\n\n\t\treturn varResult;\n\n    end;\n$$;",
+			"lines": [],
+			"generate": true,
+			"generateCustomCode": true,
+			"pg": {
+				"schema": ""
+			}
+		},
+		"d3e15c8b-b715-4392-8c73-125b8f38751a": {
+			"id": "d3e15c8b-b715-4392-8c73-125b8f38751a",
+			"visible": true,
+			"name": "Commit",
+			"desc": "",
+			"type": "Other",
+			"code": "commit;",
 			"lines": [],
 			"generate": true,
 			"generateCustomCode": true,
@@ -2203,19 +3108,19 @@
 			"diagramItems": {
 				"b63c7ff7-25fc-4d0c-96a0-3763ef3b7fd3": {
 					"referencedItemId": "b63c7ff7-25fc-4d0c-96a0-3763ef3b7fd3",
-					"x": 760,
+					"x": 759,
 					"y": 515,
-					"gHeight": 154,
-					"gWidth": 360,
+					"gHeight": 144,
+					"gWidth": 265,
 					"color": "#ffffff",
-					"background": "#03a9f4",
+					"background": "#009688",
 					"resized": true,
 					"autoExpand": true
 				},
 				"ad9008af-1465-4e0c-896a-809dfb511a1d": {
 					"referencedItemId": "ad9008af-1465-4e0c-896a-809dfb511a1d",
 					"x": 45,
-					"y": 1418,
+					"y": 1417.5,
 					"gHeight": 44,
 					"gWidth": 150,
 					"color": "#eee",
@@ -2225,68 +3130,57 @@
 				},
 				"eb66978e-e757-424f-8517-b3a06dcfa57e": {
 					"referencedItemId": "eb66978e-e757-424f-8517-b3a06dcfa57e",
-					"x": 760,
+					"x": 759.5,
 					"y": 96,
-					"gHeight": 171,
-					"gWidth": 244,
+					"gHeight": 226,
+					"gWidth": 265,
 					"color": "#ffffff",
 					"background": "#03a9f4",
-					"resized": false,
+					"resized": true,
 					"autoExpand": true
 				},
 				"46db98b1-fb30-4d90-affa-9e57b8ab6f44": {
 					"referencedItemId": "46db98b1-fb30-4d90-affa-9e57b8ab6f44",
 					"x": 45,
 					"y": 96,
-					"gHeight": 117,
-					"gWidth": 239,
+					"gHeight": 99,
+					"gWidth": 265,
 					"color": "#ffffff",
 					"background": "#03a9f4",
-					"resized": false,
+					"resized": true,
 					"autoExpand": true
 				},
 				"2f5d4a32-9eb2-4f5e-8965-d90e5ed06fd8": {
 					"referencedItemId": "2f5d4a32-9eb2-4f5e-8965-d90e5ed06fd8",
 					"x": 370,
 					"y": 96,
-					"gHeight": 99,
-					"gWidth": 220,
+					"gHeight": 135,
+					"gWidth": 265,
 					"color": "#ffffff",
 					"background": "#03a9f4",
-					"resized": false,
+					"resized": true,
 					"autoExpand": true
 				},
 				"4993bf46-242c-4785-b01f-22bb50e9df76": {
 					"referencedItemId": "4993bf46-242c-4785-b01f-22bb50e9df76",
-					"x": 371,
+					"x": 370,
 					"y": 307,
-					"gHeight": 135,
-					"gWidth": 227,
+					"gHeight": 153,
+					"gWidth": 265,
 					"color": "#ffffff",
 					"background": "#03a9f4",
-					"resized": false,
+					"resized": true,
 					"autoExpand": true
 				},
 				"81441bbc-4af1-4048-9fd0-cedaa6bb974f": {
 					"referencedItemId": "81441bbc-4af1-4048-9fd0-cedaa6bb974f",
 					"x": 370,
 					"y": 515,
-					"gHeight": 153,
-					"gWidth": 248,
+					"gHeight": 141,
+					"gWidth": 265,
 					"color": "#ffffff",
 					"background": "#03a9f4",
-					"resized": false,
-					"autoExpand": true
-				},
-				"c8cf8f9e-f1bc-485d-8e0c-37ec7bba20df": {
-					"referencedItemId": "c8cf8f9e-f1bc-485d-8e0c-37ec7bba20df",
-					"x": 218,
-					"y": 1418,
-					"gHeight": 44,
-					"gWidth": 150,
-					"color": "#eee",
-					"background": "#9c27b0",
-					"resized": false,
+					"resized": true,
 					"autoExpand": true
 				},
 				"b9eb08ed-da89-4ca8-b3ef-001327b011b9": {
@@ -2302,7 +3196,7 @@
 				},
 				"457b9266-642f-4a0d-92f2-83dc48b91122": {
 					"referencedItemId": "457b9266-642f-4a0d-92f2-83dc48b91122",
-					"x": 670,
+					"x": 669.75,
 					"y": 1353,
 					"gHeight": 44,
 					"gWidth": 150,
@@ -2313,7 +3207,7 @@
 				},
 				"82cb7113-6078-42aa-9c88-b9fdc92d608e": {
 					"referencedItemId": "82cb7113-6078-42aa-9c88-b9fdc92d608e",
-					"x": 670,
+					"x": 669.75,
 					"y": 1418,
 					"gHeight": 44,
 					"gWidth": 150,
@@ -2324,8 +3218,8 @@
 				},
 				"63c5af14-fc87-45a2-8dd5-939e26063a03": {
 					"referencedItemId": "63c5af14-fc87-45a2-8dd5-939e26063a03",
-					"x": 1019,
-					"y": 1418,
+					"x": 1018.5,
+					"y": 1419,
 					"gHeight": 44,
 					"gWidth": 150,
 					"color": "#eee",
@@ -2346,7 +3240,7 @@
 				},
 				"c884728c-c17a-484f-a108-b5c39da48666": {
 					"referencedItemId": "c884728c-c17a-484f-a108-b5c39da48666",
-					"x": 1198,
+					"x": 1198.5,
 					"y": 1418,
 					"gHeight": 44,
 					"gWidth": 150,
@@ -2390,30 +3284,30 @@
 				},
 				"a19db193-d33f-42c4-88b0-01471e08cce4": {
 					"referencedItemId": "a19db193-d33f-42c4-88b0-01471e08cce4",
-					"x": 1583,
+					"x": 1584,
 					"y": 96,
 					"gHeight": 99,
-					"gWidth": 220,
+					"gWidth": 265,
 					"color": "#ffffff",
 					"background": "#03a9f4",
-					"resized": false,
+					"resized": true,
 					"autoExpand": true
 				},
 				"4d182476-ecd5-4df0-824e-bf9d117e5773": {
 					"referencedItemId": "4d182476-ecd5-4df0-824e-bf9d117e5773",
-					"x": 1583,
+					"x": 1584,
 					"y": 515,
 					"gHeight": 81,
-					"gWidth": 220,
+					"gWidth": 265,
 					"color": "#ffffff",
 					"background": "#03a9f4",
-					"resized": false,
+					"resized": true,
 					"autoExpand": true
 				},
 				"08988c15-893c-4ba6-903e-1e6f6dc06391": {
 					"referencedItemId": "08988c15-893c-4ba6-903e-1e6f6dc06391",
-					"x": 45,
-					"y": 1483,
+					"x": 214.5,
+					"y": 1417.5,
 					"gHeight": 44,
 					"gWidth": 150,
 					"color": "#eee",
@@ -2423,35 +3317,35 @@
 				},
 				"b929ba88-f620-448f-ad3c-8f39ad3d07b2": {
 					"referencedItemId": "b929ba88-f620-448f-ad3c-8f39ad3d07b2",
-					"x": 1543,
+					"x": 1584,
 					"y": 307,
 					"gHeight": 135,
-					"gWidth": 260,
+					"gWidth": 265,
 					"color": "#ffffff",
-					"background": "#03a9f4",
-					"resized": false,
+					"background": "#009688",
+					"resized": true,
 					"autoExpand": true
 				},
 				"1cf17ead-fbb2-4816-a18a-d048bdc21a71": {
 					"referencedItemId": "1cf17ead-fbb2-4816-a18a-d048bdc21a71",
-					"x": 1230,
+					"x": 1232,
 					"y": 515,
-					"gHeight": 117,
-					"gWidth": 238,
+					"gHeight": 142,
+					"gWidth": 268,
 					"color": "#ffffff",
-					"background": "#03a9f4",
-					"resized": false,
+					"background": "#009688",
+					"resized": true,
 					"autoExpand": true
 				},
 				"08006987-d2e7-46e2-853a-e78e3707c9b7": {
 					"referencedItemId": "08006987-d2e7-46e2-853a-e78e3707c9b7",
-					"x": 760,
+					"x": 759.5,
 					"y": 751,
-					"gHeight": 117,
-					"gWidth": 235,
+					"gHeight": 136,
+					"gWidth": 265,
 					"color": "#ffffff",
 					"background": "#03a9f4",
-					"resized": false,
+					"resized": true,
 					"autoExpand": true
 				},
 				"7b7c6ad4-94e7-4e0c-985d-ca37fe6808ab": {
@@ -2459,15 +3353,15 @@
 					"x": 370,
 					"y": 751,
 					"gHeight": 99,
-					"gWidth": 235,
+					"gWidth": 265,
 					"color": "#ffffff",
 					"background": "#03a9f4",
-					"resized": false,
+					"resized": true,
 					"autoExpand": true
 				},
 				"571dc1b9-c4a2-40be-8846-566dd21173b0": {
 					"referencedItemId": "571dc1b9-c4a2-40be-8846-566dd21173b0",
-					"x": 670,
+					"x": 669.75,
 					"y": 1483,
 					"gHeight": 44,
 					"gWidth": 150,
@@ -2511,8 +3405,8 @@
 				},
 				"9a29efbd-65cd-49b8-9629-710d715e64c3": {
 					"referencedItemId": "9a29efbd-65cd-49b8-9629-710d715e64c3",
-					"x": 1019,
-					"y": 1483,
+					"x": 1018.5,
+					"y": 1484,
 					"gHeight": 44,
 					"gWidth": 150,
 					"color": "#eee",
@@ -2522,7 +3416,7 @@
 				},
 				"ed3d8c9b-668c-4d99-bc32-2f1116dfeaef": {
 					"referencedItemId": "ed3d8c9b-668c-4d99-bc32-2f1116dfeaef",
-					"x": 1198,
+					"x": 1198.5,
 					"y": 1483,
 					"gHeight": 44,
 					"gWidth": 150,
@@ -2588,12 +3482,221 @@
 				},
 				"b7fe57fa-0f72-4058-adc6-4590c6843db8": {
 					"referencedItemId": "b7fe57fa-0f72-4058-adc6-4590c6843db8",
-					"x": 218,
+					"x": 215,
 					"y": 996,
 					"gHeight": 44,
 					"gWidth": 150,
 					"color": "#eee",
 					"background": "#3f51b5",
+					"resized": false,
+					"autoExpand": true
+				},
+				"18236b60-5d71-4b2e-af88-14d508ea928d": {
+					"referencedItemId": "18236b60-5d71-4b2e-af88-14d508ea928d",
+					"x": 45,
+					"y": 1062,
+					"gHeight": 44,
+					"gWidth": 150,
+					"color": "#eee",
+					"background": "#3f51b5",
+					"resized": false,
+					"autoExpand": true
+				},
+				"9bf22457-1cdf-4726-b7e4-e40ed93c5703": {
+					"referencedItemId": "9bf22457-1cdf-4726-b7e4-e40ed93c5703",
+					"x": 1232,
+					"y": 96,
+					"gHeight": 99,
+					"gWidth": 265,
+					"color": "#ffffff",
+					"background": "#03a9f4",
+					"resized": true,
+					"autoExpand": true
+				},
+				"bbb5bfd7-f6c6-4eea-a816-5ad4b1e0816d": {
+					"referencedItemId": "bbb5bfd7-f6c6-4eea-a816-5ad4b1e0816d",
+					"x": 669.75,
+					"y": 1547.75,
+					"gHeight": 44,
+					"gWidth": 150,
+					"color": "#eee",
+					"background": "#795548",
+					"resized": false,
+					"autoExpand": true
+				},
+				"9b8d3e6b-b378-41dd-9b78-ba07298f5c4f": {
+					"referencedItemId": "9b8d3e6b-b378-41dd-9b78-ba07298f5c4f",
+					"x": 45,
+					"y": 1198,
+					"gHeight": 44,
+					"gWidth": 153,
+					"color": "#eee",
+					"background": "#673ab7",
+					"resized": false,
+					"autoExpand": true
+				},
+				"712016e3-cfe8-47a4-becc-73ed179e3cd3": {
+					"referencedItemId": "712016e3-cfe8-47a4-becc-73ed179e3cd3",
+					"x": 214.5,
+					"y": 1198,
+					"gHeight": 44,
+					"gWidth": 150,
+					"color": "#eee",
+					"background": "#673ab7",
+					"resized": false,
+					"autoExpand": true
+				},
+				"d67fb300-16c5-4fb4-a0a3-a325a3b05881": {
+					"referencedItemId": "d67fb300-16c5-4fb4-a0a3-a325a3b05881",
+					"x": 45,
+					"y": 258,
+					"gHeight": 99,
+					"gWidth": 265,
+					"color": "#ffffff",
+					"background": "#03a9f4",
+					"resized": true,
+					"autoExpand": true
+				},
+				"5450da57-9feb-4a72-85be-d146e68c8ad5": {
+					"referencedItemId": "5450da57-9feb-4a72-85be-d146e68c8ad5",
+					"x": 844,
+					"y": 1547.75,
+					"gHeight": 44,
+					"gWidth": 150,
+					"color": "#eee",
+					"background": "#795548",
+					"resized": false,
+					"autoExpand": true
+				},
+				"7a72a58b-ba7b-4c78-8622-63536d60da0b": {
+					"referencedItemId": "7a72a58b-ba7b-4c78-8622-63536d60da0b",
+					"x": 669.75,
+					"y": 1199.5,
+					"gHeight": 44,
+					"gWidth": 150,
+					"color": "#eee",
+					"background": "#009688",
+					"resized": true,
+					"autoExpand": true
+				},
+				"220444a6-ddfd-44f0-b336-28f96da138e9": {
+					"referencedItemId": "220444a6-ddfd-44f0-b336-28f96da138e9",
+					"x": 1199,
+					"y": 1199.5,
+					"gHeight": 44,
+					"gWidth": 150,
+					"color": "#eee",
+					"background": "#607d8b",
+					"resized": false,
+					"autoExpand": true
+				},
+				"c5370c7e-0b11-49ad-b8dc-6b0ad134f3c1": {
+					"referencedItemId": "c5370c7e-0b11-49ad-b8dc-6b0ad134f3c1",
+					"x": 1583,
+					"y": 752,
+					"gHeight": 154,
+					"gWidth": 265,
+					"color": "#ffffff",
+					"background": "#03a9f4",
+					"resized": true,
+					"autoExpand": true
+				},
+				"87154a11-cdbd-436c-a027-afd820c20504": {
+					"referencedItemId": "87154a11-cdbd-436c-a027-afd820c20504",
+					"x": 1018.5,
+					"y": 1547.75,
+					"gHeight": 44,
+					"gWidth": 150,
+					"color": "#eee",
+					"background": "#795548",
+					"resized": false,
+					"autoExpand": true
+				},
+				"9d7c387c-97bf-4481-9be8-cd95ff23a010": {
+					"referencedItemId": "9d7c387c-97bf-4481-9be8-cd95ff23a010",
+					"x": 1232,
+					"y": 751,
+					"gHeight": 136,
+					"gWidth": 265,
+					"color": "#ffffff",
+					"background": "#009688",
+					"resized": true,
+					"autoExpand": true
+				},
+				"fbad7a13-0c70-4e84-9cac-fb94436130e0": {
+					"referencedItemId": "fbad7a13-0c70-4e84-9cac-fb94436130e0",
+					"x": 1200,
+					"y": 1548,
+					"gHeight": 44,
+					"gWidth": 150,
+					"color": "#eee",
+					"background": "#795548",
+					"resized": false,
+					"autoExpand": true
+				},
+				"c7ebf254-06be-4c40-80cc-1f543b31d83e": {
+					"referencedItemId": "c7ebf254-06be-4c40-80cc-1f543b31d83e",
+					"x": 844,
+					"y": 1199.5,
+					"gHeight": 44,
+					"gWidth": 150,
+					"color": "#eee",
+					"background": "#009688",
+					"resized": false,
+					"autoExpand": true
+				},
+				"be9d4622-26e1-40af-9f76-418de1e60304": {
+					"referencedItemId": "be9d4622-26e1-40af-9f76-418de1e60304",
+					"x": 670,
+					"y": 1260,
+					"gHeight": 44,
+					"gWidth": 150,
+					"color": "#eee",
+					"background": "#009688",
+					"resized": false,
+					"autoExpand": true
+				},
+				"4f2fc388-ddcf-4e46-b3eb-a00b29ba48f2": {
+					"referencedItemId": "4f2fc388-ddcf-4e46-b3eb-a00b29ba48f2",
+					"x": 844,
+					"y": 1262,
+					"gHeight": 44,
+					"gWidth": 150,
+					"color": "#eee",
+					"background": "#009688",
+					"resized": false,
+					"autoExpand": true
+				},
+				"1582d019-bfd6-4d99-ae58-9c33436084ce": {
+					"referencedItemId": "1582d019-bfd6-4d99-ae58-9c33436084ce",
+					"x": 1199,
+					"y": 1262,
+					"gHeight": 44,
+					"gWidth": 150,
+					"color": "#eee",
+					"background": "#607d8b",
+					"resized": false,
+					"autoExpand": true
+				},
+				"4c0114bc-b670-4c94-92b7-babab23b130d": {
+					"referencedItemId": "4c0114bc-b670-4c94-92b7-babab23b130d",
+					"x": 1378,
+					"y": 1199.5,
+					"gHeight": 44,
+					"gWidth": 150,
+					"color": "#eee",
+					"background": "#607d8b",
+					"resized": false,
+					"autoExpand": true
+				},
+				"d3e15c8b-b715-4392-8c73-125b8f38751a": {
+					"referencedItemId": "d3e15c8b-b715-4392-8c73-125b8f38751a",
+					"x": 669.75,
+					"y": 996,
+					"gHeight": 44,
+					"gWidth": 150,
+					"color": "#eee",
+					"background": "#4caf50",
 					"resized": false,
 					"autoExpand": true
 				}
@@ -2606,7 +3709,6 @@
 	},
 	"order": [
 		"ad9008af-1465-4e0c-896a-809dfb511a1d",
-		"c8cf8f9e-f1bc-485d-8e0c-37ec7bba20df",
 		"08988c15-893c-4ba6-903e-1e6f6dc06391",
 		"82cb7113-6078-42aa-9c88-b9fdc92d608e",
 		"63c5af14-fc87-45a2-8dd5-939e26063a03",
@@ -2620,6 +3722,10 @@
 		"ed3d8c9b-668c-4d99-bc32-2f1116dfeaef",
 		"15605b64-799d-4fa5-8c4f-1b771b0ebd0b",
 		"571dc1b9-c4a2-40be-8846-566dd21173b0",
+		"bbb5bfd7-f6c6-4eea-a816-5ad4b1e0816d",
+		"5450da57-9feb-4a72-85be-d146e68c8ad5",
+		"87154a11-cdbd-436c-a027-afd820c20504",
+		"fbad7a13-0c70-4e84-9cac-fb94436130e0",
 		"b63c7ff7-25fc-4d0c-96a0-3763ef3b7fd3",
 		"eb66978e-e757-424f-8517-b3a06dcfa57e",
 		"46db98b1-fb30-4d90-affa-9e57b8ab6f44",
@@ -2632,20 +3738,39 @@
 		"1cf17ead-fbb2-4816-a18a-d048bdc21a71",
 		"08006987-d2e7-46e2-853a-e78e3707c9b7",
 		"7b7c6ad4-94e7-4e0c-985d-ca37fe6808ab",
+		"9bf22457-1cdf-4726-b7e4-e40ed93c5703",
+		"d67fb300-16c5-4fb4-a0a3-a325a3b05881",
+		"c5370c7e-0b11-49ad-b8dc-6b0ad134f3c1",
+		"9d7c387c-97bf-4481-9be8-cd95ff23a010",
 		"bc8987c7-f96b-468c-852b-90ffa311925c",
 		"7fb5d30a-9db3-4bb2-a2d0-4ee9718a926c",
 		"030bcf72-be0a-45c9-ab2c-47909c92f25a",
 		"aebc2e48-558f-434d-a3aa-50e0e7869a18",
 		"64bf2a6d-c718-4a11-923c-953bcc26869c",
-		"9155cedf-1629-4306-88d8-af8bd979d9ad",
 		"5cdd9f82-b14b-4d70-9478-6908fd1630bb",
 		"b07afdf1-ec61-4455-a00c-aa3c54356f6a",
 		"1241cf12-3c9e-4d26-8730-7ce5bf36ef15",
 		"a5c778ee-586f-4e10-af7c-336b378d8ddd",
 		"e1dd14d8-25aa-4bc8-997b-f727756c0d77",
 		"3dae2274-3f25-4a13-a699-ee57f395cd07",
+		"049c29f8-7900-47d9-ae15-e404669286d9",
+		"d7d7996e-d27a-4b2a-b414-1268d526a368",
+		"c9318851-d025-4864-bcbf-48650ee4bdd1",
+		"39a76c84-f3e3-4b41-b04d-6ef1cb723cf1",
+		"1ea28107-86b0-477a-aa46-1d13bf2e28ee",
+		"220444a6-ddfd-44f0-b336-28f96da138e9",
+		"1582d019-bfd6-4d99-ae58-9c33436084ce",
+		"4c0114bc-b670-4c94-92b7-babab23b130d",
+		"9b8d3e6b-b378-41dd-9b78-ba07298f5c4f",
+		"712016e3-cfe8-47a4-becc-73ed179e3cd3",
+		"7a72a58b-ba7b-4c78-8622-63536d60da0b",
+		"c7ebf254-06be-4c40-80cc-1f543b31d83e",
+		"be9d4622-26e1-40af-9f76-418de1e60304",
+		"4f2fc388-ddcf-4e46-b3eb-a00b29ba48f2",
 		"50e0df72-fcd3-4dd3-9bb3-97e047b53c54",
-		"b7fe57fa-0f72-4058-adc6-4590c6843db8"
+		"b7fe57fa-0f72-4058-adc6-4590c6843db8",
+		"18236b60-5d71-4b2e-af88-14d508ea928d",
+		"d3e15c8b-b715-4392-8c73-125b8f38751a"
 	],
 	"collapsedTreeItems": []
 }
