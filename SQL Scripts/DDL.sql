@@ -3,7 +3,7 @@ SET check_function_bodies = false;
 CREATE TYPE en_booleano AS ENUM('sim', 'nao');
 
 CREATE TYPE en_tp_item AS ENUM
-  ('bola',  'carta',  'bebida alcoolica',  'bastao',  'quadra',  'papelaria', 'tabuleiro',  'dado',  'geral')
+  ('bola',  'carta',  'bebida_alcoolica',  'bastao',  'quadra',  'papelaria', 'tabuleiro',  'dado',  'geral')
   ;
 
 create sequence sq_usuario;
