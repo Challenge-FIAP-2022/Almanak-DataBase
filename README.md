@@ -19,6 +19,3 @@ contudo a aplicação não se limite a crianças, podendo ser para adultos tamb�
 Para entender melhor o layout da base de dados que está API está consultando recomandamos olhar o layout antes. Segue o link abaixo com a referida arquitetura:
 
 Link: https://almanak-db-report.herokuapp.com/
-
-<hr>
-<br>

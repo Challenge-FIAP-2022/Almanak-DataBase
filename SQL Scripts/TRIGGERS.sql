@@ -105,3 +105,55 @@ $tb_usuario_grupo$ language plpgsql;
 create or replace trigger tg_agrupar_usuario
     before insert on tb_usuario_grupo
     FOR EACH ROW EXECUTE FUNCTION fn_agrupar_usuario();
+
+--TG_CADASTRO_JOGO_GRUPO
+
+create or replace function fn_cadastro_jogo_grupo() returns trigger as
+$tb_jogo_grupo$
+    DECLARE
+        varCursor refcursor;
+        varRecord record;
+        varQtd Integer;
+        varQtdDesejada Integer := 5;
+
+    BEGIN
+        select count(*) into varQtd from tb_jogo_grupo where id_grupo = new.id_grupo;
+        if varQtd <= varQtdDesejada then
+            return new;
+
+        else
+            select count(*) into varQtd from tb_jogo_grupo where id_grupo = new.id_grupo and fl_valido = 'sim';
+
+            if varQtd = 0 then
+                insert into tb_erro values(nextval('sq_erro'), 'tg_cadastro_jogo_grupo', concat('Grupo ', new.id_grupo, ' sem jogos recomendados validos.'), current_timestamp);
+			    raise notice 'TG_Cadastro_JOGO_GRUPO: Grupo % sem jogos recomendados validos.', new.id_usuario;
+                return new;
+
+            elsif varQtd < varQtdDesejada then
+                insert into tb_erro values(nextval('sq_erro'), 'tg_cadastro_jogo_grupo', concat('Grupo ', new.id_grupo, ' com menos de ', varQtdDesejada ,' jogos recomendados validos.'), current_timestamp);
+			    raise notice 'TG_Cadastro_JOGO_GRUPO: Grupo % com menos de % jogos recomendados validos.', new.id_usuario, varQtdDesejada;
+                return new;
+
+            elsif varQtd > varQtdDesejada then
+                insert into tb_erro values(nextval('sq_erro'), 'tg_cadastro_jogo_grupo', concat('Grupo ', new.id_grupo, ' com mais de ', varQtdDesejada ,'jogos recomendados validos.'), current_timestamp);
+			    raise notice 'TG_Cadastro_JOGO_GRUPO: Grupo % com mais de % jogos recomendados validos.', new.id_usuario, varQtdDesejada;
+
+            end if;
+
+			open varCursor for
+				select * from tb_jogo_grupo where id_grupo = new.id_grupo and fl_valido = 'sim' order by dt_registro limit (varQtd - 5)
+			;
+
+			loop
+				fetch varCursor into varRecord;
+				exit when not found;
+				update tb_jogo_grupo set dt_encerramento = current_timestamp, fl_valido = 'nao' where id_jogo_grupo = varRecord.id_jogo_grupo;
+			end loop;
+			return new;
+        end if;
+    END;
+$tb_jogo_grupo$ language plpgsql;
+
+create or replace trigger tg_cadastro_jogo_grupo
+    before insert on tb_jogo_grupo
+    FOR EACH ROW EXECUTE FUNCTION fn_cadastro_jogo_grupo();

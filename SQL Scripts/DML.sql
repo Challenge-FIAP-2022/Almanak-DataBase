@@ -48,7 +48,7 @@ INSERT INTO tb_tipo_atividade values (nextval('sq_tipo_atividade'), 'Login', 'Ab
 -- TB_Item
 
 INSERT INTO tb_item values (nextval('sq_item'), 'carta', 'Cartas de Baralho', cast('2022-01-01' as timestamp));
-INSERT INTO tb_item values (nextval('sq_item'), 'bebida alcoolica', 'qualquer uma', cast('2022-01-01' as timestamp));
+INSERT INTO tb_item values (nextval('sq_item'), 'bebida_alcoolica', 'qualquer uma', cast('2022-01-01' as timestamp));
 INSERT INTO tb_item values (nextval('sq_item'), 'bastao', 'Taco de madeira', cast('2022-01-01' as timestamp));
 INSERT INTO tb_item values (nextval('sq_item'), 'bola', 'Bola de futebol', cast('2022-01-01' as timestamp));
 INSERT INTO tb_item values (nextval('sq_item'), 'tabuleiro', 'Tabuleiro de monopoly', cast('2022-01-01' as timestamp));
@@ -66,27 +66,27 @@ INSERT INTO tb_item values (nextval('sq_item'), 'bola', 'Bola qualquer', cast('2
 
 -- TB_Categoria
 
-INSERT INTO tb_categoria values (nextval('sq_categoria'), 'Jogos de cartas', null, null, 'Jogos que são jogados com quaisquer tipo de cartas', cast('2022-01-01' as timestamp));
-INSERT INTO tb_categoria values (nextval('sq_categoria'), 'Esporte', null,  null, 'Categoria para abrigar os principais jogos de esportes.', cast('2022-01-01' as timestamp));
-INSERT INTO tb_categoria values (nextval('sq_categoria'), 'Jogos de tabuleiro', null, null, 'Jogos que precisam de um tabuleiro para ser jogado.', cast('2022-01-01' as timestamp));
-INSERT INTO tb_categoria values (nextval('sq_categoria'), 'Ao ar livre', null, null, 'Jogos para se jogar ao ar livre, utilizando um grande espaço.', cast('2022-01-01' as timestamp));
-INSERT INTO tb_categoria values (nextval('sq_categoria'), 'Jogos de azar', null, null, 'Jogos que envolvem sorte.', cast('2022-01-01' as timestamp));
-INSERT INTO tb_categoria values (nextval('sq_categoria'), 'Jogos para Adultos', null, null, 'Jogos unicos para adultos, geralmente envolvendo bebidas.', cast('2022-01-01' as timestamp));
+INSERT INTO tb_categoria values (nextval('sq_categoria'), 'Jogos de cartas', 'cards', null, 'Jogos que são jogados com quaisquer tipo de cartas', cast('2022-01-01' as timestamp));
+INSERT INTO tb_categoria values (nextval('sq_categoria'), 'Esporte', 'soccer-field',  null, 'Categoria para abrigar os principais jogos de esportes.', cast('2022-01-01' as timestamp));
+INSERT INTO tb_categoria values (nextval('sq_categoria'), 'Jogos de tabuleiro', 'checkerboard', null, 'Jogos que precisam de um tabuleiro para ser jogado.', cast('2022-01-01' as timestamp));
+INSERT INTO tb_categoria values (nextval('sq_categoria'), 'Ao ar livre', 'pine-tree', null, 'Jogos para se jogar ao ar livre, utilizando um grande espaço.', cast('2022-01-01' as timestamp));
+INSERT INTO tb_categoria values (nextval('sq_categoria'), 'Jogos de azar', 'clover', null, 'Jogos que envolvem sorte.', cast('2022-01-01' as timestamp));
+INSERT INTO tb_categoria values (nextval('sq_categoria'), 'Jogos para Adultos', 'block-helper', null, 'Jogos unicos para adultos, geralmente envolvendo bebidas.', cast('2022-01-01' as timestamp));
 INSERT INTO tb_categoria values (nextval('sq_categoria'), 'Diversos', null, null, 'Jogos que não se enquadram nas demais categorias.', cast('2022-01-01' as timestamp));
-INSERT INTO tb_categoria values (nextval('sq_categoria'), 'Jogos para crianças', null, null, 'Jogos destinados para menores de 12 anos.', cast('2022-01-01' as timestamp));
+INSERT INTO tb_categoria values (nextval('sq_categoria'), 'Jogos para crianças', 'human-child', null, 'Jogos destinados para menores de 12 anos.', cast('2022-01-01' as timestamp));
 
 -- TB_Jogo
 
-INSERT INTO tb_jogo values (nextval('sq_jogo'), 1, 'Taco', null, 4, 4, 'nao', 'sim', 'nao', null, null, cast('2022-01-01' as timestamp));
-INSERT INTO tb_jogo values (nextval('sq_jogo'), 1, 'Pega Pega', null, 3, null, 'nao', 'sim', 'nao', null, null, cast('2022-01-01' as timestamp));
-INSERT INTO tb_jogo values (nextval('sq_jogo'), 1, 'Truco', null, 4, 6, 'nao', 'sim', 'nao', null, null, cast('2022-01-01' as timestamp));
-INSERT INTO tb_jogo values (nextval('sq_jogo'), 1, 'Sueca', null, 2, null, 'sim', 'sim', 'nao', null, null, cast('2022-01-01' as timestamp));
-INSERT INTO tb_jogo values (nextval('sq_jogo'), 1, 'Bambole', null, 2, null, 'nao', 'sim', 'nao', null, null, cast('2022-01-01' as timestamp));
-INSERT INTO tb_jogo values (nextval('sq_jogo'), 1, 'Mimica', null, 2, null, 'nao', 'sim', 'nao', null, null, cast('2022-01-01' as timestamp));
-INSERT INTO tb_jogo values (nextval('sq_jogo'), 1, 'Stop!', null, 4, null, 'nao', 'sim', 'nao', null, null, cast('2022-01-01' as timestamp));
-INSERT INTO tb_jogo values (nextval('sq_jogo'), 1, 'Cordinha', null, 3, null, 'nao', 'sim', 'nao', null, null, cast('2022-01-01' as timestamp));
-INSERT INTO tb_jogo values (nextval('sq_jogo'), 1, 'Queimada', null, 4, null, 'nao', 'sim', 'nao', null, null, cast('2022-01-01' as timestamp));
-INSERT INTO tb_jogo values (nextval('sq_jogo'), 1, 'Proibido falar não', null, 3, null, 'sim', 'sim', 'sim', null, null, cast('2022-01-01' as timestamp));
+INSERT INTO tb_jogo values (nextval('sq_jogo'), 1, 'Taco', 'https://images.unsplash.com/photo-1523275147196-8c1f5e82a3a3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80', 4, 4, 'nao', 'sim', 'nao', null, null, cast('2022-01-01' as timestamp));
+INSERT INTO tb_jogo values (nextval('sq_jogo'), 1, 'Pega Pega', 'https://images.unsplash.com/photo-1532341556711-1c37110eaaac?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1632&q=80', 3, null, 'nao', 'sim', 'nao', null, null, cast('2022-01-01' as timestamp));
+INSERT INTO tb_jogo values (nextval('sq_jogo'), 1, 'Truco', 'https://images.unsplash.com/photo-1501003878151-d3cb87799705?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80', 4, 6, 'nao', 'sim', 'nao', null, null, cast('2022-01-01' as timestamp));
+INSERT INTO tb_jogo values (nextval('sq_jogo'), 1, 'Sueca', 'https://images.unsplash.com/photo-1608135383810-3a615f1ad2ed?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80', 2, null, 'sim', 'sim', 'nao', null, null, cast('2022-01-01' as timestamp));
+INSERT INTO tb_jogo values (nextval('sq_jogo'), 1, 'Bambole', 'https://i.pinimg.com/originals/57/6a/75/576a75d665da672def14bfeb7fd9cdd8.jpg', 2, null, 'nao', 'sim', 'nao', null, null, cast('2022-01-01' as timestamp));
+INSERT INTO tb_jogo values (nextval('sq_jogo'), 1, 'Mimica', 'https://st.depositphotos.com/3332767/4588/i/600/depositphotos_45881451-stock-photo-mime-artist-running-with-flowers.jpg', 2, null, 'nao', 'sim', 'nao', null, null, cast('2022-01-01' as timestamp));
+INSERT INTO tb_jogo values (nextval('sq_jogo'), 1, 'Stop!', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbvtjd3TmDYegdm-3pEy95mjt491VpjUZIVQ&usqp=CAU', 4, null, 'nao', 'sim', 'nao', null, null, cast('2022-01-01' as timestamp));
+INSERT INTO tb_jogo values (nextval('sq_jogo'), 1, 'Cordinha', 'https://ambientacao.unyleya.edu.br/pluginfile.php/435/mod_page/content/144/Imagem1.png', 3, null, 'nao', 'sim', 'nao', null, null, cast('2022-01-01' as timestamp));
+INSERT INTO tb_jogo values (nextval('sq_jogo'), 1, 'Queimada', 'https://images.unsplash.com/photo-1593786930094-d5c8164ac771?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80', 4, null, 'nao', 'sim', 'nao', null, null, cast('2022-01-01' as timestamp));
+INSERT INTO tb_jogo values (nextval('sq_jogo'), 1, 'Proibido falar não', 'https://images.unsplash.com/photo-1584483456442-b0bfd23f20fb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=764&q=80', 3, null, 'sim', 'sim', 'sim', null, null, cast('2022-01-01' as timestamp));
 
 -- TB_Regra
 
@@ -142,3 +142,11 @@ INSERT INTO tb_jogo_categoria values (nextval('sq_jogo_categoria'), 10, 6, cast(
 INSERT INTO tb_jogo_categoria values (nextval('sq_jogo_categoria'), 2, 8, cast('2022-01-01' as timestamp));
 INSERT INTO tb_jogo_categoria values (nextval('sq_jogo_categoria'), 5, 8, cast('2022-01-01' as timestamp));
 INSERT INTO tb_jogo_categoria values (nextval('sq_jogo_categoria'), 8, 8, cast('2022-01-01' as timestamp));
+
+-- TB_Avaliação
+
+call sp_preencher_avaliacao(100);
+
+-- Commit
+
+commit;

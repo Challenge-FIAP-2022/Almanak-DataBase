@@ -132,12 +132,19 @@ CREATE TABLE tb_categoria(
   CONSTRAINT "UN_Nome_Categoria" UNIQUE(nm_categoria)
 );
 
+COMMENT ON TABLE tb_categoria IS
+  'Tabela para o cadastro das categorias que os jogos podem ter.';
+
 CREATE TABLE tb_grupo(
   id_grupo integer NOT NULL,
   nm_grupo text NOT NULL,
   dt_registro timestamp,
   CONSTRAINT "PK_Grupo" PRIMARY KEY(id_grupo)
 );
+
+COMMENT ON TABLE tb_grupo IS
+  'Tabela para o cadastro dos possiveis grupos que os usuarios poderao ser agrupados.'
+  ;
 
 CREATE TABLE tb_jogo_grupo(
   id_jogo_grupo integer NOT NULL,
@@ -150,7 +157,7 @@ CREATE TABLE tb_jogo_grupo(
 );
 
 COMMENT ON TABLE tb_jogo_grupo IS
-  'Tebela relacionamento entre o item e o jogo que utilizara esse item.';
+  'Tabela com o historico dos jogos recomendados para cada um dos grupos.';
 
 CREATE TABLE tb_usuario_grupo(
   id_usuario_grupo integer NOT NULL,
@@ -162,6 +169,10 @@ CREATE TABLE tb_usuario_grupo(
   CONSTRAINT "PK_Grupo_Usuario" PRIMARY KEY(id_usuario_grupo)
 );
 
+COMMENT ON TABLE tb_usuario_grupo IS
+  'Tabela para agrupamento dos usuario, para que se possa recomendar jogos a esses grupos.'
+  ;
+
 CREATE TABLE tb_atividade(
   id_atividade integer NOT NULL,
   id_usuario integer NOT NULL,
@@ -172,6 +183,9 @@ CREATE TABLE tb_atividade(
   CONSTRAINT "PK_Atividade" PRIMARY KEY(id_atividade)
 );
 
+COMMENT ON TABLE tb_atividade IS
+  'Tabela para o registro das atividades executados por um usuario.';
+
 CREATE TABLE tb_tipo_atividade(
   id_tipo_atividade integer NOT NULL,
   nm_grupo text,
@@ -180,6 +194,10 @@ CREATE TABLE tb_tipo_atividade(
   CONSTRAINT "PK_Tipo_Atividade" PRIMARY KEY(id_tipo_atividade)
 );
 
+COMMENT ON TABLE tb_tipo_atividade IS
+  'Tabela para o cadastro dos tipos de atividade que o usuario pode executar no app, como logar, entrar no app, buscar um jogo, etc...'
+  ;
+
 CREATE TABLE tb_jogo_categoria(
   id_jogo_categoria integer NOT NULL,
   id_jogo integer NOT NULL,
@@ -187,6 +205,9 @@ CREATE TABLE tb_jogo_categoria(
   dt_registro timestamp,
   CONSTRAINT "PK_Jogo_Categoria" PRIMARY KEY(id_jogo_categoria)
 );
+
+COMMENT ON TABLE tb_jogo_categoria IS
+  'Tabela para o relacionamento de jogos com suas respectivas categortias.';
 
 CREATE TABLE tb_erro(
   id_erro integer NOT NULL,
@@ -211,6 +232,9 @@ CREATE TABLE tb_plano(
   CONSTRAINT "UN_Nome_Plano" UNIQUE(nm_plano)
 );
 
+COMMENT ON TABLE tb_plano IS
+  'Tabela para o cadastro dos planos que os usuarios poderao contratar.';
+
 CREATE TABLE tb_contrato(
   id_contrato integer NOT NULL,
   id_usuario integer NOT NULL,
@@ -220,6 +244,9 @@ CREATE TABLE tb_contrato(
   dt_registro timestamp,
   CONSTRAINT "PK_Plano_Usario" PRIMARY KEY(id_contrato)
 );
+
+COMMENT ON TABLE tb_contrato IS
+  'Tabela para o cadastro do historico de planos contratados pelos usuarios.';
 
 ALTER TABLE tb_jogo_item
   ADD CONSTRAINT "FK_Item_Jogo" FOREIGN KEY (id_jogo) REFERENCES tb_jogo (id_jogo)
@@ -573,6 +600,34 @@ $$
     END;
 $$;
 
+create or replace procedure sp_recomendar_jogo()
+language plpgsql
+as
+$$
+    DECLARE
+        varCursor refcursor;
+        varRecord record;
+        varQtd integer:= 0;
+    BEGIN
+        open varCursor for
+			select
+			id_jogo,
+			fn_nota_jogo(id_jogo,current_date)
+			from tb_jogo
+			order by 2 desc,1
+			limit 5
+        ;
+		loop
+			fetch varCursor into varRecord;
+			exit when not found;
+			insert into tb_jogo_grupo values(nextval('sq_jogo_grupo'), 1, varRecord.id_jogo , 'sim', null, current_timestamp);
+			varQtd := varQtd + 1;
+		end loop;
+		raise notice '% valores inseridos com sucesso.', TO_CHAR(varQtd, 'fm999G999');
+        close varCursor;
+    END;
+$$;
+
 create or replace function fn_cadastro_usuario() returns trigger as
 $tb_usuario$
     BEGIN
@@ -674,6 +729,56 @@ $tb_usuario_grupo$ language plpgsql;
 create or replace trigger tg_agrupar_usuario
     before insert on tb_usuario_grupo
     FOR EACH ROW EXECUTE FUNCTION fn_agrupar_usuario();
+
+create or replace function fn_cadastro_jogo_grupo() returns trigger as
+$tb_jogo_grupo$
+    DECLARE
+        varCursor refcursor;
+        varRecord record;
+        varQtd Integer;
+        varQtdDesejada Integer := 5;
+
+    BEGIN
+        select count(*) into varQtd from tb_jogo_grupo where id_grupo = new.id_grupo;
+        if varQtd < varQtdDesejada then
+            return new;
+
+        else
+            select count(*) into varQtd from tb_jogo_grupo where id_grupo = new.id_grupo and fl_valido = 'sim';
+
+            if varQtd = 0 then
+                insert into tb_erro values(nextval('sq_erro'), 'tg_cadastro_jogo_grupo', concat('Grupo ', new.id_grupo, ' sem jogos recomendados validos.'), current_timestamp);
+			    raise notice 'TG_Cadastro_JOGO_GRUPO: Grupo % sem jogos recomendados validos.', new.id_grupo;
+                return new;
+
+            elsif varQtd < varQtdDesejada then
+                insert into tb_erro values(nextval('sq_erro'), 'tg_cadastro_jogo_grupo', concat('Grupo ', new.id_grupo, ' com menos de ', varQtdDesejada ,' jogos recomendados validos.'), current_timestamp);
+			    raise notice 'TG_Cadastro_JOGO_GRUPO: Grupo % com menos de % jogos recomendados validos.', new.id_grupo, varQtdDesejada;
+                return new;
+
+            elsif varQtd > varQtdDesejada then
+                insert into tb_erro values(nextval('sq_erro'), 'tg_cadastro_jogo_grupo', concat('Grupo ', new.id_grupo, ' com mais de ', varQtdDesejada ,'jogos recomendados validos.'), current_timestamp);
+			    raise notice 'TG_Cadastro_JOGO_GRUPO: Grupo % com mais de % jogos recomendados validos.', new.id_grupo, varQtdDesejada;
+
+            end if;
+
+			open varCursor for
+				select * from tb_jogo_grupo where id_grupo = new.id_grupo and fl_valido = 'sim' order by dt_registro limit (varQtd - 4)
+			;
+
+			loop
+				fetch varCursor into varRecord;
+				exit when not found;
+				update tb_jogo_grupo set dt_encerramento = current_timestamp, fl_valido = 'nao' where id_jogo_grupo = varRecord.id_jogo_grupo;
+			end loop;
+			return new;
+        end if;
+    END;
+$tb_jogo_grupo$ language plpgsql;
+
+create or replace trigger tg_cadastro_jogo_grupo
+    before insert on tb_jogo_grupo
+    FOR EACH ROW EXECUTE FUNCTION fn_cadastro_jogo_grupo();
 
 create or replace view vw_usuario_kpi as
 

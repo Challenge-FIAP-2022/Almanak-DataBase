@@ -952,7 +952,7 @@
 			"id": "a19db193-d33f-42c4-88b0-01471e08cce4",
 			"visible": true,
 			"name": "tb_categoria",
-			"desc": "",
+			"desc": "Tabela para o cadastro das categorias que os jogos podem ter.",
 			"estimatedSize": "",
 			"cols": [
 				{
@@ -1100,7 +1100,7 @@
 			"id": "4d182476-ecd5-4df0-824e-bf9d117e5773",
 			"visible": true,
 			"name": "tb_grupo",
-			"desc": "",
+			"desc": "Tabela para o cadastro dos possiveis grupos que os usuarios poderao ser agrupados.",
 			"estimatedSize": "",
 			"cols": [
 				{
@@ -1186,7 +1186,7 @@
 			"id": "b929ba88-f620-448f-ad3c-8f39ad3d07b2",
 			"visible": true,
 			"name": "tb_jogo_grupo",
-			"desc": "Tebela relacionamento entre o item e o jogo que utilizara esse item.",
+			"desc": "Tabela com o historico dos jogos recomendados para cada um dos grupos.",
 			"estimatedSize": "",
 			"cols": [
 				{
@@ -1323,7 +1323,7 @@
 			"id": "1cf17ead-fbb2-4816-a18a-d048bdc21a71",
 			"visible": true,
 			"name": "tb_usuario_grupo",
-			"desc": "",
+			"desc": "Tabela para agrupamento dos usuario, para que se possa recomendar jogos a esses grupos.",
 			"estimatedSize": "",
 			"cols": [
 				{
@@ -1460,7 +1460,7 @@
 			"id": "08006987-d2e7-46e2-853a-e78e3707c9b7",
 			"visible": true,
 			"name": "tb_atividade",
-			"desc": "",
+			"desc": "Tabela para o registro das atividades executados por um usuario.",
 			"estimatedSize": "",
 			"cols": [
 				{
@@ -1597,7 +1597,7 @@
 			"id": "7b7c6ad4-94e7-4e0c-985d-ca37fe6808ab",
 			"visible": true,
 			"name": "tb_tipo_atividade",
-			"desc": "",
+			"desc": "Tabela para o cadastro dos tipos de atividade que o usuario pode executar no app, como logar, entrar no app, buscar um jogo, etc...",
 			"estimatedSize": "",
 			"cols": [
 				{
@@ -1699,7 +1699,7 @@
 			"id": "9bf22457-1cdf-4726-b7e4-e40ed93c5703",
 			"visible": true,
 			"name": "tb_jogo_categoria",
-			"desc": "",
+			"desc": "Tabela para o relacionamento de jogos com suas respectivas categortias.",
 			"estimatedSize": "",
 			"cols": [
 				{
@@ -1902,7 +1902,7 @@
 			"id": "c5370c7e-0b11-49ad-b8dc-6b0ad134f3c1",
 			"visible": true,
 			"name": "tb_plano",
-			"desc": "",
+			"desc": "Tabela para o cadastro dos planos que os usuarios poderao contratar.",
 			"estimatedSize": "",
 			"cols": [
 				{
@@ -2067,7 +2067,7 @@
 			"id": "9d7c387c-97bf-4481-9be8-cd95ff23a010",
 			"visible": true,
 			"name": "tb_contrato",
-			"desc": "",
+			"desc": "Tabela para o cadastro do historico de planos contratados pelos usuarios.",
 			"estimatedSize": "",
 			"cols": [
 				{
@@ -2698,7 +2698,7 @@
 			"quotation": "if_needed",
 			"includeGeneratedNames": "always"
 		},
-		"lastSaved": "Mon Aug 29 2022 08:17:58 GMT-0300 (Brasilia Standard Time)",
+		"lastSaved": "Wed Sep 07 2022 01:08:07 GMT-0300 (Brasilia Standard Time)",
 		"writeFileParam": false,
 		"nameAutoGeneration": {
 			"keys": false,
@@ -3090,10 +3090,10 @@
 		"4f2fc388-ddcf-4e46-b3eb-a00b29ba48f2": {
 			"id": "4f2fc388-ddcf-4e46-b3eb-a00b29ba48f2",
 			"visible": true,
-			"name": "TG_Grupo_Jogo",
+			"name": "TG_Jogo_Grupo",
 			"desc": "",
 			"type": "Trigger",
-			"code": "",
+			"code": "create or replace function fn_cadastro_jogo_grupo() returns trigger as\n$tb_jogo_grupo$\n    DECLARE\n        varCursor refcursor;\n        varRecord record;\n        varQtd Integer;\n        varQtdDesejada Integer := 5;\n\n    BEGIN\n        select count(*) into varQtd from tb_jogo_grupo where id_grupo = new.id_grupo;\n        if varQtd < varQtdDesejada then\n            return new;\n\n        else\n            select count(*) into varQtd from tb_jogo_grupo where id_grupo = new.id_grupo and fl_valido = 'sim';\n\n            if varQtd = 0 then\n                insert into tb_erro values(nextval('sq_erro'), 'tg_cadastro_jogo_grupo', concat('Grupo ', new.id_grupo, ' sem jogos recomendados validos.'), current_timestamp);\n\t\t\t    raise notice 'TG_Cadastro_JOGO_GRUPO: Grupo % sem jogos recomendados validos.', new.id_grupo;\n                return new;\n\n            elsif varQtd < varQtdDesejada then\n                insert into tb_erro values(nextval('sq_erro'), 'tg_cadastro_jogo_grupo', concat('Grupo ', new.id_grupo, ' com menos de ', varQtdDesejada ,' jogos recomendados validos.'), current_timestamp);\n\t\t\t    raise notice 'TG_Cadastro_JOGO_GRUPO: Grupo % com menos de % jogos recomendados validos.', new.id_grupo, varQtdDesejada;\n                return new;\n\n            elsif varQtd > varQtdDesejada then\n                insert into tb_erro values(nextval('sq_erro'), 'tg_cadastro_jogo_grupo', concat('Grupo ', new.id_grupo, ' com mais de ', varQtdDesejada ,'jogos recomendados validos.'), current_timestamp);\n\t\t\t    raise notice 'TG_Cadastro_JOGO_GRUPO: Grupo % com mais de % jogos recomendados validos.', new.id_grupo, varQtdDesejada;\n\n            end if;\n\n\t\t\topen varCursor for\n\t\t\t\tselect * from tb_jogo_grupo where id_grupo = new.id_grupo and fl_valido = 'sim' order by dt_registro limit (varQtd - 4)\n\t\t\t;\n\n\t\t\tloop\n\t\t\t\tfetch varCursor into varRecord;\n\t\t\t\texit when not found;\n\t\t\t\tupdate tb_jogo_grupo set dt_encerramento = current_timestamp, fl_valido = 'nao' where id_jogo_grupo = varRecord.id_jogo_grupo;\n\t\t\tend loop;\n\t\t\treturn new;\n        end if;\n    END;\n$tb_jogo_grupo$ language plpgsql;\n\ncreate or replace trigger tg_cadastro_jogo_grupo\n    before insert on tb_jogo_grupo\n    FOR EACH ROW EXECUTE FUNCTION fn_cadastro_jogo_grupo();",
 			"lines": [],
 			"generate": true,
 			"generateCustomCode": true,
@@ -3164,6 +3164,20 @@
 			"desc": "",
 			"type": "Procedure",
 			"code": "create or replace procedure sp_preencher_avaliacao(nr_loops integer)\nlanguage plpgsql\nas\n$$\n    DECLARE\n        varIdUsuario integer;\n        varQtdUsuario integer;\n        varArrUsuario integer array;\n        varDtRegistro timestamp;\n\n        varIdJogo integer;\n        varQtdjogo integer;\n        varArrjogo integer array;\n\n        vl_nota numeric;\n\n    BEGIN\n\n        select count(*),array_agg(id_usuario) into varQtdUsuario, varArrUsuario from tb_usuario;\n        select count(*),array_agg(id_jogo) into varQtdjogo, varArrjogo from tb_jogo;\n\n        for i in 1..nr_loops loop\n\n            vl_nota:= random();\n\t\t\tif vl_nota >= 0.5 then\n\t\t\t\tvl_nota:= 0;\n\t\t\telse\n\t\t\t\tvl_nota:= 0.5;\n\t\t\tend if;\n            vl_nota:= fn_random_between(2,5) + vl_nota;\n\n            if vl_nota > 5 then vl_nota:= 5; end if;\n\n            varIdUsuario = varArrUsuario[fn_random_between(1,varQtdUsuario)];\n            varIdJogo = varArrjogo[fn_random_between(1,varQtdjogo)];\n\n            select dt_registro into varDtRegistro from tb_usuario where id_usuario = varIdUsuario;\n            varDtRegistro:= varDtRegistro + random() * (current_timestamp - varDtRegistro);\n\n            insert into tb_avaliacao values (nextval('sq_avaliacao'), varIdUsuario, varIdJogo, vl_nota, null, varDtRegistro);\n\n\t\tend loop;\n\n    END;\n$$;",
+			"lines": [],
+			"generate": true,
+			"generateCustomCode": true,
+			"pg": {
+				"schema": ""
+			}
+		},
+		"78fc8c3f-79dd-427f-a890-5886c36298d5": {
+			"id": "78fc8c3f-79dd-427f-a890-5886c36298d5",
+			"visible": true,
+			"name": "SP_Recomendar_Jogo",
+			"desc": "",
+			"type": "Procedure",
+			"code": "create or replace procedure sp_recomendar_jogo()\nlanguage plpgsql\nas\n$$\n    DECLARE\n        varCursor refcursor;\n        varRecord record;\n        varQtd integer:= 0;\n    BEGIN\n        open varCursor for\n\t\t\tselect\n\t\t\tid_jogo,\n\t\t\tfn_nota_jogo(id_jogo,current_date)\n\t\t\tfrom tb_jogo\n\t\t\torder by 2 desc,1\n\t\t\tlimit 5\n        ;\n\t\tloop\n\t\t\tfetch varCursor into varRecord;\n\t\t\texit when not found;\n\t\t\tinsert into tb_jogo_grupo values(nextval('sq_jogo_grupo'), 1, varRecord.id_jogo , 'sim', null, current_timestamp);\n\t\t\tvarQtd := varQtd + 1;\n\t\tend loop;\n\t\traise notice '% valores inseridos com sucesso.', TO_CHAR(varQtd, 'fm999G999');\n        close varCursor;\n    END;\n$$;",
 			"lines": [],
 			"generate": true,
 			"generateCustomCode": true,
@@ -3418,7 +3432,7 @@
 				},
 				"08006987-d2e7-46e2-853a-e78e3707c9b7": {
 					"referencedItemId": "08006987-d2e7-46e2-853a-e78e3707c9b7",
-					"x": 759.5,
+					"x": 761,
 					"y": 751,
 					"gHeight": 136,
 					"gWidth": 265,
@@ -3800,6 +3814,17 @@
 					"background": "#673ab7",
 					"resized": false,
 					"autoExpand": true
+				},
+				"78fc8c3f-79dd-427f-a890-5886c36298d5": {
+					"referencedItemId": "78fc8c3f-79dd-427f-a890-5886c36298d5",
+					"x": 230,
+					"y": 1260,
+					"gHeight": 44,
+					"gWidth": 150,
+					"color": "#eee",
+					"background": "#673ab7",
+					"resized": false,
+					"autoExpand": true
 				}
 			},
 			"scroll": {
@@ -3866,6 +3891,7 @@
 		"9b8d3e6b-b378-41dd-9b78-ba07298f5c4f",
 		"712016e3-cfe8-47a4-becc-73ed179e3cd3",
 		"f04f0b47-3f1e-441d-8bc4-425c1e381536",
+		"78fc8c3f-79dd-427f-a890-5886c36298d5",
 		"7a72a58b-ba7b-4c78-8622-63536d60da0b",
 		"c7ebf254-06be-4c40-80cc-1f543b31d83e",
 		"be9d4622-26e1-40af-9f76-418de1e60304",
