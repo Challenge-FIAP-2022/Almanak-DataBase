@@ -484,6 +484,28 @@ $$
     end;
 $$;
 
+create or replace function fn_jogos_recomendados(id integer)
+  returns table (like tb_jogo)
+AS
+$$
+	BEGIN
+		return query
+		    select
+			j.*
+			from tb_jogo_grupo jg
+			left join tb_jogo j
+				on jg.id_jogo = j.id_jogo
+			left join tb_grupo g
+				on jg.id_grupo = g.id_grupo
+			left join tb_usuario_grupo ug
+				on g.id_grupo = ug.id_grupo
+			where
+				jg.fl_valido = 'sim'
+				and ug.id_usuario = id
+			order by 1 desc,2;
+	END;
+$$language plpgsql;
+
 create or replace procedure sp_usuario_sem_grupo()
 language plpgsql
 as
