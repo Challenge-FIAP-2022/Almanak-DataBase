@@ -2698,7 +2698,7 @@
 			"quotation": "if_needed",
 			"includeGeneratedNames": "always"
 		},
-		"lastSaved": "Wed Sep 07 2022 01:08:07 GMT-0300 (Brasilia Standard Time)",
+		"lastSaved": "Wed Sep 07 2022 14:23:53 GMT-0300 (Brasilia Standard Time)",
 		"writeFileParam": false,
 		"nameAutoGeneration": {
 			"keys": false,
@@ -3178,6 +3178,20 @@
 			"desc": "",
 			"type": "Procedure",
 			"code": "create or replace procedure sp_recomendar_jogo()\nlanguage plpgsql\nas\n$$\n    DECLARE\n        varCursor refcursor;\n        varRecord record;\n        varQtd integer:= 0;\n    BEGIN\n        open varCursor for\n\t\t\tselect\n\t\t\tid_jogo,\n\t\t\tfn_nota_jogo(id_jogo,current_date)\n\t\t\tfrom tb_jogo\n\t\t\torder by 2 desc,1\n\t\t\tlimit 5\n        ;\n\t\tloop\n\t\t\tfetch varCursor into varRecord;\n\t\t\texit when not found;\n\t\t\tinsert into tb_jogo_grupo values(nextval('sq_jogo_grupo'), 1, varRecord.id_jogo , 'sim', null, current_timestamp);\n\t\t\tvarQtd := varQtd + 1;\n\t\tend loop;\n\t\traise notice '% valores inseridos com sucesso.', TO_CHAR(varQtd, 'fm999G999');\n        close varCursor;\n    END;\n$$;",
+			"lines": [],
+			"generate": true,
+			"generateCustomCode": true,
+			"pg": {
+				"schema": ""
+			}
+		},
+		"93152996-80f0-4e3c-8ef9-e853cbfe6f95": {
+			"id": "93152996-80f0-4e3c-8ef9-e853cbfe6f95",
+			"visible": true,
+			"name": "FN_Jogos_Recomendados",
+			"desc": "",
+			"type": "Function",
+			"code": "create or replace function fn_jogos_recomendados(id integer)\n  returns table (like tb_jogo)\nAS\n$$\n\tBEGIN\n\t\treturn query\n\t\t    select\n\t\t\tj.*\n\t\t\tfrom tb_jogo_grupo jg\n\t\t\tleft join tb_jogo j\n\t\t\t\ton jg.id_jogo = j.id_jogo\n\t\t\tleft join tb_grupo g\n\t\t\t\ton jg.id_grupo = g.id_grupo\n\t\t\tleft join tb_usuario_grupo ug\n\t\t\t\ton g.id_grupo = ug.id_grupo\n\t\t\twhere\n\t\t\t\tjg.fl_valido = 'sim'\n\t\t\t\tand ug.id_usuario = id\n\t\t\torder by 1 desc,2;\n\tEND;\n$$language plpgsql;",
 			"lines": [],
 			"generate": true,
 			"generateCustomCode": true,
@@ -3825,6 +3839,17 @@
 					"background": "#673ab7",
 					"resized": false,
 					"autoExpand": true
+				},
+				"93152996-80f0-4e3c-8ef9-e853cbfe6f95": {
+					"referencedItemId": "93152996-80f0-4e3c-8ef9-e853cbfe6f95",
+					"x": 1550,
+					"y": 1199,
+					"gHeight": 44,
+					"gWidth": 163,
+					"color": "#eee",
+					"background": "#607d8b",
+					"resized": false,
+					"autoExpand": true
 				}
 			},
 			"scroll": {
@@ -3888,6 +3913,7 @@
 		"1582d019-bfd6-4d99-ae58-9c33436084ce",
 		"4c0114bc-b670-4c94-92b7-babab23b130d",
 		"56e8ec0a-570c-4682-a3c6-fa3db5fdea48",
+		"93152996-80f0-4e3c-8ef9-e853cbfe6f95",
 		"9b8d3e6b-b378-41dd-9b78-ba07298f5c4f",
 		"712016e3-cfe8-47a4-becc-73ed179e3cd3",
 		"f04f0b47-3f1e-441d-8bc4-425c1e381536",

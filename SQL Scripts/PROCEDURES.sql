@@ -46,6 +46,36 @@ $$
     END;
 $$;
 
+-- SP_Recomendar_Jogo
+
+create or replace procedure sp_recomendar_jogo()
+language plpgsql
+as
+$$
+    DECLARE
+        varCursor refcursor;
+        varRecord record;
+        varQtd integer:= 0;
+    BEGIN
+        open varCursor for
+			select
+			id_jogo,
+			fn_nota_jogo(id_jogo,current_date)
+			from tb_jogo
+			order by 2 desc,1
+			limit 5
+        ;
+		loop
+			fetch varCursor into varRecord;
+			exit when not found;
+			insert into tb_jogo_grupo values(nextval('sq_jogo_grupo'), 1, varRecord.id_jogo , 'sim', null, current_timestamp);
+			varQtd := varQtd + 1;
+		end loop;
+		raise notice '% valores inseridos com sucesso.', TO_CHAR(varQtd, 'fm999G999');
+        close varCursor;
+    END;
+$$;
+
 -- SP_Usuario_Sem_Grupo
 
 create or replace procedure sp_usuario_sem_grupo()
