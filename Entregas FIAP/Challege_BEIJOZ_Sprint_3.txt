@@ -1,0 +1,39 @@
+Integrantes do Grupo (Ordem alfabética):
+
+    - Bianca Man Tchuin Chang Lee (RM: 89171)
+    - Danilo Zequim de Moura (RM: 89045)
+    - Eric Brianez Giannetti (RM: 87087)
+    - Matheus Pismel de Jeronymo (RM: 86931)
+    - Otavio de Magalhães Gomes (RM: 87680)
+    - Zack Lorenzzo Corrêa (RM: 87149)
+
+Layout da Base de dados:
+
+    https://almanak-db-report.herokuapp.com/
+
+Repositório Git com todos os códigos da base:
+
+    Tudos os comandos de DDL, DML e DQL podem ser acessados na pasta "SQL Scripts".
+
+    https://github.com/Challenge-FIAP-2022/Almanak-DataBase
+
+Notas extras:
+
+    Professor optamos por criar uma base de dados em PostgreSQL para aprendermos outra linguagem de SQL que não só o da Oracle.
+    Com isso tivemos que fazer uma adaptação, conforme conversamos muitas das nossas procedures e triggers não contam com 
+    exception do tipo "when others" nem as ciradas pelo DBA, contudo temos tratamento de exceção no código e registro de  
+    ocorrências em uma tabela de erro. Como são procedimentos que consomem dados da própria base não teremos muitas exceção
+    do tipo "when others" dado que os cursores consumirão tabelas já preenchidas e sem inputs dos usuários, fizemos assim para
+    deixar tudo o mais automático possivel e evitar ao máximo inputs humanos na base.
+
+Acesso a base PostgreSQL:
+
+    Caso você queira ver tudo que criamos, recomendo acessar o site com o layout e acessar nossa base com os dados abaixo,
+    vale um único disclaimer, acredito que o Heroku troque de tempos em tempos, então qualquer problema pode chamar qualquer
+    um do grupo de te passaremos os dados atualizados, segue o acesso:
+
+    Host: ec2-52-86-115-245.compute-1.amazonaws.com
+    Database: d92em23mmlh07d
+    User: yjixuohawbxqpj
+    Port: 5432
+    Password: 61a11b1ebe328f19fc17be47b54382fc78a89a613d3eaea7633ff4cf4a3d73ad

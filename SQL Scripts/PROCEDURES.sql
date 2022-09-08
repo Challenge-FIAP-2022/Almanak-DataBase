@@ -1,3 +1,81 @@
+-- SP_Preencher_Avaliacoes
+
+create or replace procedure sp_preencher_avaliacao(nr_loops integer)
+language plpgsql
+as
+$$
+    DECLARE
+        varIdUsuario integer;
+        varQtdUsuario integer;
+        varArrUsuario integer array;
+        varDtRegistro timestamp;
+
+        varIdJogo integer;
+        varQtdjogo integer;
+        varArrjogo integer array;
+
+        vl_nota numeric;
+
+    BEGIN
+
+        select count(*),array_agg(id_usuario) into varQtdUsuario, varArrUsuario from tb_usuario;
+        select count(*),array_agg(id_jogo) into varQtdjogo, varArrjogo from tb_jogo;
+
+        for i in 1..nr_loops loop
+
+            vl_nota:= random();
+			if vl_nota >= 0.5 then
+				vl_nota:= 0;
+			else
+				vl_nota:= 0.5;
+			end if;
+            vl_nota:= fn_random_between(2,5) + vl_nota;
+
+            if vl_nota > 5 then vl_nota:= 5; end if;
+
+            varIdUsuario = varArrUsuario[fn_random_between(1,varQtdUsuario)];
+            varIdJogo = varArrjogo[fn_random_between(1,varQtdjogo)];
+
+            select dt_registro into varDtRegistro from tb_usuario where id_usuario = varIdUsuario;
+            varDtRegistro:= varDtRegistro + random() * (current_timestamp - varDtRegistro);
+
+            insert into tb_avaliacao values (nextval('sq_avaliacao'), varIdUsuario, varIdJogo, vl_nota, null, varDtRegistro);
+
+		end loop;
+
+    END;
+$$;
+
+-- SP_Recomendar_Jogo
+
+create or replace procedure sp_recomendar_jogo()
+language plpgsql
+as
+$$
+    DECLARE
+        varCursor refcursor;
+        varRecord record;
+        varQtd integer:= 0;
+    BEGIN
+        open varCursor for
+			select
+			id_jogo,
+			fn_nota_jogo(id_jogo,current_date)
+			from tb_jogo
+			order by 2 desc,1
+			limit 5
+        ;
+		loop
+			fetch varCursor into varRecord;
+			exit when not found;
+			insert into tb_jogo_grupo values(nextval('sq_jogo_grupo'), 1, varRecord.id_jogo , 'sim', null, current_timestamp);
+			varQtd := varQtd + 1;
+		end loop;
+		raise notice '% valores inseridos com sucesso.', TO_CHAR(varQtd, 'fm999G999');
+        close varCursor;
+    END;
+$$;
+
 -- SP_Usuario_Sem_Grupo
 
 create or replace procedure sp_usuario_sem_grupo()
@@ -69,18 +147,5 @@ $$
 			raise notice '% valores inseridos com sucesso.', TO_CHAR(varQtd, 'fm999G999');
 		end if;
         close varCursor;
-    END;
-$$;
-
--- SP_Preencher_Avaliacao
-
-create or replace procedure sp_preencher_avaliacao()
-language plpgsql
-as
-$$
-    DECLARE
-        
-    BEGIN
-
     END;
 $$;

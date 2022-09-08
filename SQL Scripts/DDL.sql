@@ -3,7 +3,7 @@ SET check_function_bodies = false;
 CREATE TYPE en_booleano AS ENUM('sim', 'nao');
 
 CREATE TYPE en_tp_item AS ENUM
-  ('bola',  'carta',  'bebida alcoolica',  'bastao',  'quadra',  'papelaria', 'tabuleiro',  'dado',  'geral')
+  ('bola',  'carta',  'bebida_alcoolica',  'bastao',  'quadra',  'papelaria', 'tabuleiro',  'dado',  'geral')
   ;
 
 create sequence sq_usuario;
@@ -55,6 +55,7 @@ CREATE TABLE tb_jogo(
   id_jogo integer NOT NULL,
   id_usuario integer NOT NULL,
   nm_jogo varchar(50) NOT NULL,
+  lk_imagem text,
   nr_min_jogadores integer NOT NULL,
   nr_max_jogadores integer,
   fl_idade en_booleano,
@@ -123,11 +124,16 @@ COMMENT ON TABLE tb_avaliacao IS
 CREATE TABLE tb_categoria(
   id_categoria integer NOT NULL,
   nm_categoria text NOT NULL,
+  lk_icone text,
+  lk_imagem text,
   ds_categoria text,
   dt_registro timestamp,
   CONSTRAINT "PK_Categoria" PRIMARY KEY(id_categoria),
   CONSTRAINT "UN_Nome_Categoria" UNIQUE(nm_categoria)
 );
+
+COMMENT ON TABLE tb_categoria IS
+  'Tabela para o cadastro das categorias que os jogos podem ter.';
 
 CREATE TABLE tb_grupo(
   id_grupo integer NOT NULL,
@@ -135,6 +141,10 @@ CREATE TABLE tb_grupo(
   dt_registro timestamp,
   CONSTRAINT "PK_Grupo" PRIMARY KEY(id_grupo)
 );
+
+COMMENT ON TABLE tb_grupo IS
+  'Tabela para o cadastro dos possiveis grupos que os usuarios poderao ser agrupados.'
+  ;
 
 CREATE TABLE tb_jogo_grupo(
   id_jogo_grupo integer NOT NULL,
@@ -147,7 +157,7 @@ CREATE TABLE tb_jogo_grupo(
 );
 
 COMMENT ON TABLE tb_jogo_grupo IS
-  'Tebela relacionamento entre o item e o jogo que utilizara esse item.';
+  'Tabela com o historico dos jogos recomendados para cada um dos grupos.';
 
 CREATE TABLE tb_usuario_grupo(
   id_usuario_grupo integer NOT NULL,
@@ -159,6 +169,10 @@ CREATE TABLE tb_usuario_grupo(
   CONSTRAINT "PK_Grupo_Usuario" PRIMARY KEY(id_usuario_grupo)
 );
 
+COMMENT ON TABLE tb_usuario_grupo IS
+  'Tabela para agrupamento dos usuario, para que se possa recomendar jogos a esses grupos.'
+  ;
+
 CREATE TABLE tb_atividade(
   id_atividade integer NOT NULL,
   id_usuario integer NOT NULL,
@@ -169,6 +183,9 @@ CREATE TABLE tb_atividade(
   CONSTRAINT "PK_Atividade" PRIMARY KEY(id_atividade)
 );
 
+COMMENT ON TABLE tb_atividade IS
+  'Tabela para o registro das atividades executados por um usuario.';
+
 CREATE TABLE tb_tipo_atividade(
   id_tipo_atividade integer NOT NULL,
   nm_grupo text,
@@ -177,6 +194,10 @@ CREATE TABLE tb_tipo_atividade(
   CONSTRAINT "PK_Tipo_Atividade" PRIMARY KEY(id_tipo_atividade)
 );
 
+COMMENT ON TABLE tb_tipo_atividade IS
+  'Tabela para o cadastro dos tipos de atividade que o usuario pode executar no app, como logar, entrar no app, buscar um jogo, etc...'
+  ;
+
 CREATE TABLE tb_jogo_categoria(
   id_jogo_categoria integer NOT NULL,
   id_jogo integer NOT NULL,
@@ -184,6 +205,9 @@ CREATE TABLE tb_jogo_categoria(
   dt_registro timestamp,
   CONSTRAINT "PK_Jogo_Categoria" PRIMARY KEY(id_jogo_categoria)
 );
+
+COMMENT ON TABLE tb_jogo_categoria IS
+  'Tabela para o relacionamento de jogos com suas respectivas categortias.';
 
 CREATE TABLE tb_erro(
   id_erro integer NOT NULL,
@@ -208,6 +232,9 @@ CREATE TABLE tb_plano(
   CONSTRAINT "UN_Nome_Plano" UNIQUE(nm_plano)
 );
 
+COMMENT ON TABLE tb_plano IS
+  'Tabela para o cadastro dos planos que os usuarios poderao contratar.';
+
 CREATE TABLE tb_contrato(
   id_contrato integer NOT NULL,
   id_usuario integer NOT NULL,
@@ -217,6 +244,9 @@ CREATE TABLE tb_contrato(
   dt_registro timestamp,
   CONSTRAINT "PK_Plano_Usario" PRIMARY KEY(id_contrato)
 );
+
+COMMENT ON TABLE tb_contrato IS
+  'Tabela para o cadastro do historico de planos contratados pelos usuarios.';
 
 ALTER TABLE tb_jogo_item
   ADD CONSTRAINT "FK_Item_Jogo" FOREIGN KEY (id_jogo) REFERENCES tb_jogo (id_jogo)
@@ -293,36 +323,37 @@ as $$
     end;
 $$;
 
-create or replace function fn_nota_usuario(id integer, dataref date)
-returns numeric language plpgsql
+create or replace function fn_nota_usuario(nomeUsuario text, dataref date)
+returns numeric(6,4) language plpgsql
 as $$
     declare
-        varResult numeric;
+        varResult numeric(6,4);
 
     begin
 
-		with avaliacao as (
+		with avaliacaoTemp as (
 			select
-				ta.vl_avaliacao as valor,
-				ta.dt_registro,
-				min(ta.dt_registro) over w1 as min_date,
-				max(ta.dt_registro) over w1 as max_date,
-				count(*) over w1 as qtd
-				from tb_avaliacao ta
-				left join tb_usuario tu on ta.id_usuario = tu.id_usuario
-				where
-					tu.id_usuario = id
-					and ta.dt_registro <= dataref
-				window
-					w1 as (partition by tu.id_usuario)
+			ta.vl_avaliacao as valor,
+
+			cast(date(ta.dt_registro) - min(date(ta.dt_registro)) over () + 1 as decimal) /
+			cast(max(date(ta.dt_registro)) over () - min(date(ta.dt_registro)) over () + 1 as decimal)
+			as peso
+
+			from tb_avaliacao ta
+			left join tb_usuario tu on ta.id_usuario = tu.id_usuario
+			where
+				lower(tu.nm_usuario) = lower(nomeUsuario)
+				and ta.dt_registro <= dataref
+		),
+
+		avaliacao as (
+		    select
+		    valor, peso, sum(peso) over () as pesoTotal
+		    from avaliacaoTemp
 		)
 
 		select
-		sum(
-			valor *
-			(date(dt_registro) - date(min_date) + 1)/
-			(date(dt_registro) - date(max_date) + 1)
-		) into varResult
+		sum(valor * peso/ pesoTotal)  into varResult
 		from avaliacao;
 
 		return varResult;
@@ -331,35 +362,35 @@ as $$
 $$;
 
 create or replace function fn_nota_usuario(id integer, dataref date)
-returns numeric language plpgsql
+returns numeric(6,4) language plpgsql
 as $$
     declare
-        varResult numeric;
+        varResult numeric(6,4);
 
     begin
 
-		with avaliacao as (
+		with avaliacaoTemp as (
 			select
-				ta.vl_avaliacao as valor,
-				ta.dt_registro,
-				min(ta.dt_registro) over w1 as min_date,
-				max(ta.dt_registro) over w1 as max_date,
-				count(*) over w1 as qtd
-				from tb_avaliacao ta
-				left join tb_usuario tu on ta.id_usuario = tu.id_usuario
-				where
-					tu.id_usuario = id
-					and ta.dt_registro <= dataref
-				window
-					w1 as (partition by tu.id_usuario)
+			ta.vl_avaliacao as valor,
+
+			cast(date(ta.dt_registro) - min(date(ta.dt_registro)) over () + 1 as decimal) /
+			cast(max(date(ta.dt_registro)) over () - min(date(ta.dt_registro)) over () + 1 as decimal)
+			as peso
+
+			from tb_avaliacao ta
+			where
+				ta.id_usuario = id
+				and ta.dt_registro <= dataref
+		),
+
+		avaliacao as (
+		    select
+		    valor, peso, sum(peso) over () as pesoTotal
+		    from avaliacaoTemp
 		)
 
 		select
-		sum(
-			valor *
-			(date(dt_registro) - date(min_date) + 1)/
-			(date(dt_registro) - date(max_date) + 1)
-		) into varResult
+		sum(valor * peso/ pesoTotal)  into varResult
 		from avaliacao;
 
 		return varResult;
@@ -368,35 +399,36 @@ as $$
 $$;
 
 create or replace function fn_nota_jogo(nomeJogo text, dataref date)
-returns numeric language plpgsql
+returns numeric(6,4) language plpgsql
 as $$
     declare
-        varResult numeric;
+        varResult numeric(6,4);
 
     begin
 
-		with avaliacao as (
+		with avaliacaoTemp as (
 			select
-				ta.vl_avaliacao as valor,
-				ta.dt_registro,
-				min(ta.dt_registro) over w1 as min_date,
-				max(ta.dt_registro) over w1 as max_date,
-				count(*) over w1 as qtd
-				from tb_avaliacao ta
-				left join tb_jogo tj on ta.id_jogo = tj.id_jogo
-				where
-					lower(tj.nm_jogo) = lower(nomeJogo)
-					and ta.dt_registro <= dataref
-				window
-					w1 as (partition by tj.id_jogo)
+			ta.vl_avaliacao as valor,
+
+			cast(date(ta.dt_registro) - min(date(ta.dt_registro)) over () + 1 as decimal) /
+			cast(max(date(ta.dt_registro)) over () - min(date(ta.dt_registro)) over () + 1 as decimal)
+			as peso
+
+			from tb_avaliacao ta
+			left join tb_jogo tj on ta.id_jogo = tj.id_jogo
+			where
+				lower(tj.nm_jogo) = lower(nomeJogo)
+				and ta.dt_registro <= dataref
+		),
+
+		avaliacao as (
+		    select
+		    valor, peso, sum(peso) over () as pesoTotal
+		    from avaliacaoTemp
 		)
 
 		select
-		sum(
-			valor *
-			(date(dt_registro) - date(min_date) + 1)/
-			(date(dt_registro) - date(max_date) + 1)
-		) into varResult
+		sum(valor * peso/ pesoTotal)  into varResult
 		from avaliacao;
 
 		return varResult;
@@ -405,41 +437,74 @@ as $$
 $$;
 
 create or replace function fn_nota_jogo(id integer, dataref date)
-returns numeric language plpgsql
+returns numeric(6,4) language plpgsql
 as $$
     declare
-        varResult numeric;
+        varResult numeric(6,4);
 
     begin
 
-		with avaliacao as (
+		with avaliacaoTemp as (
 			select
-				ta.vl_avaliacao as valor,
-				ta.dt_registro,
-				min(ta.dt_registro) over w1 as min_date,
-				max(ta.dt_registro) over w1 as max_date,
-				count(*) over w1 as qtd
-				from tb_avaliacao ta
-				left join tb_jogo tj on ta.id_jogo = tj.id_jogo
-				where
-					tj.id_jogo = id
-					and ta.dt_registro <= dataref
-				window
-					w1 as (partition by tj.id_jogo)
+			ta.vl_avaliacao as valor,
+
+			cast(date(ta.dt_registro) - min(date(ta.dt_registro)) over () + 1 as decimal) /
+			cast(max(date(ta.dt_registro)) over () - min(date(ta.dt_registro)) over () + 1 as decimal)
+			as peso
+
+			from tb_avaliacao ta
+			where
+				ta.id_jogo = id
+				and ta.dt_registro <= dataref
+		),
+
+		avaliacao as (
+		    select
+		    valor, peso, sum(peso) over () as pesoTotal
+		    from avaliacaoTemp
 		)
 
 		select
-		sum(
-			valor *
-			(date(dt_registro) - date(min_date) + 1)/
-			(date(dt_registro) - date(max_date) + 1)
-		) into varResult
+		sum(valor * peso/ pesoTotal)  into varResult
 		from avaliacao;
 
 		return varResult;
 
     end;
 $$;
+
+create or replace function fn_random_between(floor numeric, ceil numeric)
+returns integer language plpgsql
+as
+$$
+    begin
+        return floor(random()*(ceil-floor+1))+floor;
+    exception when others then
+        return null;
+    end;
+$$;
+
+create or replace function fn_jogos_recomendados(id integer)
+  returns table (like tb_jogo)
+AS
+$$
+	BEGIN
+		return query
+		    select
+			j.*
+			from tb_jogo_grupo jg
+			left join tb_jogo j
+				on jg.id_jogo = j.id_jogo
+			left join tb_grupo g
+				on jg.id_grupo = g.id_grupo
+			left join tb_usuario_grupo ug
+				on g.id_grupo = ug.id_grupo
+			where
+				jg.fl_valido = 'sim'
+				and ug.id_usuario = id
+			order by 1 desc,2;
+	END;
+$$language plpgsql;
 
 create or replace procedure sp_usuario_sem_grupo()
 language plpgsql
@@ -511,11 +576,85 @@ $$
     END;
 $$;
 
+create or replace procedure sp_preencher_avaliacao(nr_loops integer)
+language plpgsql
+as
+$$
+    DECLARE
+        varIdUsuario integer;
+        varQtdUsuario integer;
+        varArrUsuario integer array;
+        varDtRegistro timestamp;
+
+        varIdJogo integer;
+        varQtdjogo integer;
+        varArrjogo integer array;
+
+        vl_nota numeric;
+
+    BEGIN
+
+        select count(*),array_agg(id_usuario) into varQtdUsuario, varArrUsuario from tb_usuario;
+        select count(*),array_agg(id_jogo) into varQtdjogo, varArrjogo from tb_jogo;
+
+        for i in 1..nr_loops loop
+
+            vl_nota:= random();
+			if vl_nota >= 0.5 then
+				vl_nota:= 0;
+			else
+				vl_nota:= 0.5;
+			end if;
+            vl_nota:= fn_random_between(2,5) + vl_nota;
+
+            if vl_nota > 5 then vl_nota:= 5; end if;
+
+            varIdUsuario = varArrUsuario[fn_random_between(1,varQtdUsuario)];
+            varIdJogo = varArrjogo[fn_random_between(1,varQtdjogo)];
+
+            select dt_registro into varDtRegistro from tb_usuario where id_usuario = varIdUsuario;
+            varDtRegistro:= varDtRegistro + random() * (current_timestamp - varDtRegistro);
+
+            insert into tb_avaliacao values (nextval('sq_avaliacao'), varIdUsuario, varIdJogo, vl_nota, null, varDtRegistro);
+
+		end loop;
+
+    END;
+$$;
+
+create or replace procedure sp_recomendar_jogo()
+language plpgsql
+as
+$$
+    DECLARE
+        varCursor refcursor;
+        varRecord record;
+        varQtd integer:= 0;
+    BEGIN
+        open varCursor for
+			select
+			id_jogo,
+			fn_nota_jogo(id_jogo,current_date)
+			from tb_jogo
+			order by 2 desc,1
+			limit 5
+        ;
+		loop
+			fetch varCursor into varRecord;
+			exit when not found;
+			insert into tb_jogo_grupo values(nextval('sq_jogo_grupo'), 1, varRecord.id_jogo , 'sim', null, current_timestamp);
+			varQtd := varQtd + 1;
+		end loop;
+		raise notice '% valores inseridos com sucesso.', TO_CHAR(varQtd, 'fm999G999');
+        close varCursor;
+    END;
+$$;
+
 create or replace function fn_cadastro_usuario() returns trigger as
 $tb_usuario$
     BEGIN
-        insert into tb_usuario_grupo values(nextval('sq_usuario_grupo'), new.id_usuario, 1, 'sim', null, current_timestamp);
-        insert into tb_contrato values(nextval('sq_contrato'), new.id_usuario, 1, 'sim', null ,current_timestamp);
+        insert into tb_usuario_grupo values(nextval('sq_usuario_grupo'), new.id_usuario, 1, 'sim', null, new.dt_registro);
+        insert into tb_contrato values(nextval('sq_contrato'), new.id_usuario, 1, 'sim', null ,new.dt_registro);
         return null;
     END;
 $tb_usuario$ language plpgsql;
@@ -613,6 +752,56 @@ create or replace trigger tg_agrupar_usuario
     before insert on tb_usuario_grupo
     FOR EACH ROW EXECUTE FUNCTION fn_agrupar_usuario();
 
+create or replace function fn_cadastro_jogo_grupo() returns trigger as
+$tb_jogo_grupo$
+    DECLARE
+        varCursor refcursor;
+        varRecord record;
+        varQtd Integer;
+        varQtdDesejada Integer := 5;
+
+    BEGIN
+        select count(*) into varQtd from tb_jogo_grupo where id_grupo = new.id_grupo;
+        if varQtd < varQtdDesejada then
+            return new;
+
+        else
+            select count(*) into varQtd from tb_jogo_grupo where id_grupo = new.id_grupo and fl_valido = 'sim';
+
+            if varQtd = 0 then
+                insert into tb_erro values(nextval('sq_erro'), 'tg_cadastro_jogo_grupo', concat('Grupo ', new.id_grupo, ' sem jogos recomendados validos.'), current_timestamp);
+			    raise notice 'TG_Cadastro_JOGO_GRUPO: Grupo % sem jogos recomendados validos.', new.id_grupo;
+                return new;
+
+            elsif varQtd < varQtdDesejada then
+                insert into tb_erro values(nextval('sq_erro'), 'tg_cadastro_jogo_grupo', concat('Grupo ', new.id_grupo, ' com menos de ', varQtdDesejada ,' jogos recomendados validos.'), current_timestamp);
+			    raise notice 'TG_Cadastro_JOGO_GRUPO: Grupo % com menos de % jogos recomendados validos.', new.id_grupo, varQtdDesejada;
+                return new;
+
+            elsif varQtd > varQtdDesejada then
+                insert into tb_erro values(nextval('sq_erro'), 'tg_cadastro_jogo_grupo', concat('Grupo ', new.id_grupo, ' com mais de ', varQtdDesejada ,'jogos recomendados validos.'), current_timestamp);
+			    raise notice 'TG_Cadastro_JOGO_GRUPO: Grupo % com mais de % jogos recomendados validos.', new.id_grupo, varQtdDesejada;
+
+            end if;
+
+			open varCursor for
+				select * from tb_jogo_grupo where id_grupo = new.id_grupo and fl_valido = 'sim' order by dt_registro limit (varQtd - 4)
+			;
+
+			loop
+				fetch varCursor into varRecord;
+				exit when not found;
+				update tb_jogo_grupo set dt_encerramento = current_timestamp, fl_valido = 'nao' where id_jogo_grupo = varRecord.id_jogo_grupo;
+			end loop;
+			return new;
+        end if;
+    END;
+$tb_jogo_grupo$ language plpgsql;
+
+create or replace trigger tg_cadastro_jogo_grupo
+    before insert on tb_jogo_grupo
+    FOR EACH ROW EXECUTE FUNCTION fn_cadastro_jogo_grupo();
+
 create or replace view vw_usuario_kpi as
 
 with DatasArray as (
@@ -627,8 +816,11 @@ usuario as (
     nm_usuario,
     date(dt_registro) as dt_registro,
     dt_nascimento,
-    min(date(dt_registro)) over() as min_data
+    min(date(dt_registro)) over() as min_data,
+    row_number() over (partition by id_usuario order by dt_registro desc) as nr_linha
     from tb_usuario
+    qualify
+
 ),
 
 contrato as (
@@ -642,7 +834,8 @@ contrato as (
     case
 		when tp.nm_plano != 'Gamer' then date(tpu.dt_registro) - lag(date(tpu.dt_registro)) over w1
 		else 0
-	end as nr_dias_upgrade_plano
+	end as nr_dias_upgrade_plano,
+    row_number() over (partition by tpu.id_usuario order by tpu.dt_registro desc) as nr_linha
     from tb_contrato tpu
     left join tb_plano tp on tpu.id_plano = tp.id_plano
     window
@@ -650,13 +843,14 @@ contrato as (
 ),
 
 avaliacaoTemp as (
-    select
+    select distinct
     id_avaliacao,
 	id_usuario,
 	date(dt_registro) as dt_registro,
 	vl_avaliacao,
 	min(date(ta.dt_registro)) over w1 as min_date,
-	max(date(ta.dt_registro)) over w1 as max_date
+	max(date(ta.dt_registro)) over w1 as max_date,
+	row_number() over (partition by id_usuario order by dt_registro desc) as nr_linha
 	from tb_avaliacao ta
 	window
 		w1 as (partition by ta.id_usuario order by ta.dt_registro rows between unbounded preceding and current row)
@@ -665,16 +859,18 @@ avaliacaoTemp as (
 avaliacao as (
 	select
 	dta.dt_array as dt_ref,
-	ta.id_usuario,
-	ta.dt_registro,
-	sum(case when ta.dt_registro = dta.dt_array then 1 else 0 end) over w1 as qtd,
-	sum(ta.vl_avaliacao * (date(ta.dt_registro) - min_date +1) / (date(ta.dt_registro) - max_date +1)) as vl_avaliacao_media
-	from avaliacaoTemp ta
+	a.id_usuario,
+	a.dt_registro,
+	sum(case when a.dt_registro = dta.dt_array then 1 else 0 end) over w1 as qtd,
+	sum(a.vl_avaliacao * (date(a.dt_registro) - min_date +1) / (date(a.dt_registro) - max_date +1)) as vl_avaliacao_media
+	from avaliacaoTemp a
 	left join DatasArray dta
-		on ta.dt_registro <= dta.dt_array
+		on a.dt_registro <= dta.dt_array
+	where
+	    a.nr_linha = 1
 	group by 1,2,3
 	window
-		w1 as (partition by ta.id_usuario order by ta.dt_registro rows between unbounded preceding and current row)
+		w1 as (partition by a.id_usuario order by a.dt_registro rows between unbounded preceding and current row)
 )
 
 select
@@ -710,6 +906,10 @@ left join contrato c
 left join avaliacao a
 	on u.id_usuario = a.id_usuario
 	and dta.dt_array = a.dt_ref
+
+where
+    u.nr_linha = 1
+	and c.nr_linha = 1
 
 order by 1,2;
 
