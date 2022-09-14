@@ -2668,7 +2668,7 @@
 		"replaceSpace": "_",
 		"color": "transparent",
 		"sideSelections": true,
-		"isDirty": false,
+		"isDirty": true,
 		"storedin": {
 			"major": 4,
 			"minor": 4,
@@ -2698,7 +2698,7 @@
 			"quotation": "if_needed",
 			"includeGeneratedNames": "always"
 		},
-		"lastSaved": "Wed Sep 07 2022 14:23:53 GMT-0300 (Brasilia Standard Time)",
+		"lastSaved": "Wed Sep 14 2022 00:41:13 GMT-0300 (Brasilia Standard Time)",
 		"writeFileParam": false,
 		"nameAutoGeneration": {
 			"keys": false,
@@ -2925,7 +2925,7 @@
 			"name": "VW_Usuario_KPI",
 			"desc": "",
 			"type": "View",
-			"code": "create or replace view vw_usuario_kpi as\n\nwith DatasArray as (\n    select\n        date(dt_array) as dt_array\n    from generate_series('2022-01-01', current_date, '1 day':: interval) as dt_array\n),\n\nusuario as (\n    select\n    id_usuario,\n    nm_usuario,\n    date(dt_registro) as dt_registro,\n    dt_nascimento,\n    min(date(dt_registro)) over() as min_data,\n    row_number() over (partition by id_usuario order by dt_registro desc) as nr_linha\n    from tb_usuario\n    qualify\n\n),\n\ncontrato as (\n    select\n    tpu.id_usuario,\n    tp.id_plano,\n    tp.nm_plano,\n    tp.vl_plano,\n    date(tpu.dt_registro) as dt_registro,\n    coalesce(tp.dt_encerramento :: date, '2500-01-01') as dt_encerramento,\n    case\n\t\twhen tp.nm_plano != 'Gamer' then date(tpu.dt_registro) - lag(date(tpu.dt_registro)) over w1\n\t\telse 0\n\tend as nr_dias_upgrade_plano,\n    row_number() over (partition by tpu.id_usuario order by tpu.dt_registro desc) as nr_linha\n    from tb_contrato tpu\n    left join tb_plano tp on tpu.id_plano = tp.id_plano\n    window\n    \tw1 as (partition by tpu.id_usuario order by tpu.dt_registro rows between unbounded preceding and current row)\n),\n\navaliacaoTemp as (\n    select distinct\n    id_avaliacao,\n\tid_usuario,\n\tdate(dt_registro) as dt_registro,\n\tvl_avaliacao,\n\tmin(date(ta.dt_registro)) over w1 as min_date,\n\tmax(date(ta.dt_registro)) over w1 as max_date,\n\trow_number() over (partition by id_usuario order by dt_registro desc) as nr_linha\n\tfrom tb_avaliacao ta\n\twindow\n\t\tw1 as (partition by ta.id_usuario order by ta.dt_registro rows between unbounded preceding and current row)\n),\n\navaliacao as (\n\tselect\n\tdta.dt_array as dt_ref,\n\ta.id_usuario,\n\ta.dt_registro,\n\tsum(case when a.dt_registro = dta.dt_array then 1 else 0 end) over w1 as qtd,\n\tsum(a.vl_avaliacao * (date(a.dt_registro) - min_date +1) / (date(a.dt_registro) - max_date +1)) as vl_avaliacao_media\n\tfrom avaliacaoTemp a\n\tleft join DatasArray dta\n\t\ton a.dt_registro <= dta.dt_array\n\twhere\n\t    a.nr_linha = 1\n\tgroup by 1,2,3\n\twindow\n\t\tw1 as (partition by a.id_usuario order by a.dt_registro rows between unbounded preceding and current row)\n)\n\nselect\n\ndta.dt_array as dt_ref,\n\nu.id_usuario,\nu.nm_usuario,\ncase\n    when extract(year from current_timestamp - u.dt_nascimento) > 18 then 'sim'\n    else 'nao'\nend as fl_maiorirdade,\nu.dt_registro as dt_registro,\ncoalesce(current_date - u.dt_registro, 0) as nr_dias_registrado,\n\nc.id_plano,\nc.nm_plano as nm_current_plano,\nc.nr_dias_upgrade_plano,\n\ncoalesce(a.qtd, 0) as nr_avaliacoes,\ncoalesce(a.vl_avaliacao_media, 0)\n\nfrom usuario u\n\nleft join DatasArray dta\n    on u.min_data <= dta.dt_array\n\nleft join contrato c\n    on u.id_usuario = c.id_usuario\n\tand dta.dt_array >= c.dt_registro\n\tand dta.dt_array < c.dt_encerramento\n\nleft join avaliacao a\n\ton u.id_usuario = a.id_usuario\n\tand dta.dt_array = a.dt_ref\n\nwhere\n    u.nr_linha = 1\n\tand c.nr_linha = 1\n\norder by 1,2;",
+			"code": "create materialized view vw_usuario_kpi as\n\nwith\n\n    DatasArray as (\n\t\tselect\n\t\t\tdate(dt_array) as dt_array\n\t\tfrom generate_series('2022-01-01', current_date, '1 day':: interval) as dt_array\n\t),\n\n\tusuario as (\n\t\tselect\n\t\tid_usuario,\n\t\tnm_usuario,\n\t\tdt_nascimento as dt_nascimento,\n\t\tdate(dt_registro) as dt_registro\n\t\tfrom tb_usuario\n\t),\n\n\tcontrato as (\n\t\tselect\n\t\ttc.id_usuario,\n\t\ttp.id_plano,\n\t\ttp.nm_plano,\n\t\ttp.vl_plano,\n\t\tdate(tc.dt_registro) as dt_registro,\n\t\tcoalesce(tp.dt_encerramento :: date, '2500-01-01'::date) as dt_encerramento\n\t\tfrom tb_contrato tc\n\t\tleft join tb_plano tp on tc.id_plano = tp.id_plano\n\t),\n\n\tjogo as (\n\t\tselect\n\t\tid_usuario,\n\t\tid_jogo,\n\t\tdate(dt_registro) as dt_registro\n\t\tfrom tb_jogo\n\t),\n\n\tavaliacao as (\n\t\tselect\n\t\tid_usuario,\n\t\tid_avaliacao,\n\t\tvl_avaliacao,\n\t\tdate(dt_registro) as dt_registro\n\t\tfrom tb_avaliacao\n\t),\n\n\tatividade as (\n\t\tselect\n\t\tta.id_usuario,\n\t\tta.id_atividade,\n\t\ttta.nm_grupo,\n\t\ttta.nm_subgrupo,\n\t\tdate(ta.dt_registro) as dt_registro\n\t\tfrom tb_atividade ta\n\t\tleft join tb_tipo_atividade tta\n\t\t\ton ta.id_tipo_atividade = tta.id_tipo_atividade\n\t)\n\nselect\n\n-- Datas\nd.dt_array as dt_referencia,\n\n-- Usuario\nu.id_usuario,\nu.nm_usuario,\nextract(year from age(d.dt_array, u.dt_nascimento)) as vl_idade,\nd.dt_array - u.dt_registro as vl_dias_registrado,\n\n-- Plano\nc.id_plano,\nc.nm_plano,\nc.vl_plano,\nd.dt_array - c.dt_registro as vl_dias_no_plano,\n\n-- Jogo\ncount(distinct j.id_jogo) filter (where j.dt_registro = d.dt_array) as qt_jogo_criado,\ncount(distinct j.id_jogo) as qt_hist_jogo_criado,\n\n-- Avaliação\ncount(distinct a.id_avaliacao) filter (where a.dt_registro = d.dt_array) as qt_avaliacao,\ncount(distinct a.id_avaliacao) as qt_hist_avaliacao,\navg(a.vl_avaliacao) filter (where a.dt_registro = d.dt_array) as vl_nota,\nfn_nota_usuario(u.id_usuario, d.dt_array) as vl_hist_nota,\n\n-- Atividade\n\ncount(distinct ac.id_atividade) filter (where ac.dt_registro = d.dt_array) as qt_atividade,\ncount(distinct ac.id_atividade) filter (where lower(ac.nm_grupo) = 'login' and ac.dt_registro = d.dt_array) as qt_atividade_login,\ncount(distinct ac.id_atividade) filter (where lower(ac.nm_grupo) = 'cadastro' and ac.dt_registro = d.dt_array) as qt_atividade_cadastro,\ncount(distinct ac.id_atividade) filter (where lower(ac.nm_grupo) = 'jogo' and ac.dt_registro = d.dt_array) as qt_atividade_jogo,\ncount(distinct ac.id_atividade) filter (where lower(ac.nm_grupo) in ('busca', 'filtro') and ac.dt_registro = d.dt_array) as qt_atividade_busca,\n\ncount(distinct ac.id_atividade) as qt_hist_atividade,\ncount(distinct ac.id_atividade) filter (where lower(ac.nm_grupo) = 'login') as qt_hist_atividade_login,\ncount(distinct ac.id_atividade) filter (where lower(ac.nm_grupo) = 'cadastro') as qt_hist_atividade_cadastro,\ncount(distinct ac.id_atividade) filter (where lower(ac.nm_grupo) = 'jogo') as qt_hist_atividade_jogo,\ncount(distinct ac.id_atividade) filter (where lower(ac.nm_grupo) in ('busca', 'filtro')) as qt_hist_atividade_busca,\n\n-- Geral\ncurrent_timestamp as dt_updated\n\nfrom DatasArray d\n\nleft join usuario u\n\ton d.dt_array >= u.dt_registro\n\nleft join contrato c\n\ton u.id_usuario = c.id_usuario\n\tand d.dt_array >= c.dt_registro\n\tand d.dt_array < c.dt_encerramento\n\nleft join jogo j\n\ton u.id_usuario = j.id_usuario\n\tand d.dt_array >= j.dt_registro\n\nleft join avaliacao a\n\ton u.id_usuario = a.id_usuario\n\tand d.dt_array >= a.dt_registro\n\nleft join atividade ac\n\ton u.id_usuario = ac.id_usuario\n\tand d.dt_array >= ac.dt_registro\n\nwhere\n    u.id_usuario is not null\n\ngroup by 1,2,3,4,5,6,7,8,9\norder by 1,2;",
 			"lines": [],
 			"generate": true,
 			"generateCustomCode": true,
@@ -2939,7 +2939,7 @@
 			"name": "VW_Jogo_KPI",
 			"desc": "",
 			"type": "View",
-			"code": "",
+			"code": "create materialized view vw_jogo_kpi as\n\nwith\n\n\tDatasArray as (\n\t\tselect\n\t\t\tdate(dt_array) as dt_array\n\t\tfrom generate_series('2022-01-01', current_date, '1 day':: interval) as dt_array\n\t),\n\n\tjogo as (\n\t\tselect\n\t\tid_jogo,\n\t\tnm_jogo,\n\t\tnr_min_jogadores,\n\t\tnr_max_jogadores,\n\t\tcase when fl_idade = 'sim' then 1 else 0 end as fl_idade,\n\t\tdate(dt_registro) as dt_registro,\n\t\tcoalesce(dt_encerramento :: date, '2500-01-01'::date) as dt_encerramento\n\t\tfrom tb_jogo\n\t),\n\n\titem as (\n\t\tselect\n\t\ttji.id_jogo,\n\t\tti.tp_item,\n\t\tdate(tji.dt_registro) as dt_registro\n\t\tfrom tb_jogo_item tji\n\t\tleft join tb_item ti\n\t\t\ton tji.id_item = ti.id_item\n\t),\n\n\tcategoria as (\n\t\tselect\n\t\ttjc.id_jogo,\n\t\ttc.nm_categoria,\n\t\tdate(tjc.dt_registro) as dt_registro\n\t\tfrom tb_jogo_categoria tjc\n\t\tleft join tb_categoria tc\n\t\t\ton tjc.id_categoria = tc.id_categoria\n\n\t),\n\n\tavaliacao as (\n\t\tselect\n\t\tid_jogo,\n\t\tid_avaliacao,\n\t\tvl_avaliacao,\n\t\tdate(dt_registro) as dt_registro\n\t\tfrom tb_avaliacao\n\t)\n\nselect\n\n-- Datas\nd.dt_array as dt_referencia,\n\n-- Jogo\nj.id_jogo,\nj.nm_jogo,\nj.nr_min_jogadores,\nj.nr_max_jogadores,\nj.fl_idade,\n\n-- Item\n\ncase when string_agg(distinct i.tp_item::text,',') like '%bola%' then 1 else 0 end as oh_bola,\ncase when string_agg(distinct i.tp_item::text,',') like '%carta%' then 1 else 0 end as oh_carta,\ncase when string_agg(distinct i.tp_item::text,',') like '%bebida_alcoolica%' then 1 else 0 end as oh_bebida_alcoolica,\ncase when string_agg(distinct i.tp_item::text,',') like '%bastao%' then 1 else 0 end as oh_bastao,\ncase when string_agg(distinct i.tp_item::text,',') like '%quadra%' then 1 else 0 end as oh_quadra,\ncase when string_agg(distinct i.tp_item::text,',') like '%papelaria%' then 1 else 0 end as oh_papelaria,\ncase when string_agg(distinct i.tp_item::text,',') like '%tabuleiro%' then 1 else 0 end as oh_tabuleiro,\ncase when string_agg(distinct i.tp_item::text,',') like '%dado%' then 1 else 0 end as oh_dado,\ncase when string_agg(distinct i.tp_item::text,',') like '%geral%' then 1 else 0 end as oh_geral,\n\n-- Categoria\n\ncase when string_agg(distinct nm_categoria,',') like '%Ao ar livre%' then 1 else 0 end as oh_ar_livre,\ncase when string_agg(distinct nm_categoria,',') like '%Diversos%' then 1 else 0 end as oh_diversos,\ncase when string_agg(distinct nm_categoria,',') like '%Esporte%' then 1 else 0 end as oh_esporte,\ncase when string_agg(distinct nm_categoria,',') like '%Jogos de azar%' then 1 else 0 end as oh_jogos_de_azar,\ncase when string_agg(distinct nm_categoria,',') like '%Jogos de cartas%' then 1 else 0 end as oh_jogos_de_cartas,\ncase when string_agg(distinct nm_categoria,',') like '%Jogos de tabuleiro%' then 1 else 0 end as oh_jogos_de_tabuleiro,\ncase when string_agg(distinct nm_categoria,',') like '%Jogos para Adultos%' then 1 else 0 end as oh_jogos_para_adultos,\ncase when string_agg(distinct nm_categoria,',') like '%Jogos para crianças%' then 1 else 0 end as oh_jogos_para_crianças,\n\n-- Avaliação\ncount(distinct a.id_avaliacao) filter (where a.dt_registro = d.dt_array) as qt_avaliacao,\ncount(distinct a.id_avaliacao) as qt_hist_avaliacao,\navg(a.vl_avaliacao) filter (where a.dt_registro = d.dt_array) as vl_nota,\nfn_nota_jogo(j.id_jogo, d.dt_array) as vl_hist_nota\n\nfrom DatasArray d\n\nleft join jogo j\n\ton d.dt_array >= j.dt_registro\n\tand d.dt_array < j.dt_encerramento\n\nleft join item i\n\ton j.id_jogo = i.id_jogo\n\tand d.dt_array >= i.dt_registro\n\nleft join categoria c\n\ton j.id_jogo = c.id_jogo\n\tand d.dt_array >= c.dt_registro\n\nleft join avaliacao a\n\ton j.id_jogo = a.id_jogo\n\tand d.dt_array >= a.dt_registro\n\nwhere\n\tj.id_jogo is not null\n\ngroup by 1,2,3,4,5,6\norder by 1,2;",
 			"lines": [],
 			"generate": true,
 			"generateCustomCode": true,
@@ -3198,6 +3198,34 @@
 			"pg": {
 				"schema": ""
 			}
+		},
+		"f7ac839a-e790-455e-b75c-1cf5a337c1f1": {
+			"id": "f7ac839a-e790-455e-b75c-1cf5a337c1f1",
+			"visible": true,
+			"name": "FN_One_Hot_TP_Item",
+			"desc": "",
+			"type": "Function",
+			"code": "create or replace function fn_one_hot_tp_item()\nreturns text language plpgsql\nas $$\n    declare\n        resultado text;\n    begin\n\n\t\twith\n\n\t\t\ttpItem as (\n\t\t\t\tselect distinct\n\t\t\t\ttp_item\n\t\t\t\tfrom tb_item\n\t\t\t)\n\t\tselect\n\n\t\tstring_agg(concat(\n\t\t\t'case when string_agg(distinct i.tp_item::text, ',\n\t\t    quote_literal(','),\n\t\t    ') like ',\n\t\t\tquote_literal(concat('%', tp_item::text, '%')),\n\t\t\t' then 1 else 0 end as oh_',\n\t\t\tlower(replace(tp_item::text,' ','_'))\n\t\t), ', ') into resultado\n\n\t\tfrom tpItem;\n\n\t\treturn resultado;\n\n    end;\n$$;",
+			"lines": [],
+			"generate": true,
+			"generateCustomCode": true,
+			"pg": {
+				"schema": ""
+			}
+		},
+		"a4d9634e-0f9b-47b6-84cd-a1617e94b1f8": {
+			"id": "a4d9634e-0f9b-47b6-84cd-a1617e94b1f8",
+			"visible": true,
+			"name": "FN_One_Hot_Categoria",
+			"desc": "",
+			"type": "Function",
+			"code": "create or replace function fn_one_hot_categoria()\nreturns text language plpgsql\nas $$\n    declare\n        resultado text;\n    begin\n\t\twith\n\n\t\t\tcategoria as (\n\t\t\t\tselect distinct\n\t\t\t\tnm_categoria\n\t\t\t\tfrom tb_categoria\n\t\t\t)\n\t\tselect\n\n\t\tstring_agg(concat(\n\t\t\t'case when string_agg(distinct nm_categoria, ',\n\t\t    quote_literal(','),\n\t\t    ') like ',\n\t\t\tquote_literal(concat('%', nm_categoria::text, '%')),\n\t\t\t' then 1 else 0 end as oh_',\n\t\t\tlower(replace(nm_categoria::text,' ','_'))\n\t\t), ', ') into resultado\n\n\t\tfrom categoria;\n\n\t\treturn resultado;\n\n    end;\n$$;",
+			"lines": [],
+			"generate": true,
+			"generateCustomCode": true,
+			"pg": {
+				"schema": ""
+			}
 		}
 	},
 	"diagrams": {
@@ -3227,7 +3255,7 @@
 				"ad9008af-1465-4e0c-896a-809dfb511a1d": {
 					"referencedItemId": "ad9008af-1465-4e0c-896a-809dfb511a1d",
 					"x": 45,
-					"y": 1417.5,
+					"y": 1473,
 					"gHeight": 44,
 					"gWidth": 150,
 					"color": "#eee",
@@ -3293,7 +3321,7 @@
 				"b9eb08ed-da89-4ca8-b3ef-001327b011b9": {
 					"referencedItemId": "b9eb08ed-da89-4ca8-b3ef-001327b011b9",
 					"x": 45,
-					"y": 1355,
+					"y": 1410,
 					"gHeight": 44,
 					"gWidth": 166,
 					"color": "#ffffff",
@@ -3303,8 +3331,8 @@
 				},
 				"457b9266-642f-4a0d-92f2-83dc48b91122": {
 					"referencedItemId": "457b9266-642f-4a0d-92f2-83dc48b91122",
-					"x": 669.75,
-					"y": 1353,
+					"x": 676,
+					"y": 1410,
 					"gHeight": 44,
 					"gWidth": 150,
 					"color": "#ffffff",
@@ -3314,8 +3342,8 @@
 				},
 				"82cb7113-6078-42aa-9c88-b9fdc92d608e": {
 					"referencedItemId": "82cb7113-6078-42aa-9c88-b9fdc92d608e",
-					"x": 669.75,
-					"y": 1418,
+					"x": 670,
+					"y": 1472,
 					"gHeight": 44,
 					"gWidth": 150,
 					"color": "#eee",
@@ -3325,8 +3353,8 @@
 				},
 				"63c5af14-fc87-45a2-8dd5-939e26063a03": {
 					"referencedItemId": "63c5af14-fc87-45a2-8dd5-939e26063a03",
-					"x": 1018.5,
-					"y": 1419,
+					"x": 1025,
+					"y": 1473,
 					"gHeight": 44,
 					"gWidth": 150,
 					"color": "#eee",
@@ -3337,7 +3365,7 @@
 				"6a1a0a5e-af9b-4f0a-9860-f076a72ecab0": {
 					"referencedItemId": "6a1a0a5e-af9b-4f0a-9860-f076a72ecab0",
 					"x": 844,
-					"y": 1418,
+					"y": 1473,
 					"gHeight": 44,
 					"gWidth": 150,
 					"color": "#eee",
@@ -3347,8 +3375,8 @@
 				},
 				"c884728c-c17a-484f-a108-b5c39da48666": {
 					"referencedItemId": "c884728c-c17a-484f-a108-b5c39da48666",
-					"x": 1198.5,
-					"y": 1418,
+					"x": 1199,
+					"y": 1473,
 					"gHeight": 44,
 					"gWidth": 150,
 					"color": "#eee",
@@ -3358,8 +3386,8 @@
 				},
 				"b1801aa7-6068-44d2-a55d-b03653e7ee4a": {
 					"referencedItemId": "b1801aa7-6068-44d2-a55d-b03653e7ee4a",
-					"x": 1376.5,
-					"y": 1418,
+					"x": 1376,
+					"y": 1473,
 					"gHeight": 44,
 					"gWidth": 150,
 					"color": "#eee",
@@ -3370,7 +3398,7 @@
 				"883caa20-b06c-4667-9961-02cb7490c8c6": {
 					"referencedItemId": "883caa20-b06c-4667-9961-02cb7490c8c6",
 					"x": 1550,
-					"y": 1483,
+					"y": 1540,
 					"gHeight": 44,
 					"gWidth": 150,
 					"color": "#eee",
@@ -3413,8 +3441,8 @@
 				},
 				"08988c15-893c-4ba6-903e-1e6f6dc06391": {
 					"referencedItemId": "08988c15-893c-4ba6-903e-1e6f6dc06391",
-					"x": 230,
-					"y": 1418,
+					"x": 215,
+					"y": 1473,
 					"gHeight": 44,
 					"gWidth": 150,
 					"color": "#eee",
@@ -3468,8 +3496,8 @@
 				},
 				"571dc1b9-c4a2-40be-8846-566dd21173b0": {
 					"referencedItemId": "571dc1b9-c4a2-40be-8846-566dd21173b0",
-					"x": 669.75,
-					"y": 1483,
+					"x": 670,
+					"y": 1539,
 					"gHeight": 44,
 					"gWidth": 150,
 					"color": "#eee",
@@ -3479,8 +3507,8 @@
 				},
 				"367d18ad-1d37-4c07-bc37-aa60b02ce804": {
 					"referencedItemId": "367d18ad-1d37-4c07-bc37-aa60b02ce804",
-					"x": 1376.5,
-					"y": 1483,
+					"x": 1376,
+					"y": 1540,
 					"gHeight": 44,
 					"gWidth": 150,
 					"color": "#eee",
@@ -3491,7 +3519,7 @@
 				"1823739d-7c29-42a3-b174-93c90d8438a1": {
 					"referencedItemId": "1823739d-7c29-42a3-b174-93c90d8438a1",
 					"x": 1550,
-					"y": 1418,
+					"y": 1473,
 					"gHeight": 44,
 					"gWidth": 150,
 					"color": "#eee",
@@ -3502,7 +3530,7 @@
 				"15605b64-799d-4fa5-8c4f-1b771b0ebd0b": {
 					"referencedItemId": "15605b64-799d-4fa5-8c4f-1b771b0ebd0b",
 					"x": 844,
-					"y": 1483,
+					"y": 1540,
 					"gHeight": 44,
 					"gWidth": 150,
 					"color": "#eee",
@@ -3512,8 +3540,8 @@
 				},
 				"9a29efbd-65cd-49b8-9629-710d715e64c3": {
 					"referencedItemId": "9a29efbd-65cd-49b8-9629-710d715e64c3",
-					"x": 1018.5,
-					"y": 1484,
+					"x": 1025,
+					"y": 1540,
 					"gHeight": 44,
 					"gWidth": 150,
 					"color": "#eee",
@@ -3523,8 +3551,8 @@
 				},
 				"ed3d8c9b-668c-4d99-bc32-2f1116dfeaef": {
 					"referencedItemId": "ed3d8c9b-668c-4d99-bc32-2f1116dfeaef",
-					"x": 1198.5,
-					"y": 1483,
+					"x": 1199,
+					"y": 1540,
 					"gHeight": 44,
 					"gWidth": 150,
 					"color": "#eee",
@@ -3589,8 +3617,8 @@
 				},
 				"b7fe57fa-0f72-4058-adc6-4590c6843db8": {
 					"referencedItemId": "b7fe57fa-0f72-4058-adc6-4590c6843db8",
-					"x": 229,
-					"y": 995.5,
+					"x": 228,
+					"y": 996,
 					"gHeight": 44,
 					"gWidth": 150,
 					"color": "#eee",
@@ -3622,8 +3650,8 @@
 				},
 				"bbb5bfd7-f6c6-4eea-a816-5ad4b1e0816d": {
 					"referencedItemId": "bbb5bfd7-f6c6-4eea-a816-5ad4b1e0816d",
-					"x": 669.75,
-					"y": 1547.75,
+					"x": 670,
+					"y": 1609,
 					"gHeight": 44,
 					"gWidth": 150,
 					"color": "#eee",
@@ -3667,7 +3695,7 @@
 				"5450da57-9feb-4a72-85be-d146e68c8ad5": {
 					"referencedItemId": "5450da57-9feb-4a72-85be-d146e68c8ad5",
 					"x": 844,
-					"y": 1547.75,
+					"y": 1610,
 					"gHeight": 44,
 					"gWidth": 150,
 					"color": "#eee",
@@ -3710,8 +3738,8 @@
 				},
 				"87154a11-cdbd-436c-a027-afd820c20504": {
 					"referencedItemId": "87154a11-cdbd-436c-a027-afd820c20504",
-					"x": 1018.5,
-					"y": 1547.75,
+					"x": 1025,
+					"y": 1610,
 					"gHeight": 44,
 					"gWidth": 150,
 					"color": "#eee",
@@ -3732,8 +3760,8 @@
 				},
 				"fbad7a13-0c70-4e84-9cac-fb94436130e0": {
 					"referencedItemId": "fbad7a13-0c70-4e84-9cac-fb94436130e0",
-					"x": 1200,
-					"y": 1548,
+					"x": 1199,
+					"y": 1610,
 					"gHeight": 44,
 					"gWidth": 150,
 					"color": "#eee",
@@ -3755,7 +3783,7 @@
 				"be9d4622-26e1-40af-9f76-418de1e60304": {
 					"referencedItemId": "be9d4622-26e1-40af-9f76-418de1e60304",
 					"x": 670,
-					"y": 1260,
+					"y": 1259,
 					"gHeight": 44,
 					"gWidth": 150,
 					"color": "#eee",
@@ -3787,7 +3815,7 @@
 				},
 				"4c0114bc-b670-4c94-92b7-babab23b130d": {
 					"referencedItemId": "4c0114bc-b670-4c94-92b7-babab23b130d",
-					"x": 1378,
+					"x": 1376,
 					"y": 1199,
 					"gHeight": 44,
 					"gWidth": 150,
@@ -3846,6 +3874,28 @@
 					"y": 1199,
 					"gHeight": 44,
 					"gWidth": 163,
+					"color": "#eee",
+					"background": "#607d8b",
+					"resized": false,
+					"autoExpand": true
+				},
+				"f7ac839a-e790-455e-b75c-1cf5a337c1f1": {
+					"referencedItemId": "f7ac839a-e790-455e-b75c-1cf5a337c1f1",
+					"x": 1550,
+					"y": 1262,
+					"gHeight": 44,
+					"gWidth": 150,
+					"color": "#eee",
+					"background": "#607d8b",
+					"resized": false,
+					"autoExpand": true
+				},
+				"a4d9634e-0f9b-47b6-84cd-a1617e94b1f8": {
+					"referencedItemId": "a4d9634e-0f9b-47b6-84cd-a1617e94b1f8",
+					"x": 1199,
+					"y": 1325,
+					"gHeight": 44,
+					"gWidth": 150,
 					"color": "#eee",
 					"background": "#607d8b",
 					"resized": false,
@@ -3914,6 +3964,8 @@
 		"4c0114bc-b670-4c94-92b7-babab23b130d",
 		"56e8ec0a-570c-4682-a3c6-fa3db5fdea48",
 		"93152996-80f0-4e3c-8ef9-e853cbfe6f95",
+		"f7ac839a-e790-455e-b75c-1cf5a337c1f1",
+		"a4d9634e-0f9b-47b6-84cd-a1617e94b1f8",
 		"9b8d3e6b-b378-41dd-9b78-ba07298f5c4f",
 		"712016e3-cfe8-47a4-becc-73ed179e3cd3",
 		"f04f0b47-3f1e-441d-8bc4-425c1e381536",

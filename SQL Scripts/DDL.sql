@@ -506,6 +506,69 @@ $$
 	END;
 $$language plpgsql;
 
+create or replace function fn_one_hot_tp_item()
+returns text language plpgsql
+as $$
+    declare
+        resultado text;
+    begin
+
+		with
+
+			tpItem as (
+				select distinct
+				tp_item
+				from tb_item
+			)
+		select
+
+		string_agg(concat(
+			'case when string_agg(distinct i.tp_item::text, ',
+		    quote_literal(','),
+		    ') like ',
+			quote_literal(concat('%', tp_item::text, '%')),
+			' then 1 else 0 end as oh_',
+			lower(replace(tp_item::text,' ','_'))
+		), ', ') into resultado
+
+		from tpItem;
+
+		return resultado;
+
+    end;
+$$;
+
+create or replace function fn_one_hot_categoria()
+returns text language plpgsql
+as $$
+    declare
+        resultado text;
+    begin
+		with
+
+			categoria as (
+				select distinct
+				nm_categoria
+				from tb_categoria
+			)
+		select
+
+		string_agg(concat(
+			'case when string_agg(distinct nm_categoria, ',
+		    quote_literal(','),
+		    ') like ',
+			quote_literal(concat('%', nm_categoria::text, '%')),
+			' then 1 else 0 end as oh_',
+			lower(replace(nm_categoria::text,' ','_'))
+		), ', ') into resultado
+
+		from categoria;
+
+		return resultado;
+
+    end;
+$$;
+
 create or replace procedure sp_usuario_sem_grupo()
 language plpgsql
 as
@@ -802,115 +865,253 @@ create or replace trigger tg_cadastro_jogo_grupo
     before insert on tb_jogo_grupo
     FOR EACH ROW EXECUTE FUNCTION fn_cadastro_jogo_grupo();
 
-create or replace view vw_usuario_kpi as
+create materialized view vw_usuario_kpi as
 
-with DatasArray as (
-    select
-        date(dt_array) as dt_array
-    from generate_series('2022-01-01', current_date, '1 day':: interval) as dt_array
-),
+with
 
-usuario as (
-    select
-    id_usuario,
-    nm_usuario,
-    date(dt_registro) as dt_registro,
-    dt_nascimento,
-    min(date(dt_registro)) over() as min_data,
-    row_number() over (partition by id_usuario order by dt_registro desc) as nr_linha
-    from tb_usuario
-    qualify
+    DatasArray as (
+		select
+			date(dt_array) as dt_array
+		from generate_series('2022-01-01', current_date, '1 day':: interval) as dt_array
+	),
 
-),
+	usuario as (
+		select
+		id_usuario,
+		nm_usuario,
+		dt_nascimento as dt_nascimento,
+		date(dt_registro) as dt_registro
+		from tb_usuario
+	),
 
-contrato as (
-    select
-    tpu.id_usuario,
-    tp.id_plano,
-    tp.nm_plano,
-    tp.vl_plano,
-    date(tpu.dt_registro) as dt_registro,
-    coalesce(tp.dt_encerramento :: date, '2500-01-01') as dt_encerramento,
-    case
-		when tp.nm_plano != 'Gamer' then date(tpu.dt_registro) - lag(date(tpu.dt_registro)) over w1
-		else 0
-	end as nr_dias_upgrade_plano,
-    row_number() over (partition by tpu.id_usuario order by tpu.dt_registro desc) as nr_linha
-    from tb_contrato tpu
-    left join tb_plano tp on tpu.id_plano = tp.id_plano
-    window
-    	w1 as (partition by tpu.id_usuario order by tpu.dt_registro rows between unbounded preceding and current row)
-),
+	contrato as (
+		select
+		tc.id_usuario,
+		tp.id_plano,
+		tp.nm_plano,
+		tp.vl_plano,
+		date(tc.dt_registro) as dt_registro,
+		coalesce(tp.dt_encerramento :: date, '2500-01-01'::date) as dt_encerramento
+		from tb_contrato tc
+		left join tb_plano tp on tc.id_plano = tp.id_plano
+	),
 
-avaliacaoTemp as (
-    select distinct
-    id_avaliacao,
-	id_usuario,
-	date(dt_registro) as dt_registro,
-	vl_avaliacao,
-	min(date(ta.dt_registro)) over w1 as min_date,
-	max(date(ta.dt_registro)) over w1 as max_date,
-	row_number() over (partition by id_usuario order by dt_registro desc) as nr_linha
-	from tb_avaliacao ta
-	window
-		w1 as (partition by ta.id_usuario order by ta.dt_registro rows between unbounded preceding and current row)
-),
+	jogo as (
+		select
+		id_usuario,
+		id_jogo,
+		date(dt_registro) as dt_registro
+		from tb_jogo
+	),
 
-avaliacao as (
-	select
-	dta.dt_array as dt_ref,
-	a.id_usuario,
-	a.dt_registro,
-	sum(case when a.dt_registro = dta.dt_array then 1 else 0 end) over w1 as qtd,
-	sum(a.vl_avaliacao * (date(a.dt_registro) - min_date +1) / (date(a.dt_registro) - max_date +1)) as vl_avaliacao_media
-	from avaliacaoTemp a
-	left join DatasArray dta
-		on a.dt_registro <= dta.dt_array
-	where
-	    a.nr_linha = 1
-	group by 1,2,3
-	window
-		w1 as (partition by a.id_usuario order by a.dt_registro rows between unbounded preceding and current row)
-)
+	avaliacao as (
+		select
+		id_usuario,
+		id_avaliacao,
+		vl_avaliacao,
+		date(dt_registro) as dt_registro
+		from tb_avaliacao
+	),
+
+	atividade as (
+		select
+		ta.id_usuario,
+		ta.id_atividade,
+		tta.nm_grupo,
+		tta.nm_subgrupo,
+		date(ta.dt_registro) as dt_registro
+		from tb_atividade ta
+		left join tb_tipo_atividade tta
+			on ta.id_tipo_atividade = tta.id_tipo_atividade
+	)
 
 select
 
-dta.dt_array as dt_ref,
+-- Datas
+d.dt_array as dt_referencia,
 
+-- Usuario
 u.id_usuario,
 u.nm_usuario,
-case
-    when extract(year from current_timestamp - u.dt_nascimento) > 18 then 'sim'
-    else 'nao'
-end as fl_maiorirdade,
-u.dt_registro as dt_registro,
-coalesce(current_date - u.dt_registro, 0) as nr_dias_registrado,
+extract(year from age(d.dt_array, u.dt_nascimento)) as vl_idade,
+d.dt_array - u.dt_registro as vl_dias_registrado,
 
+-- Plano
 c.id_plano,
-c.nm_plano as nm_current_plano,
-c.nr_dias_upgrade_plano,
+c.nm_plano,
+c.vl_plano,
+d.dt_array - c.dt_registro as vl_dias_no_plano,
 
-coalesce(a.qtd, 0) as nr_avaliacoes,
-coalesce(a.vl_avaliacao_media, 0)
+-- Jogo
+count(distinct j.id_jogo) filter (where j.dt_registro = d.dt_array) as qt_jogo_criado,
+count(distinct j.id_jogo) as qt_hist_jogo_criado,
 
-from usuario u
+-- Avaliação
+count(distinct a.id_avaliacao) filter (where a.dt_registro = d.dt_array) as qt_avaliacao,
+count(distinct a.id_avaliacao) as qt_hist_avaliacao,
+avg(a.vl_avaliacao) filter (where a.dt_registro = d.dt_array) as vl_nota,
+fn_nota_usuario(u.id_usuario, d.dt_array) as vl_hist_nota,
 
-left join DatasArray dta
-    on u.min_data <= dta.dt_array
+-- Atividade
+
+count(distinct ac.id_atividade) filter (where ac.dt_registro = d.dt_array) as qt_atividade,
+count(distinct ac.id_atividade) filter (where lower(ac.nm_grupo) = 'login' and ac.dt_registro = d.dt_array) as qt_atividade_login,
+count(distinct ac.id_atividade) filter (where lower(ac.nm_grupo) = 'cadastro' and ac.dt_registro = d.dt_array) as qt_atividade_cadastro,
+count(distinct ac.id_atividade) filter (where lower(ac.nm_grupo) = 'jogo' and ac.dt_registro = d.dt_array) as qt_atividade_jogo,
+count(distinct ac.id_atividade) filter (where lower(ac.nm_grupo) in ('busca', 'filtro') and ac.dt_registro = d.dt_array) as qt_atividade_busca,
+
+count(distinct ac.id_atividade) as qt_hist_atividade,
+count(distinct ac.id_atividade) filter (where lower(ac.nm_grupo) = 'login') as qt_hist_atividade_login,
+count(distinct ac.id_atividade) filter (where lower(ac.nm_grupo) = 'cadastro') as qt_hist_atividade_cadastro,
+count(distinct ac.id_atividade) filter (where lower(ac.nm_grupo) = 'jogo') as qt_hist_atividade_jogo,
+count(distinct ac.id_atividade) filter (where lower(ac.nm_grupo) in ('busca', 'filtro')) as qt_hist_atividade_busca,
+
+-- Geral
+current_timestamp as dt_updated
+
+from DatasArray d
+
+left join usuario u
+	on d.dt_array >= u.dt_registro
 
 left join contrato c
-    on u.id_usuario = c.id_usuario
-	and dta.dt_array >= c.dt_registro
-	and dta.dt_array < c.dt_encerramento
+	on u.id_usuario = c.id_usuario
+	and d.dt_array >= c.dt_registro
+	and d.dt_array < c.dt_encerramento
+
+left join jogo j
+	on u.id_usuario = j.id_usuario
+	and d.dt_array >= j.dt_registro
 
 left join avaliacao a
 	on u.id_usuario = a.id_usuario
-	and dta.dt_array = a.dt_ref
+	and d.dt_array >= a.dt_registro
+
+left join atividade ac
+	on u.id_usuario = ac.id_usuario
+	and d.dt_array >= ac.dt_registro
 
 where
-    u.nr_linha = 1
-	and c.nr_linha = 1
+    u.id_usuario is not null
 
+group by 1,2,3,4,5,6,7,8,9
+order by 1,2;
+
+create materialized view vw_jogo_kpi as
+
+with
+
+	DatasArray as (
+		select
+			date(dt_array) as dt_array
+		from generate_series('2022-01-01', current_date, '1 day':: interval) as dt_array
+	),
+
+	jogo as (
+		select
+		id_jogo,
+		nm_jogo,
+		nr_min_jogadores,
+		nr_max_jogadores,
+		case when fl_idade = 'sim' then 1 else 0 end as fl_idade,
+		date(dt_registro) as dt_registro,
+		coalesce(dt_encerramento :: date, '2500-01-01'::date) as dt_encerramento
+		from tb_jogo
+	),
+
+	item as (
+		select
+		tji.id_jogo,
+		ti.tp_item,
+		date(tji.dt_registro) as dt_registro
+		from tb_jogo_item tji
+		left join tb_item ti
+			on tji.id_item = ti.id_item
+	),
+
+	categoria as (
+		select
+		tjc.id_jogo,
+		tc.nm_categoria,
+		date(tjc.dt_registro) as dt_registro
+		from tb_jogo_categoria tjc
+		left join tb_categoria tc
+			on tjc.id_categoria = tc.id_categoria
+
+	),
+
+	avaliacao as (
+		select
+		id_jogo,
+		id_avaliacao,
+		vl_avaliacao,
+		date(dt_registro) as dt_registro
+		from tb_avaliacao
+	)
+
+select
+
+-- Datas
+d.dt_array as dt_referencia,
+
+-- Jogo
+j.id_jogo,
+j.nm_jogo,
+j.nr_min_jogadores,
+j.nr_max_jogadores,
+j.fl_idade,
+
+-- Item
+
+case when string_agg(distinct i.tp_item::text,',') like '%bola%' then 1 else 0 end as oh_bola,
+case when string_agg(distinct i.tp_item::text,',') like '%carta%' then 1 else 0 end as oh_carta,
+case when string_agg(distinct i.tp_item::text,',') like '%bebida_alcoolica%' then 1 else 0 end as oh_bebida_alcoolica,
+case when string_agg(distinct i.tp_item::text,',') like '%bastao%' then 1 else 0 end as oh_bastao,
+case when string_agg(distinct i.tp_item::text,',') like '%quadra%' then 1 else 0 end as oh_quadra,
+case when string_agg(distinct i.tp_item::text,',') like '%papelaria%' then 1 else 0 end as oh_papelaria,
+case when string_agg(distinct i.tp_item::text,',') like '%tabuleiro%' then 1 else 0 end as oh_tabuleiro,
+case when string_agg(distinct i.tp_item::text,',') like '%dado%' then 1 else 0 end as oh_dado,
+case when string_agg(distinct i.tp_item::text,',') like '%geral%' then 1 else 0 end as oh_geral,
+
+-- Categoria
+
+case when string_agg(distinct nm_categoria,',') like '%Ao ar livre%' then 1 else 0 end as oh_ar_livre,
+case when string_agg(distinct nm_categoria,',') like '%Diversos%' then 1 else 0 end as oh_diversos,
+case when string_agg(distinct nm_categoria,',') like '%Esporte%' then 1 else 0 end as oh_esporte,
+case when string_agg(distinct nm_categoria,',') like '%Jogos de azar%' then 1 else 0 end as oh_jogos_de_azar,
+case when string_agg(distinct nm_categoria,',') like '%Jogos de cartas%' then 1 else 0 end as oh_jogos_de_cartas,
+case when string_agg(distinct nm_categoria,',') like '%Jogos de tabuleiro%' then 1 else 0 end as oh_jogos_de_tabuleiro,
+case when string_agg(distinct nm_categoria,',') like '%Jogos para Adultos%' then 1 else 0 end as oh_jogos_para_adultos,
+case when string_agg(distinct nm_categoria,',') like '%Jogos para crianças%' then 1 else 0 end as oh_jogos_para_crianças,
+
+-- Avaliação
+count(distinct a.id_avaliacao) filter (where a.dt_registro = d.dt_array) as qt_avaliacao,
+count(distinct a.id_avaliacao) as qt_hist_avaliacao,
+avg(a.vl_avaliacao) filter (where a.dt_registro = d.dt_array) as vl_nota,
+fn_nota_jogo(j.id_jogo, d.dt_array) as vl_hist_nota
+
+from DatasArray d
+
+left join jogo j
+	on d.dt_array >= j.dt_registro
+	and d.dt_array < j.dt_encerramento
+
+left join item i
+	on j.id_jogo = i.id_jogo
+	and d.dt_array >= i.dt_registro
+
+left join categoria c
+	on j.id_jogo = c.id_jogo
+	and d.dt_array >= c.dt_registro
+
+left join avaliacao a
+	on j.id_jogo = a.id_jogo
+	and d.dt_array >= a.dt_registro
+
+where
+	j.id_jogo is not null
+
+group by 1,2,3,4,5,6
 order by 1,2;
 
 commit;

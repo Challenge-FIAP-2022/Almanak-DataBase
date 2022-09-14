@@ -200,3 +200,70 @@ $$
 			order by 1 desc,2;
 	END;
 $$language plpgsql;
+
+-- FN_One_Hot_TP_Item
+
+create or replace function fn_one_hot_tp_item()
+returns text language plpgsql
+as $$
+    declare
+        resultado text;
+    begin
+
+		with
+
+			tpItem as (
+				select distinct
+				tp_item
+				from tb_item
+			)
+		select
+
+		string_agg(concat(
+			'case when string_agg(distinct i.tp_item::text, ',
+		    quote_literal(','),
+		    ') like ',
+			quote_literal(concat('%', tp_item::text, '%')),
+			' then 1 else 0 end as oh_',
+			lower(replace(tp_item::text,' ','_'))
+		), ', ') into resultado
+
+		from tpItem;
+
+		return resultado;
+
+    end;
+$$;
+
+-- FN_One_Hot_Categoria
+
+create or replace function fn_one_hot_categoria()
+returns text language plpgsql
+as $$
+    declare
+        resultado text;
+    begin
+		with
+
+			categoria as (
+				select distinct
+				nm_categoria
+				from tb_categoria
+			)
+		select
+
+		string_agg(concat(
+			'case when string_agg(distinct nm_categoria, ',
+		    quote_literal(','),
+		    ') like ',
+			quote_literal(concat('%', nm_categoria::text, '%')),
+			' then 1 else 0 end as oh_',
+			lower(replace(nm_categoria::text,' ','_'))
+		), ', ') into resultado
+
+		from categoria;
+
+		return resultado;
+
+    end;
+$$;
