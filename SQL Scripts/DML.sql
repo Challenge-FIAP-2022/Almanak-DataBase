@@ -2,6 +2,12 @@
 
 INSERT INTO tb_grupo values (nextval('sq_grupo'), 'inicial', cast('2022-01-01' as timestamp));
 
+INSERT INTO tb_grupo values (nextval('sq_grupo'), 'KNN 1', cast('2022-01-01' as timestamp));
+INSERT INTO tb_grupo values (nextval('sq_grupo'), 'KNN 2', cast('2022-01-01' as timestamp));
+INSERT INTO tb_grupo values (nextval('sq_grupo'), 'KNN 3', cast('2022-01-01' as timestamp));
+INSERT INTO tb_grupo values (nextval('sq_grupo'), 'KNN 4', cast('2022-01-01' as timestamp));
+INSERT INTO tb_grupo values (nextval('sq_grupo'), 'KNN 5', cast('2022-01-01' as timestamp));
+
 -- TB_Plano
 
 INSERT INTO tb_plano values (nextval('sq_plano'), 'Gamer', 'Plano gratuito, com anúncios.', 0, 'sim', null, cast('2022-01-01' as timestamp));

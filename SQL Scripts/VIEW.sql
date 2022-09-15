@@ -69,6 +69,7 @@ d.dt_array as dt_referencia,
 u.id_usuario,
 u.nm_usuario,
 extract(year from age(d.dt_array, u.dt_nascimento)) as vl_idade,
+u.dt_registro,
 d.dt_array - u.dt_registro as vl_dias_registrado,
 
 -- Plano
@@ -129,7 +130,7 @@ left join atividade ac
 where
     u.id_usuario is not null
 
-group by 1,2,3,4,5,6,7,8,9
+group by 1,2,3,4,5,6,7,8,9,10
 order by 1,2;
 
 -- Jogo KPI
