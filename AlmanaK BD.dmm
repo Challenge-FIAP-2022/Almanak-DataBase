@@ -2668,7 +2668,7 @@
 		"replaceSpace": "_",
 		"color": "transparent",
 		"sideSelections": true,
-		"isDirty": true,
+		"isDirty": false,
 		"storedin": {
 			"major": 4,
 			"minor": 4,
@@ -2698,7 +2698,7 @@
 			"quotation": "if_needed",
 			"includeGeneratedNames": "always"
 		},
-		"lastSaved": "Wed Sep 14 2022 00:41:13 GMT-0300 (Brasilia Standard Time)",
+		"lastSaved": "Wed Sep 14 2022 02:22:15 GMT-0300 (Brasilia Standard Time)",
 		"writeFileParam": false,
 		"nameAutoGeneration": {
 			"keys": false,
