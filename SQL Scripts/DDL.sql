@@ -38,6 +38,8 @@ create sequence sq_plano;
 
 create sequence sq_contrato;
 
+create sequence sq_categoria_regra;
+
 CREATE TABLE tb_usuario(
   id_usuario integer NOT NULL,
   nm_usuario varchar(50),
@@ -248,6 +250,14 @@ CREATE TABLE tb_contrato(
 COMMENT ON TABLE tb_contrato IS
   'Tabela para o cadastro do historico de planos contratados pelos usuarios.';
 
+CREATE TABLE tb_categoria_regra(
+  id_categoria_regra integer NOT NULL,
+  id_regra integer NOT NULL,
+  js_categoria text,
+  dt_registro date,
+  CONSTRAINT "Primary key" PRIMARY KEY(id_categoria_regra)
+);
+
 ALTER TABLE tb_jogo_item
   ADD CONSTRAINT "FK_Item_Jogo" FOREIGN KEY (id_jogo) REFERENCES tb_jogo (id_jogo)
   ;
@@ -312,6 +322,10 @@ ALTER TABLE tb_contrato
 ALTER TABLE tb_contrato
   ADD CONSTRAINT "FK_Usuario_Plano"
     FOREIGN KEY (id_plano) REFERENCES tb_plano (id_plano);
+
+ALTER TABLE tb_categoria_regra
+  ADD CONSTRAINT "FK_Categoria_Regra"
+    FOREIGN KEY (id_regra) REFERENCES tb_regra (id_regra);
 
 create or replace function fn_safe_cast_integer(texto text)
 returns integer language plpgsql
@@ -473,6 +487,48 @@ as $$
     end;
 $$;
 
+create or replace function fn_nota_jogo(idJogo integer, idGrupo integer, dataref date)
+returns numeric(6,4) language plpgsql
+as $$
+    declare
+        varResult numeric(6,4);
+
+    begin
+
+		with avaliacaoTemp as (
+			select
+			ta.vl_avaliacao as valor,
+
+			cast(date(ta.dt_registro) - min(date(ta.dt_registro)) over () + 1 as decimal) /
+			cast(max(date(ta.dt_registro)) over () - min(date(ta.dt_registro)) over () + 1 as decimal)
+			as peso
+
+			from tb_avaliacao ta
+			left join tb_jogo tj on ta.id_jogo = tj.id_jogo
+			left join tb_usuario tu on ta.id_usuario = tu.id_usuario
+			left join (select id_usuario, id_grupo from tb_usuario_grupo where fl_valido = 'sim') tug on tu.id_usuario = tug.id_usuario
+
+			where
+				ta.id_jogo = idJogo
+				and ta.dt_registro <= dataref
+				and tug.id_grupo = idGrupo
+		),
+
+		avaliacao as (
+		    select
+		    valor, peso, sum(peso) over () as pesoTotal
+		    from avaliacaoTemp
+		)
+
+		select
+		sum(valor * peso/ pesoTotal)  into varResult
+		from avaliacao;
+
+		return varResult;
+
+    end;
+$$;
+
 create or replace function fn_random_between(floor numeric, ceil numeric)
 returns integer language plpgsql
 as
@@ -501,6 +557,7 @@ $$
 				on g.id_grupo = ug.id_grupo
 			where
 				jg.fl_valido = 'sim'
+				and ug.fl_valido = 'sim'
 				and ug.id_usuario = id
 			order by 1 desc,2;
 	END;
@@ -690,11 +747,16 @@ language plpgsql
 as
 $$
     DECLARE
-        varCursor refcursor;
-        varRecord record;
+        varCursorJogo refcursor;
+        varCursorGrupo refcursor;
+        varRecordJogo record;
+        varRecordGrupo record;
         varQtd integer:= 0;
     BEGIN
-        open varCursor for
+
+        -- Grupo Inicial
+
+        open varCursorJogo for
 			select
 			id_jogo,
 			fn_nota_jogo(id_jogo,current_date)
@@ -702,14 +764,55 @@ $$
 			order by 2 desc,1
 			limit 5
         ;
+
 		loop
-			fetch varCursor into varRecord;
+			fetch varCursorJogo into varRecordJogo;
 			exit when not found;
-			insert into tb_jogo_grupo values(nextval('sq_jogo_grupo'), 1, varRecord.id_jogo , 'sim', null, current_timestamp);
+			insert into tb_jogo_grupo values(nextval('sq_jogo_grupo'), 1, varRecordJogo.id_jogo , 'sim', null, current_timestamp);
 			varQtd := varQtd + 1;
 		end loop;
+
+        close varCursorJogo;
+
+        --Demais Grupos
+
+        open varCursorGrupo for
+			select distinct
+			id_grupo
+			from tb_usuario_grupo
+			where
+				id_grupo != 1
+				and fl_valido = 'sim'
+			order by 1
+        ;
+
+        loop
+			fetch varCursorGrupo into varRecordGrupo;
+			exit when not found;
+
+			open varCursorJogo for
+				select
+				id_jogo,
+				fn_nota_jogo(id_jogo, varRecordGrupo.id_grupo, current_date)
+				from tb_jogo
+				order by 2 desc,1
+				limit 5
+			;
+
+			loop
+				fetch varCursorJogo into varRecordJogo;
+				exit when not found;
+				insert into tb_jogo_grupo values(nextval('sq_jogo_grupo'), varRecordGrupo.id_grupo , varRecordJogo.id_jogo , 'sim', null, current_timestamp);
+				varQtd := varQtd + 1;
+			end loop;
+
+			close varCursorJogo;
+
+		end loop;
+
 		raise notice '% valores inseridos com sucesso.', TO_CHAR(varQtd, 'fm999G999');
-        close varCursor;
+        close varCursorGrupo;
+
     END;
 $$;
 

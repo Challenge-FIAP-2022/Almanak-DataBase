@@ -100,6 +100,48 @@ as $$
     end;
 $$;
 
+create or replace function fn_nota_jogo(idJogo integer, idGrupo integer, dataref date)
+returns numeric(6,4) language plpgsql
+as $$
+    declare
+        varResult numeric(6,4);
+
+    begin
+
+		with avaliacaoTemp as (
+			select
+			ta.vl_avaliacao as valor,
+
+			cast(date(ta.dt_registro) - min(date(ta.dt_registro)) over () + 1 as decimal) /
+			cast(max(date(ta.dt_registro)) over () - min(date(ta.dt_registro)) over () + 1 as decimal)
+			as peso
+
+			from tb_avaliacao ta
+			left join tb_jogo tj on ta.id_jogo = tj.id_jogo
+			left join tb_usuario tu on ta.id_usuario = tu.id_usuario
+			left join (select id_usuario, id_grupo from tb_usuario_grupo where fl_valido = 'sim') tug on tu.id_usuario = tug.id_usuario
+
+			where
+				ta.id_jogo = idJogo
+				and ta.dt_registro <= dataref
+				and tug.id_grupo = idGrupo
+		),
+
+		avaliacao as (
+		    select
+		    valor, peso, sum(peso) over () as pesoTotal
+		    from avaliacaoTemp
+		)
+
+		select
+		sum(valor * peso/ pesoTotal)  into varResult
+		from avaliacao;
+
+		return varResult;
+
+    end;
+$$;
+
 -- FN_Nota_Usuario
 
 create or replace function fn_nota_usuario(nomeUsuario text, dataref date)
@@ -196,6 +238,7 @@ $$
 				on g.id_grupo = ug.id_grupo
 			where
 				jg.fl_valido = 'sim'
+				and ug.fl_valido = 'sim'
 				and ug.id_usuario = id
 			order by 1 desc,2;
 	END;

@@ -96,14 +96,42 @@ INSERT INTO tb_jogo values (nextval('sq_jogo'), 1, 'Proibido falar não', 'https
 
 -- TB_Regra
 
-INSERT INTO tb_regra values (nextval('sq_regra'), 1, 'Principal', 1, 'Uma pessoa de cada dupla joga um taco para frente, com a missão de aproximá-lo ao máximo que puder de um determinado ponto – por exemplo: o meio fio de uma rua, ou um muro. Ganha essa a disputa o par do taco que aproximar mais perto do ponto escolhido. Se o bastão encostar ou passar do ponto, a dupla perde a disputa.', 'nao', cast('2022-01-01' as timestamp));
-INSERT INTO tb_regra values (nextval('sq_regra'), 2, 'Principal', 1, 'Escolhe-se um pegador e os demais se espalham pelo espaço de jogo. Quando alguém é pego, dá a mão para o pegador e passa a atuar em dupla com ele. Em seguida, em trio, quarteto e assim sucessivamente, formando uma “corrente”, até que reste apenas um fugitivo, que será declarado vencedor.', 'nao', cast('2022-01-01' as timestamp));
-INSERT INTO tb_regra values (nextval('sq_regra'), 3, 'Principal', 1, 'Em cada rodada, um jogador deve colocar uma de suas cartas na mesa, e o jogador com a carta mais forte vence a rodada. Quem ganhar 2 dessas rodadas ganha a mão e marca 1 ponto, e uma nova mão se inicia. Durante as rodadas, os jogadores têm a opção de pedir Truco, Seis, Nove e Doze, aumentando o valor da rodada.', 'nao', cast('2022-01-01' as timestamp));
-INSERT INTO tb_regra values (nextval('sq_regra'), 4, 'Principal', 1, 'Rodada - uma sequência de 4 jogadas, onde cada jogador joga uma carta, e o vencedor leva as 4 cartas. Carta mais alta - a carta de maior valor do naipe. A ordem das cartas é a seguinte, da menor para a maior: 2, 3, 4, 5, 6, Q, J, K, 7, A. Seguir o naipe - jogar um carta do mesmo naipe da primeira carta da rodada.', 'nao', cast('2022-01-01' as timestamp));
+INSERT INTO tb_regra values (nextval('sq_regra'), 1, 'Principal', 1, 'Uma pessoa de cada dupla joga um taco para frente.', 'nao', cast('2022-01-01' as timestamp));
+INSERT INTO tb_regra values (nextval('sq_regra'), 1, 'Principal', 2, 'Com a missão de aproximá-lo ao máximo que puder de um determinado ponto – por exemplo:', 'nao', cast('2022-01-01' as timestamp));
+INSERT INTO tb_regra values (nextval('sq_regra'), 1, 'Principal', 3, 'O meio fio de uma rua, ou um muro.', 'nao', cast('2022-01-01' as timestamp));
+INSERT INTO tb_regra values (nextval('sq_regra'), 1, 'Principal', 4, 'Ganha essa a disputa o par do taco que aproximar mais perto do ponto escolhido.', 'nao', cast('2022-01-01' as timestamp));
+INSERT INTO tb_regra values (nextval('sq_regra'), 1, 'Principal', 5, 'Se o bastão encostar ou passar do ponto, a dupla perde a disputa.', 'nao', cast('2022-01-01' as timestamp));
+
+INSERT INTO tb_regra values (nextval('sq_regra'), 2, 'Principal', 1, 'Escolhe-se um pegador e os demais se espalham pelo espaço de jogo.', 'nao', cast('2022-01-01' as timestamp));
+INSERT INTO tb_regra values (nextval('sq_regra'), 2, 'Principal', 2, 'Quando alguém é pego, dá a mão para o pegador e passa a atuar em dupla com ele.', 'nao', cast('2022-01-01' as timestamp));
+INSERT INTO tb_regra values (nextval('sq_regra'), 2, 'Principal', 3, 'Em seguida, em trio, quarteto e assim sucessivamente, formando uma “corrente”.', 'nao', cast('2022-01-01' as timestamp));
+INSERT INTO tb_regra values (nextval('sq_regra'), 2, 'Principal', 4, 'Até que reste apenas um fugitivo, que será declarado vencedor.', 'nao', cast('2022-01-01' as timestamp));
+
+INSERT INTO tb_regra values (nextval('sq_regra'), 3, 'Principal', 1, 'Em cada rodada, um jogador deve colocar uma de suas cartas na mesa,', 'nao', cast('2022-01-01' as timestamp));
+INSERT INTO tb_regra values (nextval('sq_regra'), 3, 'Principal', 2, 'e o jogador com a carta mais forte vence a rodada.', 'nao', cast('2022-01-01' as timestamp));
+INSERT INTO tb_regra values (nextval('sq_regra'), 3, 'Principal', 3, 'Quem ganhar 2 dessas rodadas ganha a mão e marca 1 ponto,e uma nova mão se inicia.', 'nao', cast('2022-01-01' as timestamp));
+INSERT INTO tb_regra values (nextval('sq_regra'), 3, 'Principal', 4, 'Durante as rodadas, os jogadores têm a opção de pedir Truco, Seis, Nove e Doze, aumentando o valor da rodada.', 'nao', cast('2022-01-01' as timestamp));
+
+INSERT INTO tb_regra values (nextval('sq_regra'), 4, 'Principal', 1, 'Rodada - uma sequência de 4 jogadas, onde cada jogador joga uma carta, e o vencedor leva as 4 cartas.', 'nao', cast('2022-01-01' as timestamp));
+INSERT INTO tb_regra values (nextval('sq_regra'), 4, 'Principal', 2, 'Carta mais alta - a carta de maior valor do naipe.', 'nao', cast('2022-01-01' as timestamp));
+INSERT INTO tb_regra values (nextval('sq_regra'), 4, 'Principal', 3, 'A ordem das cartas é a seguinte, da menor para a maior: 2, 3, 4, 5, 6, Q, J, K, 7, A.', 'nao', cast('2022-01-01' as timestamp));
+INSERT INTO tb_regra values (nextval('sq_regra'), 4, 'Principal', 4, 'Seguir o naipe - jogar um carta do mesmo naipe da primeira carta da rodada.', 'nao', cast('2022-01-01' as timestamp));
+
 INSERT INTO tb_regra values (nextval('sq_regra'), 5, 'Principal', 1, 'O desafio é ver quem consegue rodar o bambole por mais tempo na sintura. O último jogador que continuar rodando é o ganhador.', 'nao', cast('2022-01-01' as timestamp));
+INSERT INTO tb_regra values (nextval('sq_regra'), 5, 'Principal', 2, 'O último jogador que continuar rodando é o ganhador.', 'nao', cast('2022-01-01' as timestamp));
+
 INSERT INTO tb_regra values (nextval('sq_regra'), 6, 'Principal', 1, 'A cada rodada um jogar se levanta e faz uma mimica para os demais, o primeiro a adivinhar o que era ganhar e se tornar o proximo jogador.', 'nao', cast('2022-01-01' as timestamp));
-INSERT INTO tb_regra values (nextval('sq_regra'), 7, 'Principal', 1, 'Assim que a letra é escolhida, os participantes terão que escrever abaixo de cada tema, uma palavra com início da letra sorteada. Quem terminar primeiro de escrever em toda a linha com os temas grita: Stop!, e na mesma hora todos devem largar o lápis e parar de escrever. ', 'nao', cast('2022-01-01' as timestamp));
-INSERT INTO tb_regra values (nextval('sq_regra'), 8, 'Principal', 1, 'Duas crianças batem ou giram a corda, enquanto uma terceira criança pula e diz: cor-di-nha Cada sílaba dita corresponde a um pulo. Quando a criança que pula fala a palavra completinha, ela sai da corda e dá vez a outro participante. Quem está pulando não pode pisar na corda.', 'nao', cast('2022-01-01' as timestamp));
+INSERT INTO tb_regra values (nextval('sq_regra'), 6, 'Principal', 1, 'o primeiro a adivinhar o que era ganhar e se tornar o proximo jogador.', 'nao', cast('2022-01-01' as timestamp));
+
+INSERT INTO tb_regra values (nextval('sq_regra'), 7, 'Principal', 1, 'Assim que a letra é escolhida, os participantes terão que escrever abaixo de cada tema, uma palavra com início da letra sorteada.', 'nao', cast('2022-01-01' as timestamp));
+INSERT INTO tb_regra values (nextval('sq_regra'), 7, 'Principal', 2, 'Quem terminar primeiro de escrever em toda a linha com os temas grita: Stop!, e na mesma hora todos devem largar o lápis e parar de escrever.', 'nao', cast('2022-01-01' as timestamp));
+INSERT INTO tb_regra values (nextval('sq_regra'), 7, 'Principal', 3, 'O Jogador que tiver mais categorias completas é o ganhador.', 'nao', cast('2022-01-01' as timestamp));
+
+INSERT INTO tb_regra values (nextval('sq_regra'), 8, 'Principal', 1, 'Duas crianças batem ou giram a corda, enquanto uma terceira criança pula e diz: cor-di-nha.', 'nao', cast('2022-01-01' as timestamp));
+INSERT INTO tb_regra values (nextval('sq_regra'), 8, 'Principal', 2, 'Cada sílaba dita corresponde a um pulo.', 'nao', cast('2022-01-01' as timestamp));
+INSERT INTO tb_regra values (nextval('sq_regra'), 8, 'Principal', 3, 'Quando a criança que pula fala a palavra completinha, ela sai da corda e dá vez a outro participante.', 'nao', cast('2022-01-01' as timestamp));
+INSERT INTO tb_regra values (nextval('sq_regra'), 8, 'Principal', 4, 'Quem está pulando não pode pisar na corda.', 'nao', cast('2022-01-01' as timestamp));
+
 INSERT INTO tb_regra values (nextval('sq_regra'), 9, 'Principal', 1, 'Os dois times se posicionam num campo dividido por uma linha central. Esta não pode ser ultrapassada e caso isto ocorra, o jogador infrator terá que ir para a área do queimado.', 'nao', cast('2022-01-01' as timestamp));
 INSERT INTO tb_regra values (nextval('sq_regra'), 9, 'Principal', 2, 'O jogador deve arremessar a bola contra o time adversário, com o intuito de "queimá-los". Por sua parte, os adversários tentam se espalhar no campo ou ir ao fundo do mesmo, para não serem atingidos pela bola.', 'nao', cast('2022-01-01' as timestamp));
 INSERT INTO tb_regra values (nextval('sq_regra'), 9, 'Principal', 3, 'Se a bola não atinge ninguém e apenas quica no campo adversário, o jogador pode pegá-la sem o risco de estar "queimado".', 'nao', cast('2022-01-01' as timestamp));
@@ -111,7 +139,9 @@ INSERT INTO tb_regra values (nextval('sq_regra'), 9, 'Principal', 4, 'Os jogador
 INSERT INTO tb_regra values (nextval('sq_regra'), 9, 'Principal', 5, 'Os jogadores "queimados" devem ir para uma área específica, atrás do campo do time adversário. Em alguns lugares no Brasil, esta é chamada de "prisão", "céu", "cemitério", "castigo", "base".', 'nao', cast('2022-01-01' as timestamp));
 INSERT INTO tb_regra values (nextval('sq_regra'), 9, 'Principal', 6, 'O jogador "queimado" pode voltar ao jogo se queimar outro jogador.', 'nao', cast('2022-01-01' as timestamp));
 INSERT INTO tb_regra values (nextval('sq_regra'), 9, 'Principal', 7, 'Vence o time que conseguir "queimar" o maior número de jogadores.', 'nao', cast('2022-01-01' as timestamp));
-INSERT INTO tb_regra values (nextval('sq_regra'), 10, 'Principal', 1, 'Nesse jogo só se pode responder com perguntas, o primeiro jogador que não fizer uma pergunta deve beber. Após isso a rodada se reinicia.', 'nao', cast('2022-01-01' as timestamp));
+
+INSERT INTO tb_regra values (nextval('sq_regra'), 10, 'Principal', 1, 'Nesse jogo só se pode responder com perguntas,', 'nao', cast('2022-01-01' as timestamp));
+INSERT INTO tb_regra values (nextval('sq_regra'), 10, 'Principal', 2, 'o primeiro jogador que não fizer uma pergunta deve beber. Após isso a rodada se reinicia.', 'nao', cast('2022-01-01' as timestamp));
 
 -- TB_Jogo_Item
 
