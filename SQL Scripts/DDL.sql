@@ -254,7 +254,7 @@ CREATE TABLE tb_categoria_regra(
   id_categoria_regra integer NOT NULL,
   id_regra integer NOT NULL,
   js_categoria text,
-  dt_registro date,
+  dt_registro timestamp,
   CONSTRAINT "Primary key" PRIMARY KEY(id_categoria_regra)
 );
 
@@ -626,6 +626,75 @@ as $$
     end;
 $$;
 
+create or replace function fn_regra_resposta(varIdJogo integer, varDuvida text)
+returns table (like tb_regra)
+as $$
+    begin
+        return query
+
+			with
+
+			    duvida as (
+			        select * from (select varDuvida as js_categoria) a
+				),
+
+			    intents as (
+					select
+					'intents' as tp_categoria,
+					'intents' as tp_subcategoria,
+					json_array_elements_text(js_categoria::json ->'intents') as ds_categoria
+					from duvida
+					where
+						js_categoria not like '%intents":{}%'
+				),
+
+				entities as (
+					select
+					'entities' as tp_categoria,
+					json_object_keys(js_categoria :: json -> 'entities') as tp_subcategoria,
+					json_array_elements_text(
+						js_categoria :: json
+							-> 'entities'
+								->json_object_keys(js_categoria :: json-> 'entities')
+					) as ds_categoria
+					from duvida
+					where
+						js_categoria not like '%entities":{}%'
+				),
+
+				base as (
+					select * from intents
+					union all
+					(select * from entities where tp_subcategoria != 'sys-number')
+				),
+
+				vcr as (
+					select
+					*,
+					count(*) over (partition by id_regra) as contador
+					from vw_categoria_regra vcr
+					left join base b
+						on vcr.tp_categoria = b.tp_categoria
+						and vcr.tp_subcategoria = b.tp_subcategoria
+				),
+
+				vcrTemp as (
+					select distinct
+					id_regra, contador, max(contador) over() as maximo
+					from vcr
+					order by 2 desc
+				)
+
+			select
+			*
+			from tb_regra
+			where
+			    id_jogo = varIdJogo
+			  	and id_regra in (select id_regra from vcrTemp where contador = maximo);
+
+    end;
+$$language plpgsql;
+
 create or replace procedure sp_usuario_sem_grupo()
 language plpgsql
 as
@@ -967,6 +1036,59 @@ $tb_jogo_grupo$ language plpgsql;
 create or replace trigger tg_cadastro_jogo_grupo
     before insert on tb_jogo_grupo
     FOR EACH ROW EXECUTE FUNCTION fn_cadastro_jogo_grupo();
+
+create materialized view vw_categoria_regra as
+
+with
+    cr_adj as (
+		select
+		tr.id_jogo,
+		tcr.id_regra,
+		tcr.js_categoria,
+		tcr.dt_registro,
+		row_number() over (partition by tcr.id_regra order by tcr.dt_registro desc) as row
+		from tb_categoria_regra tcr
+		left join tb_regra tr on tcr.id_regra = tr.id_regra
+	),
+
+	intents as (
+	select
+	id_jogo,
+	id_regra,
+	'intents' as tp_categoria,
+    'intents' as tp_subcategoria,
+	json_array_elements_text(js_categoria::json ->'intents') as ds_categoria,
+	dt_registro
+	from cr_adj
+	where
+		row = 1
+		and js_categoria not like '%intents":{}%'
+	),
+
+    entities as (
+        select
+        id_jogo,
+		id_regra,
+		'entities' as tp_categoria,
+		json_object_keys(js_categoria :: json -> 'entities') as tp_subcategoria,
+		json_array_elements_text(
+		    js_categoria :: json
+		        -> 'entities'
+		        	->json_object_keys(js_categoria :: json-> 'entities')
+		) as ds_categoria,
+        dt_registro
+		from cr_adj
+		where
+			row = 1
+	),
+
+    base as (
+    	select * from intents
+		union all
+		(select * from entities where tp_subcategoria != 'sys-number')
+	)
+
+select * from base order by 1,2,3 desc,4,5;
 
 create materialized view vw_usuario_kpi as
 

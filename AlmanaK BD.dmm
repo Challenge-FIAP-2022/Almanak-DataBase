@@ -784,7 +784,8 @@
 				}
 			],
 			"relations": [
-				"030bcf72-be0a-45c9-ab2c-47909c92f25a"
+				"030bcf72-be0a-45c9-ab2c-47909c92f25a",
+				"039daea2-a930-4fee-9f49-dd2aca7928cf"
 			],
 			"lines": [],
 			"keys": [
@@ -2199,6 +2200,108 @@
 				"rowsecurity": false,
 				"schema": ""
 			}
+		},
+		"4c9346d8-92eb-4577-be6c-e459d137b331": {
+			"id": "4c9346d8-92eb-4577-be6c-e459d137b331",
+			"visible": true,
+			"name": "tb_categoria_regra",
+			"desc": "",
+			"estimatedSize": "",
+			"cols": [
+				{
+					"id": "89ccf9ba-3942-4c1b-b4ba-602371d43418",
+					"name": "id_categoria_regra",
+					"datatype": "integer",
+					"pk": true,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					}
+				},
+				{
+					"id": "8fe8b641-d89e-4a88-a911-2b6914b136e9",
+					"name": "id_regra",
+					"datatype": "integer",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					},
+					"fk": true,
+					"ref": "tb_regra"
+				},
+				{
+					"id": "793fa985-cb7e-416a-a6a8-80b858c5c8c8",
+					"name": "js_categoria",
+					"datatype": "text",
+					"param": "",
+					"pk": false,
+					"nn": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"list": false,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					}
+				},
+				{
+					"id": "5b00de14-0bd1-4f18-aa88-ab02db499da3",
+					"name": "dt_registro",
+					"datatype": "timestamp",
+					"param": "",
+					"pk": false,
+					"nn": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"collation": null,
+					"list": false,
+					"after": "",
+					"pg": {
+						"generatedIdentity": "no"
+					}
+				}
+			],
+			"relations": [
+				"039daea2-a930-4fee-9f49-dd2aca7928cf"
+			],
+			"lines": [],
+			"keys": [
+				{
+					"id": "12e2d8b3-15a2-4f2e-8411-355dc7585441",
+					"name": "Primary key",
+					"isPk": true,
+					"using": "",
+					"cols": [
+						{
+							"id": "01a2a41f-3e94-43cb-b4a4-de9a2d32830d",
+							"colid": "89ccf9ba-3942-4c1b-b4ba-602371d43418"
+						}
+					]
+				}
+			],
+			"indexes": [],
+			"embeddable": false,
+			"generate": true,
+			"generateCustomCode": true,
+			"objectType": "table",
+			"pg": {
+				"rowsecurity": false,
+				"schema": ""
+			}
 		}
 	},
 	"relations": {
@@ -2601,6 +2704,31 @@
 			],
 			"generate": true,
 			"generateCustomCode": true
+		},
+		"039daea2-a930-4fee-9f49-dd2aca7928cf": {
+			"id": "039daea2-a930-4fee-9f49-dd2aca7928cf",
+			"visible": true,
+			"name": "FK_Categoria_Regra",
+			"desc": "",
+			"type": "identifying",
+			"parent_key": "b526234c-7a31-4cc1-83a4-b0eefd6bbd6d",
+			"parent": "4993bf46-242c-4785-b01f-22bb50e9df76",
+			"child": "4c9346d8-92eb-4577-be6c-e459d137b331",
+			"c_mp": "true",
+			"c_mch": "true",
+			"c_p": "one",
+			"c_ch": "many",
+			"c_cp": "",
+			"c_cch": "",
+			"cols": [
+				{
+					"id": "bffaa66a-37db-4436-907a-746fca4c70ec",
+					"parentcol": "997f9176-8e6f-46c3-9f35-3abce5a544bf",
+					"childcol": "8fe8b641-d89e-4a88-a911-2b6914b136e9"
+				}
+			],
+			"generate": true,
+			"generateCustomCode": true
 		}
 	},
 	"notes": {
@@ -2698,7 +2826,7 @@
 			"quotation": "if_needed",
 			"includeGeneratedNames": "always"
 		},
-		"lastSaved": "Sat Sep 24 2022 23:27:05 GMT-0300 (Brasilia Standard Time)",
+		"lastSaved": "Sat Oct 01 2022 04:33:16 GMT-0300 (Brasilia Standard Time)",
 		"writeFileParam": false,
 		"nameAutoGeneration": {
 			"keys": false,
@@ -2908,10 +3036,10 @@
 		"50e0df72-fcd3-4dd3-9bb3-97e047b53c54": {
 			"id": "50e0df72-fcd3-4dd3-9bb3-97e047b53c54",
 			"visible": true,
-			"name": "VW_AI_KPI",
+			"name": "VW_Categoria_Regra",
 			"desc": "",
 			"type": "View",
-			"code": "",
+			"code": "create materialized view vw_categoria_regra as\n\nwith\n    cr_adj as (\n\t\tselect\n\t\ttr.id_jogo,\n\t\ttcr.id_regra,\n\t\ttcr.js_categoria,\n\t\ttcr.dt_registro,\n\t\trow_number() over (partition by tcr.id_regra order by tcr.dt_registro desc) as row\n\t\tfrom tb_categoria_regra tcr\n\t\tleft join tb_regra tr on tcr.id_regra = tr.id_regra\n\t),\n\n\tintents as (\n\tselect\n\tid_jogo,\n\tid_regra,\n\t'intents' as tp_categoria,\n    'intents' as tp_subcategoria,\n\tjson_array_elements_text(js_categoria::json ->'intents') as ds_categoria,\n\tdt_registro\n\tfrom cr_adj\n\twhere\n\t\trow = 1\n\t\tand js_categoria not like '%intents\":{}%'\n\t),\n\n    entities as (\n        select\n        id_jogo,\n\t\tid_regra,\n\t\t'entities' as tp_categoria,\n\t\tjson_object_keys(js_categoria :: json -> 'entities') as tp_subcategoria,\n\t\tjson_array_elements_text(\n\t\t    js_categoria :: json\n\t\t        -> 'entities'\n\t\t        \t->json_object_keys(js_categoria :: json-> 'entities')\n\t\t) as ds_categoria,\n        dt_registro\n\t\tfrom cr_adj\n\t\twhere\n\t\t\trow = 1\n\t),\n\n    base as (\n    \tselect * from intents\n\t\tunion all\n\t\t(select * from entities where tp_subcategoria != 'sys-number')\n\t)\n\nselect * from base order by 1,2,3 desc,4,5;",
 			"lines": [],
 			"generate": true,
 			"generateCustomCode": true,
@@ -3220,6 +3348,34 @@
 			"desc": "",
 			"type": "Function",
 			"code": "create or replace function fn_one_hot_categoria()\nreturns text language plpgsql\nas $$\n    declare\n        resultado text;\n    begin\n\t\twith\n\n\t\t\tcategoria as (\n\t\t\t\tselect distinct\n\t\t\t\tnm_categoria\n\t\t\t\tfrom tb_categoria\n\t\t\t)\n\t\tselect\n\n\t\tstring_agg(concat(\n\t\t\t'case when string_agg(distinct nm_categoria, ',\n\t\t    quote_literal(','),\n\t\t    ') like ',\n\t\t\tquote_literal(concat('%', nm_categoria::text, '%')),\n\t\t\t' then 1 else 0 end as oh_',\n\t\t\tlower(replace(nm_categoria::text,' ','_'))\n\t\t), ', ') into resultado\n\n\t\tfrom categoria;\n\n\t\treturn resultado;\n\n    end;\n$$;",
+			"lines": [],
+			"generate": true,
+			"generateCustomCode": true,
+			"pg": {
+				"schema": ""
+			}
+		},
+		"dfbb491b-72a1-4256-8c94-a3bcc693fb11": {
+			"id": "dfbb491b-72a1-4256-8c94-a3bcc693fb11",
+			"visible": true,
+			"name": "SQ_Categoria_Regra",
+			"desc": "",
+			"type": "Sequence",
+			"code": "create sequence sq_categoria_regra;",
+			"lines": [],
+			"generate": true,
+			"generateCustomCode": true,
+			"pg": {
+				"schema": ""
+			}
+		},
+		"ea7d6a67-3a19-4293-b8b9-b5446433e027": {
+			"id": "ea7d6a67-3a19-4293-b8b9-b5446433e027",
+			"visible": true,
+			"name": "FN_Regra_Resposta",
+			"desc": "",
+			"type": "Function",
+			"code": "create or replace function fn_regra_resposta(varIdJogo integer, varDuvida text)\nreturns table (like tb_regra)\nas $$\n    begin\n        return query\n\n\t\t\twith\n\n\t\t\t    duvida as (\n\t\t\t        select * from (select varDuvida as js_categoria) a\n\t\t\t\t),\n\n\t\t\t    intents as (\n\t\t\t\t\tselect\n\t\t\t\t\t'intents' as tp_categoria,\n\t\t\t\t\t'intents' as tp_subcategoria,\n\t\t\t\t\tjson_array_elements_text(js_categoria::json ->'intents') as ds_categoria\n\t\t\t\t\tfrom duvida\n\t\t\t\t\twhere\n\t\t\t\t\t\tjs_categoria not like '%intents\":{}%'\n\t\t\t\t),\n\n\t\t\t\tentities as (\n\t\t\t\t\tselect\n\t\t\t\t\t'entities' as tp_categoria,\n\t\t\t\t\tjson_object_keys(js_categoria :: json -> 'entities') as tp_subcategoria,\n\t\t\t\t\tjson_array_elements_text(\n\t\t\t\t\t\tjs_categoria :: json\n\t\t\t\t\t\t\t-> 'entities'\n\t\t\t\t\t\t\t\t->json_object_keys(js_categoria :: json-> 'entities')\n\t\t\t\t\t) as ds_categoria\n\t\t\t\t\tfrom duvida\n\t\t\t\t\twhere\n\t\t\t\t\t\tjs_categoria not like '%entities\":{}%'\n\t\t\t\t),\n\n\t\t\t\tbase as (\n\t\t\t\t\tselect * from intents\n\t\t\t\t\tunion all\n\t\t\t\t\t(select * from entities where tp_subcategoria != 'sys-number')\n\t\t\t\t),\n\n\t\t\t\tvcr as (\n\t\t\t\t\tselect\n\t\t\t\t\t*,\n\t\t\t\t\tcount(*) over (partition by id_regra) as contador\n\t\t\t\t\tfrom vw_categoria_regra vcr\n\t\t\t\t\tleft join base b\n\t\t\t\t\t\ton vcr.tp_categoria = b.tp_categoria\n\t\t\t\t\t\tand vcr.tp_subcategoria = b.tp_subcategoria\n\t\t\t\t),\n\n\t\t\t\tvcrTemp as (\n\t\t\t\t\tselect distinct\n\t\t\t\t\tid_regra, contador, max(contador) over() as maximo\n\t\t\t\t\tfrom vcr\n\t\t\t\t\torder by 2 desc\n\t\t\t\t)\n\n\t\t\tselect\n\t\t\t*\n\t\t\tfrom tb_regra\n\t\t\twhere\n\t\t\t    id_jogo = varIdJogo\n\t\t\t  \tand id_regra in (select id_regra from vcrTemp where contador = maximo);\n\n    end;\n$$language plpgsql;",
 			"lines": [],
 			"generate": true,
 			"generateCustomCode": true,
@@ -3684,7 +3840,7 @@
 				"d67fb300-16c5-4fb4-a0a3-a325a3b05881": {
 					"referencedItemId": "d67fb300-16c5-4fb4-a0a3-a325a3b05881",
 					"x": 45,
-					"y": 258,
+					"y": 515,
 					"gHeight": 99,
 					"gWidth": 265,
 					"color": "#ffffff",
@@ -3900,6 +4056,39 @@
 					"background": "#607d8b",
 					"resized": false,
 					"autoExpand": true
+				},
+				"4c9346d8-92eb-4577-be6c-e459d137b331": {
+					"referencedItemId": "4c9346d8-92eb-4577-be6c-e459d137b331",
+					"x": 45,
+					"y": 307,
+					"gHeight": 99,
+					"gWidth": 244,
+					"color": "#ffffff",
+					"background": "#03a9f4",
+					"resized": false,
+					"autoExpand": true
+				},
+				"dfbb491b-72a1-4256-8c94-a3bcc693fb11": {
+					"referencedItemId": "dfbb491b-72a1-4256-8c94-a3bcc693fb11",
+					"x": 1376,
+					"y": 1610,
+					"gHeight": 44,
+					"gWidth": 150,
+					"color": "#eee",
+					"background": "#795548",
+					"resized": false,
+					"autoExpand": true
+				},
+				"ea7d6a67-3a19-4293-b8b9-b5446433e027": {
+					"referencedItemId": "ea7d6a67-3a19-4293-b8b9-b5446433e027",
+					"x": 1376,
+					"y": 1325,
+					"gHeight": 44,
+					"gWidth": 150,
+					"color": "#eee",
+					"background": "#607d8b",
+					"resized": false,
+					"autoExpand": true
 				}
 			},
 			"scroll": {
@@ -3927,6 +4116,7 @@
 		"5450da57-9feb-4a72-85be-d146e68c8ad5",
 		"87154a11-cdbd-436c-a027-afd820c20504",
 		"fbad7a13-0c70-4e84-9cac-fb94436130e0",
+		"dfbb491b-72a1-4256-8c94-a3bcc693fb11",
 		"b63c7ff7-25fc-4d0c-96a0-3763ef3b7fd3",
 		"eb66978e-e757-424f-8517-b3a06dcfa57e",
 		"46db98b1-fb30-4d90-affa-9e57b8ab6f44",
@@ -3943,6 +4133,7 @@
 		"d67fb300-16c5-4fb4-a0a3-a325a3b05881",
 		"c5370c7e-0b11-49ad-b8dc-6b0ad134f3c1",
 		"9d7c387c-97bf-4481-9be8-cd95ff23a010",
+		"4c9346d8-92eb-4577-be6c-e459d137b331",
 		"bc8987c7-f96b-468c-852b-90ffa311925c",
 		"7fb5d30a-9db3-4bb2-a2d0-4ee9718a926c",
 		"030bcf72-be0a-45c9-ab2c-47909c92f25a",
@@ -3959,6 +4150,7 @@
 		"c9318851-d025-4864-bcbf-48650ee4bdd1",
 		"39a76c84-f3e3-4b41-b04d-6ef1cb723cf1",
 		"1ea28107-86b0-477a-aa46-1d13bf2e28ee",
+		"039daea2-a930-4fee-9f49-dd2aca7928cf",
 		"220444a6-ddfd-44f0-b336-28f96da138e9",
 		"1582d019-bfd6-4d99-ae58-9c33436084ce",
 		"4c0114bc-b670-4c94-92b7-babab23b130d",
@@ -3966,6 +4158,7 @@
 		"93152996-80f0-4e3c-8ef9-e853cbfe6f95",
 		"f7ac839a-e790-455e-b75c-1cf5a337c1f1",
 		"a4d9634e-0f9b-47b6-84cd-a1617e94b1f8",
+		"ea7d6a67-3a19-4293-b8b9-b5446433e027",
 		"9b8d3e6b-b378-41dd-9b78-ba07298f5c4f",
 		"712016e3-cfe8-47a4-becc-73ed179e3cd3",
 		"f04f0b47-3f1e-441d-8bc4-425c1e381536",
