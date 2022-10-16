@@ -380,6 +380,8 @@ as $$
 					left join base b
 						on vcr.tp_categoria = b.tp_categoria
 						and vcr.tp_subcategoria = b.tp_subcategoria
+					where
+					    id_jogo = varIdJogo
 				),
 
 				vcrTemp as (
@@ -393,8 +395,7 @@ as $$
 			*
 			from tb_regra
 			where
-			    id_jogo = varIdJogo
-			  	and id_regra in (select id_regra from vcrTemp where contador = maximo);
+			    id_regra in (select id_regra from vcrTemp where contador = maximo);
 
     end;
 $$language plpgsql;

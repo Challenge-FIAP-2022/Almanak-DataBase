@@ -58,6 +58,7 @@ INSERT INTO tb_tipo_atividade values (nextval('sq_tipo_atividade'), 'Filtro', 'F
 INSERT INTO tb_tipo_atividade values (nextval('sq_tipo_atividade'), 'Cadastro', 'Cadastro de cartao', cast('2022-01-01' as timestamp));
 INSERT INTO tb_tipo_atividade values (nextval('sq_tipo_atividade'), 'Jogo', 'Abertura tela do jogo', cast('2022-01-01' as timestamp));
 INSERT INTO tb_tipo_atividade values (nextval('sq_tipo_atividade'), 'Login', 'Abrir App', cast('2022-01-01' as timestamp));
+INSERT INTO tb_tipo_atividade values (nextval('sq_tipo_atividade'), 'Duvida', 'Duvida por audio', cast('2022-01-01' as timestamp));
 
 --===================================================================================================================
 ----------------------------------------------- TB_Item -------------------------------------------------------------
