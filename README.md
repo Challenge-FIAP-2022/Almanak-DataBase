@@ -10,7 +10,6 @@
 <hr>
 <br>
 
-
 ## Disclaimer
 Como o referido projeto está vinculado a uma base de dados de produção, os dados obtidos como respostas de cada requisição 
 podem variar de acordo com a interação dos demais usuários.
@@ -33,4 +32,4 @@ Link: https://almanak-db-report.herokuapp.com/
 <br>
 
 ## Notas Extras
-Professor Marcel, optamos por criar uma base de dados em PostgreSQL para aprendermos outra linguagem de SQL que não só o da Oracle. Com isso, tivemos que fazer uma adaptação. Conforme conversamos, muitas das nossas procedures e triggers não contam com exception do tipo "when others" nem as criadas pelo DBA, contudo temos tratamento de exceção no código e registro de ocorrências em uma tabela de erro. Como são procedimentos que consomem dados da própria base, não teremos muita exceção do tipo "when others", dado que os cursores consumirão tabelas já preenchidas e sem inputs dos usuários. Fizemos assim para deixar tudo o mais automático possível e evitar ao máximo inputs humanos na base.
+Professor Marcel, conforme conversamos na última aula, por termos criado nossa base de dados em PostgreSQL, não existe a possibilidade de criarmos os packages, uma vez que essa funcionalidade não existe nessa linguagem. Acordamos então de lhe entregar as views com os dados processados e histórico dos clientes (que se encontra no link: https://github.com/Challenge-FIAP-2022/Almanak-DataBase/blob/master/SQL%20Scripts/VIEW.sql). Essa view cria um array de datas e cruza com os dados dos usuários. Como temos data de início e encerramento em todos os campos, podemos ter então o histórico de mudanças de planos, jogos, número de logins, número de avaliações entre outros KPIs. Caso tenha alguma dúvida, estamos à disposição. Criamos também uma view materializada das regras dos jogos convertendo o JSON de retorno do Watson Assistant em uma tabela para podermos entender os assuntos de cada regra, o código se encontra no mesmo link.
