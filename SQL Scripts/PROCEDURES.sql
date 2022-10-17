@@ -53,11 +53,16 @@ language plpgsql
 as
 $$
     DECLARE
-        varCursor refcursor;
-        varRecord record;
+        varCursorJogo refcursor;
+        varCursorGrupo refcursor;
+        varRecordJogo record;
+        varRecordGrupo record;
         varQtd integer:= 0;
     BEGIN
-        open varCursor for
+
+        -- Grupo Inicial
+
+        open varCursorJogo for
 			select
 			id_jogo,
 			fn_nota_jogo(id_jogo,current_date)
@@ -65,14 +70,55 @@ $$
 			order by 2 desc,1
 			limit 5
         ;
+
 		loop
-			fetch varCursor into varRecord;
+			fetch varCursorJogo into varRecordJogo;
 			exit when not found;
-			insert into tb_jogo_grupo values(nextval('sq_jogo_grupo'), 1, varRecord.id_jogo , 'sim', null, current_timestamp);
+			insert into tb_jogo_grupo values(nextval('sq_jogo_grupo'), 1, varRecordJogo.id_jogo , 'sim', null, current_timestamp);
 			varQtd := varQtd + 1;
 		end loop;
+
+        close varCursorJogo;
+
+        --Demais Grupos
+
+        open varCursorGrupo for
+			select distinct
+			id_grupo
+			from tb_usuario_grupo
+			where
+				id_grupo != 1
+				and fl_valido = 'sim'
+			order by 1
+        ;
+
+        loop
+			fetch varCursorGrupo into varRecordGrupo;
+			exit when not found;
+
+			open varCursorJogo for
+				select
+				id_jogo,
+				fn_nota_jogo(id_jogo, varRecordGrupo.id_grupo, current_date)
+				from tb_jogo
+				order by 2 desc,1
+				limit 5
+			;
+
+			loop
+				fetch varCursorJogo into varRecordJogo;
+				exit when not found;
+				insert into tb_jogo_grupo values(nextval('sq_jogo_grupo'), varRecordGrupo.id_grupo , varRecordJogo.id_jogo , 'sim', null, current_timestamp);
+				varQtd := varQtd + 1;
+			end loop;
+
+			close varCursorJogo;
+
+		end loop;
+
 		raise notice '% valores inseridos com sucesso.', TO_CHAR(varQtd, 'fm999G999');
-        close varCursor;
+        close varCursorGrupo;
+
     END;
 $$;
 

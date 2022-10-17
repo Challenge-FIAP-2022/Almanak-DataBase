@@ -1,4 +1,6 @@
--- Usuario KPI
+--===================================================================================================================
+----------------------------------------------- Usuario KPI ---------------------------------------------------------
+--===================================================================================================================
 
 create materialized view vw_usuario_kpi as
 
@@ -133,9 +135,12 @@ where
 group by 1,2,3,4,5,6,7,8,9,10
 order by 1,2;
 
--- Jogo KPI
+
+--===================================================================================================================
+----------------------------------------------- VW Jogo KPI ---------------------------------------------------------
 -- fn_one_hot_tp_item()
 -- fn_one_hot_categoria()
+--===================================================================================================================
 
 create materialized view vw_jogo_kpi as
 
@@ -253,3 +258,60 @@ where
 
 group by 1,2,3,4,5,6
 order by 1,2;
+
+--===================================================================================================================
+----------------------------------------------- VW Categoria Regra --------------------------------------------------
+--===================================================================================================================
+
+create materialized view vw_categoria_regra as
+
+with
+    cr_adj as (
+		select
+		tr.id_jogo,
+		tcr.id_regra,
+		tcr.js_categoria,
+		tcr.dt_registro,
+		row_number() over (partition by tcr.id_regra order by tcr.dt_registro desc) as row
+		from tb_categoria_regra tcr
+		left join tb_regra tr on tcr.id_regra = tr.id_regra
+	),
+
+	intents as (
+	select
+	id_jogo,
+	id_regra,
+	'intents' as tp_categoria,
+    'intents' as tp_subcategoria,
+	json_array_elements_text(js_categoria::json ->'intents') as ds_categoria,
+	dt_registro
+	from cr_adj
+	where
+		row = 1
+		and js_categoria not like '%intents":{}%'
+	),
+
+    entities as (
+        select
+        id_jogo,
+		id_regra,
+		'entities' as tp_categoria,
+		json_object_keys(js_categoria :: json -> 'entities') as tp_subcategoria,
+		json_array_elements_text(
+		    js_categoria :: json
+		        -> 'entities'
+		        	->json_object_keys(js_categoria :: json-> 'entities')
+		) as ds_categoria,
+        dt_registro
+		from cr_adj
+		where
+			row = 1
+	),
+
+    base as (
+    	select * from intents
+		union all
+		(select * from entities where tp_subcategoria != 'sys-number')
+	)
+
+select * from base order by 1,2,3 desc,4,5;

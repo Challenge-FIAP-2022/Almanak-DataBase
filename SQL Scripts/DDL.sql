@@ -38,6 +38,8 @@ create sequence sq_plano;
 
 create sequence sq_contrato;
 
+create sequence sq_categoria_regra;
+
 CREATE TABLE tb_usuario(
   id_usuario integer NOT NULL,
   nm_usuario varchar(50),
@@ -248,6 +250,14 @@ CREATE TABLE tb_contrato(
 COMMENT ON TABLE tb_contrato IS
   'Tabela para o cadastro do historico de planos contratados pelos usuarios.';
 
+CREATE TABLE tb_categoria_regra(
+  id_categoria_regra integer NOT NULL,
+  id_regra integer NOT NULL,
+  js_categoria text,
+  dt_registro timestamp,
+  CONSTRAINT "Primary key" PRIMARY KEY(id_categoria_regra)
+);
+
 ALTER TABLE tb_jogo_item
   ADD CONSTRAINT "FK_Item_Jogo" FOREIGN KEY (id_jogo) REFERENCES tb_jogo (id_jogo)
   ;
@@ -312,6 +322,10 @@ ALTER TABLE tb_contrato
 ALTER TABLE tb_contrato
   ADD CONSTRAINT "FK_Usuario_Plano"
     FOREIGN KEY (id_plano) REFERENCES tb_plano (id_plano);
+
+ALTER TABLE tb_categoria_regra
+  ADD CONSTRAINT "FK_Categoria_Regra"
+    FOREIGN KEY (id_regra) REFERENCES tb_regra (id_regra);
 
 create or replace function fn_safe_cast_integer(texto text)
 returns integer language plpgsql
@@ -473,6 +487,48 @@ as $$
     end;
 $$;
 
+create or replace function fn_nota_jogo(idJogo integer, idGrupo integer, dataref date)
+returns numeric(6,4) language plpgsql
+as $$
+    declare
+        varResult numeric(6,4);
+
+    begin
+
+		with avaliacaoTemp as (
+			select
+			ta.vl_avaliacao as valor,
+
+			cast(date(ta.dt_registro) - min(date(ta.dt_registro)) over () + 1 as decimal) /
+			cast(max(date(ta.dt_registro)) over () - min(date(ta.dt_registro)) over () + 1 as decimal)
+			as peso
+
+			from tb_avaliacao ta
+			left join tb_jogo tj on ta.id_jogo = tj.id_jogo
+			left join tb_usuario tu on ta.id_usuario = tu.id_usuario
+			left join (select id_usuario, id_grupo from tb_usuario_grupo where fl_valido = 'sim') tug on tu.id_usuario = tug.id_usuario
+
+			where
+				ta.id_jogo = idJogo
+				and ta.dt_registro <= dataref
+				and tug.id_grupo = idGrupo
+		),
+
+		avaliacao as (
+		    select
+		    valor, peso, sum(peso) over () as pesoTotal
+		    from avaliacaoTemp
+		)
+
+		select
+		sum(valor * peso/ pesoTotal)  into varResult
+		from avaliacao;
+
+		return varResult;
+
+    end;
+$$;
+
 create or replace function fn_random_between(floor numeric, ceil numeric)
 returns integer language plpgsql
 as
@@ -501,6 +557,7 @@ $$
 				on g.id_grupo = ug.id_grupo
 			where
 				jg.fl_valido = 'sim'
+				and ug.fl_valido = 'sim'
 				and ug.id_usuario = id
 			order by 1 desc,2;
 	END;
@@ -568,6 +625,75 @@ as $$
 
     end;
 $$;
+
+create or replace function fn_regra_resposta(varIdJogo integer, varDuvida text)
+returns table (like tb_regra)
+as $$
+    begin
+        return query
+
+			with
+
+			    duvida as (
+			        select * from (select varDuvida as js_categoria) a
+				),
+
+			    intents as (
+					select
+					'intents' as tp_categoria,
+					'intents' as tp_subcategoria,
+					json_array_elements_text(js_categoria::json ->'intents') as ds_categoria
+					from duvida
+					where
+						js_categoria not like '%intents":{}%'
+				),
+
+				entities as (
+					select
+					'entities' as tp_categoria,
+					json_object_keys(js_categoria :: json -> 'entities') as tp_subcategoria,
+					json_array_elements_text(
+						js_categoria :: json
+							-> 'entities'
+								->json_object_keys(js_categoria :: json-> 'entities')
+					) as ds_categoria
+					from duvida
+					where
+						js_categoria not like '%entities":{}%'
+				),
+
+				base as (
+					select * from intents
+					union all
+					(select * from entities where tp_subcategoria != 'sys-number')
+				),
+
+				vcr as (
+					select
+					*,
+					count(*) over (partition by id_regra) as contador
+					from vw_categoria_regra vcr
+					left join base b
+						on vcr.tp_categoria = b.tp_categoria
+						and vcr.tp_subcategoria = b.tp_subcategoria
+				),
+
+				vcrTemp as (
+					select distinct
+					id_regra, contador, max(contador) over() as maximo
+					from vcr
+					order by 2 desc
+				)
+
+			select
+			*
+			from tb_regra
+			where
+			    id_jogo = varIdJogo
+			  	and id_regra in (select id_regra from vcrTemp where contador = maximo);
+
+    end;
+$$language plpgsql;
 
 create or replace procedure sp_usuario_sem_grupo()
 language plpgsql
@@ -690,11 +816,16 @@ language plpgsql
 as
 $$
     DECLARE
-        varCursor refcursor;
-        varRecord record;
+        varCursorJogo refcursor;
+        varCursorGrupo refcursor;
+        varRecordJogo record;
+        varRecordGrupo record;
         varQtd integer:= 0;
     BEGIN
-        open varCursor for
+
+        -- Grupo Inicial
+
+        open varCursorJogo for
 			select
 			id_jogo,
 			fn_nota_jogo(id_jogo,current_date)
@@ -702,14 +833,55 @@ $$
 			order by 2 desc,1
 			limit 5
         ;
+
 		loop
-			fetch varCursor into varRecord;
+			fetch varCursorJogo into varRecordJogo;
 			exit when not found;
-			insert into tb_jogo_grupo values(nextval('sq_jogo_grupo'), 1, varRecord.id_jogo , 'sim', null, current_timestamp);
+			insert into tb_jogo_grupo values(nextval('sq_jogo_grupo'), 1, varRecordJogo.id_jogo , 'sim', null, current_timestamp);
 			varQtd := varQtd + 1;
 		end loop;
+
+        close varCursorJogo;
+
+        --Demais Grupos
+
+        open varCursorGrupo for
+			select distinct
+			id_grupo
+			from tb_usuario_grupo
+			where
+				id_grupo != 1
+				and fl_valido = 'sim'
+			order by 1
+        ;
+
+        loop
+			fetch varCursorGrupo into varRecordGrupo;
+			exit when not found;
+
+			open varCursorJogo for
+				select
+				id_jogo,
+				fn_nota_jogo(id_jogo, varRecordGrupo.id_grupo, current_date)
+				from tb_jogo
+				order by 2 desc,1
+				limit 5
+			;
+
+			loop
+				fetch varCursorJogo into varRecordJogo;
+				exit when not found;
+				insert into tb_jogo_grupo values(nextval('sq_jogo_grupo'), varRecordGrupo.id_grupo , varRecordJogo.id_jogo , 'sim', null, current_timestamp);
+				varQtd := varQtd + 1;
+			end loop;
+
+			close varCursorJogo;
+
+		end loop;
+
 		raise notice '% valores inseridos com sucesso.', TO_CHAR(varQtd, 'fm999G999');
-        close varCursor;
+        close varCursorGrupo;
+
     END;
 $$;
 
@@ -864,6 +1036,59 @@ $tb_jogo_grupo$ language plpgsql;
 create or replace trigger tg_cadastro_jogo_grupo
     before insert on tb_jogo_grupo
     FOR EACH ROW EXECUTE FUNCTION fn_cadastro_jogo_grupo();
+
+create materialized view vw_categoria_regra as
+
+with
+    cr_adj as (
+		select
+		tr.id_jogo,
+		tcr.id_regra,
+		tcr.js_categoria,
+		tcr.dt_registro,
+		row_number() over (partition by tcr.id_regra order by tcr.dt_registro desc) as row
+		from tb_categoria_regra tcr
+		left join tb_regra tr on tcr.id_regra = tr.id_regra
+	),
+
+	intents as (
+	select
+	id_jogo,
+	id_regra,
+	'intents' as tp_categoria,
+    'intents' as tp_subcategoria,
+	json_array_elements_text(js_categoria::json ->'intents') as ds_categoria,
+	dt_registro
+	from cr_adj
+	where
+		row = 1
+		and js_categoria not like '%intents":{}%'
+	),
+
+    entities as (
+        select
+        id_jogo,
+		id_regra,
+		'entities' as tp_categoria,
+		json_object_keys(js_categoria :: json -> 'entities') as tp_subcategoria,
+		json_array_elements_text(
+		    js_categoria :: json
+		        -> 'entities'
+		        	->json_object_keys(js_categoria :: json-> 'entities')
+		) as ds_categoria,
+        dt_registro
+		from cr_adj
+		where
+			row = 1
+	),
+
+    base as (
+    	select * from intents
+		union all
+		(select * from entities where tp_subcategoria != 'sys-number')
+	)
+
+select * from base order by 1,2,3 desc,4,5;
 
 create materialized view vw_usuario_kpi as
 

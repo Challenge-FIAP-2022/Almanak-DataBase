@@ -1,4 +1,6 @@
--- TG_Cadastro_Usuario
+--===================================================================================================================
+----------------------------------------------- TG_Cadastro_Usuario -------------------------------------------------
+--===================================================================================================================
 
 create or replace function fn_cadastro_usuario() returns trigger as
 $tb_usuario$
@@ -13,7 +15,9 @@ create or replace trigger tg_cadastro_usuario
     after insert on tb_usuario
     FOR EACH ROW EXECUTE FUNCTION fn_cadastro_usuario();
 
--- TG_Cadastro_Contrato
+--===================================================================================================================
+----------------------------------------------- TG_Cadastro_Contrato ------------------------------------------------
+--===================================================================================================================
 
 create or replace function fn_cadastro_contrato() returns trigger as
 $tb_contrato$
@@ -59,7 +63,9 @@ create or replace trigger tg_cadastro_contrato
     before insert on tb_contrato
     FOR EACH ROW EXECUTE FUNCTION fn_cadastro_contrato();
 
--- TG_Agrupar_Usuario
+--===================================================================================================================
+----------------------------------------------- TG_Agrupar_Usuario -------------------------------------------------
+--===================================================================================================================
 
 create or replace function fn_agrupar_usuario() returns trigger as
 $tb_usuario_grupo$
@@ -106,7 +112,9 @@ create or replace trigger tg_agrupar_usuario
     before insert on tb_usuario_grupo
     FOR EACH ROW EXECUTE FUNCTION fn_agrupar_usuario();
 
---TG_CADASTRO_JOGO_GRUPO
+--===================================================================================================================
+----------------------------------------------- TG_CADASTRO_JOGO_GRUPO ----------------------------------------------
+--===================================================================================================================
 
 create or replace function fn_cadastro_jogo_grupo() returns trigger as
 $tb_jogo_grupo$

@@ -1,0 +1,41 @@
+-- Integrantes do Grupo (Ordem alfabética):
+
+-- Bianca Man Tchuin Chang Lee (RM: 89171)
+-- Danilo Zequim de Moura (RM: 89045)
+-- Eric Brianez Giannetti (RM: 87087)
+-- Matheus Pismel de Jeronymo (RM: 86931)
+-- Otavio de Magalhães Gomes (RM: 87680)
+-- Zack Lorenzzo Corrêa (RM: 87149)
+
+Layout da Base de dados:
+
+    https://almanak-db-report.herokuapp.com/
+
+Repositório Git com todos os códigos da base:
+
+    Todos os comandos de DDL, DML e DQL podem ser acessados na pasta "SQL Scripts".
+
+    https://github.com/Challenge-FIAP-2022/Almanak-DataBase
+
+Notas extras:
+	
+	Professor Marcel, 
+	Conforme conversamos na última aula, por termos criado nossa base de dados em PostgreSQL, não existe a possibilidade de criarmos os packages, uma vez que essa funcionalidade não existe nessa linguagem. Acordamos então de lhe entregar as views com os dados processados e histórico dos clientes (que se encontra no link: https://github.com/Challenge-FIAP-2022/Almanak-DataBase/blob/master/SQL%20Scripts/VIEW.sql). Essa view cria um array de datas e cruza com os dados dos usuários. Como temos data de início e encerramento em todos os campos, podemos ter então o histórico de mudanças de planos, jogos, número de logins, número de avaliações entre outros KPIs. Caso tenha alguma dúvida, estamos à disposição. Criamos também uma view materializada das regras dos jogos convertendo o JSON de retorno do Watson Assistant em uma tabela para podermos entender os assuntos de cada regra, o código se encontra no mesmo link.
+    
+    Por fim, segue os DQL para poder ver ambas as views (o acesso à nossa base segue abaixo):
+    
+    select * from vw_usuario_kpi;
+    
+    select * from vw_categoria_regra;
+
+Acesso à base PostgreSQL:
+
+    Caso você queira ver tudo que criamos, recomendo acessar o site com o layout e acessar nossa base com os dados abaixo,
+    vale um único disclaimer, acredito que o Heroku troque de tempos em tempos, então qualquer problema pode chamar qualquer
+    integrante do grupo, e te passaremos os dados atualizados. Segue o acesso:
+
+    Host: ec2-52-86-115-245.compute-1.amazonaws.com
+    Database: d92em23mmlh07d
+    User: yjixuohawbxqpj
+    Port: 5432
+    Password: 61a11b1ebe328f19fc17be47b54382fc78a89a613d3eaea7633ff4cf4a3d73ad
